@@ -47,7 +47,7 @@ export default function NavBar(props){
                 <Typography variant="h6" className={classes.title}>
                     {props.context}
                 </Typography>
-                <Button className={classes.toolbarButton}>
+                <Button className={classes.toolbarButton} href="/courseList">
                     課程列表
                 </Button>
                 <Button className={classes.toolbarButton}>

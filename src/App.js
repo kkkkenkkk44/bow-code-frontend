@@ -1,16 +1,16 @@
 import React, { Component } from "react";
-import logo from './logo.svg';
 import './App.css';
 import MainPage from "./pages/MainPage";
+import CourseListPage from "./pages/CourseListPage";
 import { Redirect, Route, Switch } from "react-router";
 import { shallowEqual, useSelector } from "react-redux";
+require('dotenv').config();
 
 function App() {
-
-  
   return (
     <Switch>
       <Route path='/home' component={MainPage}/>
+      <Route path='/courseList' component={CourseListPage}/>
       <Redirect from='/' to='/home'/>
     </Switch>
   );
