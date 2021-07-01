@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     title: {
       marginLeft: theme.spacing(1),
       flexGrow: 1,
-      fontFamily: "Comic Sans MS"
+      fontFamily: "Comic Sans MS",
     },
     toolbar: {
         height: '100%'
@@ -74,9 +74,11 @@ export default function NavBar(props){
         <div>
         <AppBar position="static" className={classes.appbar} elevation={3}>
             <Toolbar className={classes.toolbar}>
-                <Typography variant="h6" className={classes.title}>
-                    {props.context}
-                </Typography>
+                    <Typography variant="h6" className={classes.title}>
+                    <Link component={RouterLink} to={"/home"} >
+                        {props.context}
+                    </Link>
+                    </Typography>
                 <Button className={classes.toolbarButton}>
                     課程列表
                 </Button>
@@ -86,34 +88,36 @@ export default function NavBar(props){
                 <Button className={classes.toolbarButton}>
                     我的學習
                 </Button>
-                <div>
-                    <Button
-                    ref={anchorRef}
-                    aria-controls={open ? 'menu-list-grow' : undefined}
-                    aria-haspopup="true"
-                    onClick={handleToggle} className={classes.toolbarButton}
+        
+                <Button
+                ref={anchorRef}
+                aria-controls={open ? 'menu-list-grow' : undefined}
+                aria-haspopup="true"
+                onClick={handleToggle} className={classes.toolbarButton}
+                >
+                我的教學
+                </Button>
+                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                {({ TransitionProps, placement }) => (
+                    <Grow
+                    {...TransitionProps}
+                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
                     >
-                    我的教學
-                    </Button>
-                    <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-                    {({ TransitionProps, placement }) => (
-                        <Grow
-                        {...TransitionProps}
-                        style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                        >
-                        <Paper>
-                            <ClickAwayListener onClickAway={handleClose}>
-                            <MenuList autoFocusItem={open} id="menu-list-grow" >
+                    <Paper>
+                        <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList autoFocusItem={open} id="menu-list-grow" >
+                            <Link component={RouterLink} to={"/createCourse"} color="inherit" aria-label="menu">
                                 <MenuItem onClick={handleClose}>建立課程</MenuItem>
-                                <MenuItem onClick={handleClose}>建立題目</MenuItem>
-                                <MenuItem onClick={handleClose}>建立教室</MenuItem>
-                            </MenuList>
-                            </ClickAwayListener>
-                        </Paper>
-                        </Grow>
-                    )}
-                    </Popper>
-                </div>
+                            </Link>
+                            <MenuItem onClick={handleClose}>建立題目</MenuItem>
+                            <MenuItem onClick={handleClose}>建立教室</MenuItem>
+                        </MenuList>
+                        </ClickAwayListener>
+                    </Paper>
+                    </Grow>
+                )}
+                </Popper>
+                
                 <Button className={classes.toolbarButton}>
                     登入
                 </Button>
