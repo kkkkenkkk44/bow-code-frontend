@@ -46,6 +46,7 @@ export default function CreateCoursePage() {
                 <Typography component="h1" variant="h6">
                     建立課程
                 </Typography>
+                <CreateCourseForm />
             </div>
         </div>
     )
