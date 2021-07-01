@@ -5,6 +5,17 @@ import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { Link as RouterLink, Redirect } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
+import React, { useEffect, useState, useRef} from "react";
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+//import { DropDownButton } from "@progress/kendo-react-buttons";
+//import { useDetectOutsideClick } from "/Users/ken/Desktop/bow-code-frontend/src/useDetectOutsideClick.js";
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -33,12 +44,31 @@ const useStyles = makeStyles((theme) => ({
     toolbarButton: {
         color: "#ffffff",
     },
-  }));
+}));
+
+
+
 
 export default function NavBar(props){
     const classes = useStyles()
     const dispatch = useDispatch()
     const user = useSelector(state => state.user, shallowEqual)
+
+    const [open, setOpen] = React.useState(false);
+    const anchorRef = React.useRef(null);
+
+    const handleToggle = () => {
+        setOpen((prevOpen) => !prevOpen);
+    };
+
+    const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+    };
+
 
     return(
         <div>
@@ -56,9 +86,34 @@ export default function NavBar(props){
                 <Button className={classes.toolbarButton}>
                     我的學習
                 </Button>
-                <Button className={classes.toolbarButton}>
+                <div>
+                    <Button
+                    ref={anchorRef}
+                    aria-controls={open ? 'menu-list-grow' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleToggle} className={classes.toolbarButton}
+                    >
                     我的教學
-                </Button>
+                    </Button>
+                    <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                    {({ TransitionProps, placement }) => (
+                        <Grow
+                        {...TransitionProps}
+                        style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                        >
+                        <Paper>
+                            <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList autoFocusItem={open} id="menu-list-grow" >
+                                <MenuItem onClick={handleClose}>建立課程</MenuItem>
+                                <MenuItem onClick={handleClose}>建立題目</MenuItem>
+                                <MenuItem onClick={handleClose}>建立教室</MenuItem>
+                            </MenuList>
+                            </ClickAwayListener>
+                        </Paper>
+                        </Grow>
+                    )}
+                    </Popper>
+                </div>
                 <Button className={classes.toolbarButton}>
                     登入
                 </Button>
