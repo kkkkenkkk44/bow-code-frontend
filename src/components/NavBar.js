@@ -79,7 +79,7 @@ export default function NavBar(props){
                         {props.context}
                     </Link>
                     </Typography>
-                <Button className={classes.toolbarButton}>
+                <Button className={classes.toolbarButton} href="/courseList">
                     課程列表
                 </Button>
                 <Button className={classes.toolbarButton}>
