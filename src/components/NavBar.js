@@ -59,7 +59,7 @@ export default function NavBar(props){
                 <Button className={classes.toolbarButton}>
                     我的教學
                 </Button>
-                <Button className={classes.toolbarButton}>
+                <Button className={classes.toolbarButton} href="/login">
                     登入
                 </Button>
             </Toolbar>
