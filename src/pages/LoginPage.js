@@ -110,7 +110,7 @@ export default function LoginPage() {
                                 variant="contained"
                                 onClick={renderProps.onClick}
                                 className={classes.submit}
-                            > Login with Google </Button>
+                            > Continue with Google </Button>
                         )}
                         onSuccess={responseGoogle}
                         onFailure={responseGoogle}
