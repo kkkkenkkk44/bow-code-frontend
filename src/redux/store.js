@@ -1,11 +1,11 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import reducer from "./reducer";
-import courseReducer from "./courseReducer"
+import courseListReducer from "./courseListReducer"
 import thunk from 'redux-thunk';
 
 const store = createStore(combineReducers({
     reducer,
-    courseReducer,
+    courseListReducer,
   }), applyMiddleware(thunk))
 
 export { store }
