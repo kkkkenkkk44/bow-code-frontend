@@ -12,19 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { GoogleLogin } from 'react-google-login';
-
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import { loginAsync } from '../actions/login'
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -46,10 +35,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const responseGoogle = (res) => console.log(res)
+
+function responseGoogle (dispatch) {
+    return (res) => {
+        var payload = {
+            method: "google",
+            authPayload: res.tokenId
+        }
+        dispatch(loginAsync(payload))
+    }
+}
 
 export default function LoginPage() {
     const classes = useStyles();
+    const dispatch = useDispatch()
 
     return (
         <div>
@@ -112,8 +111,8 @@ export default function LoginPage() {
                                 className={classes.submit}
                             > Continue with Google </Button>
                         )}
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
+                        onSuccess={responseGoogle(dispatch)}
+                        onFailure={responseGoogle(dispatch)}
                         cookiePolicy={'single_host_origin'}
                     />
 
