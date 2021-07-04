@@ -44,12 +44,12 @@ const useStyles = makeStyles((theme) => ({
     },
 
     difficultyText: {
-      margin: '15px',
+      marginRight: '40px',
       
     },
 
     publicText:{
-      margin: '24px'
+      margin: '40px'
     },
   }));
 
@@ -204,12 +204,12 @@ export default function CreatCourseForm() {
                 onChange={handleTags}
             />
             <span className={classes.difficultyText}>選擇課程難度</span>
-            <FormControl variant="outlined" className={classes.formControl}>
+            <FormControl className={classes.formControl}>
               <Select
                 native
                 value={difficulty}
                 onChange={handleDifficulty}
-                label="課程難度"
+                label=""
                 inputProps={{
                   name: 'difficulty',
                 }}
@@ -220,7 +220,7 @@ export default function CreatCourseForm() {
               </Select>
             </FormControl>
             <span className={classes.publicText}>是否公開課程</span>
-            <FormControl variant="outlined" className={classes.formControl}>
+            <FormControl className={classes.formControl}>
               <Select
                 native
                 value={isPublish}
