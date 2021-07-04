@@ -112,7 +112,7 @@ export default function LoginPage() {
                             > Continue with Google </Button>
                         )}
                         onSuccess={responseGoogle(dispatch)}
-                        onFailure={responseGoogle(dispatch)}
+                        onFailure={(res) => console.log(res)}
                         cookiePolicy={'single_host_origin'}
                     />
 

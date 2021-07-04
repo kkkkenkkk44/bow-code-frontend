@@ -13,15 +13,40 @@ export const loggedIn = (user) => ({
     }
 })
 
+export const logout = () => ({
+    type: LOG_OUT
+})
+
 export function loginAsync(payload) {
     return (dispatch) => {
         dispatch(loginStart())
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, { body: JSON.stringify(payload), method: "POST" })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            dispatch(loggedIn(data))
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+            body: JSON.stringify(payload),
+            method: "POST",
+            credentials: 'include'
         })
-        .catch(e => console.log(e))
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                dispatch(loggedIn(data))
+            })
+            .catch(e => console.log(e))
+    }
+}
+
+export function auth() {
+    return (dispatch) => {
+        dispatch(loginStart())
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
+            method: "GET",
+            credentials: "include"
+        })
+            .then(res => { console.log(res); return res.json() })
+            .then(data => {
+                console.log("auth finish")
+                console.log(data)
+                dispatch(loggedIn(data))
+            })
+            .catch(dispatch(logout()))
     }
 }
