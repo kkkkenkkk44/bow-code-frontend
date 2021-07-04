@@ -42,6 +42,15 @@ const useStyles = makeStyles((theme) => ({
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
+
+    difficultyText: {
+      margin: '15px',
+      
+    },
+
+    publicText:{
+      margin: '24px'
+    },
   }));
 
 const BootstrapInput = withStyles((theme) => ({
@@ -91,7 +100,6 @@ export default function CreatCourseForm() {
   const dispatch = useDispatch();
 
   const exampleBlockList = [];
-  const exampleTags = ["中數", "宇宙奧秘"]
   const exampleCreator = "60d8b6e607304cf14a3a9faa"
 
   const [name, setName] = useState("")
@@ -157,10 +165,6 @@ export default function CreatCourseForm() {
     }
   }
 
-
-
-
-
     return (
       isSuccessful ? 
         <Redirect to={'/courseEditor/' + CourseID} />
@@ -199,8 +203,8 @@ export default function CreatCourseForm() {
                 id="tags"
                 onChange={handleTags}
             />
+            <span className={classes.difficultyText}>選擇課程難度</span>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel >課程難度</InputLabel>
               <Select
                 native
                 value={difficulty}
@@ -215,8 +219,8 @@ export default function CreatCourseForm() {
                 <option value={3}>進階</option>
               </Select>
             </FormControl>
+            <span className={classes.publicText}>是否公開課程</span>
             <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel >是否公開課程</InputLabel>
               <Select
                 native
                 value={isPublish}
