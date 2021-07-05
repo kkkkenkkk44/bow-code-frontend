@@ -41,11 +41,14 @@ export function auth() {
             method: "GET",
             credentials: "include"
         })
-            .then(res => { console.log(res); return res.json() })
+            .then(res => res.json())
             .then(data => {
                 console.log("auth finish")
-                console.log(data)
-                dispatch(loggedIn(data))
+                if (data.id == ""){ // no valid login
+                    dispatch(logout())
+                } else {
+                    dispatch(loggedIn(data))
+                }
             })
             .catch(dispatch(logout()))
     }
