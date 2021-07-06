@@ -151,7 +151,7 @@ export default function CreatCourseForm() {
       fetch(`${process.env.REACT_APP_BACKEND_URL}/course`, {
         method: 'POST',
         body: JSON.stringify(course_info),
-        credential: true
+        credentials: "include"
         })
       .then(res => res.json())
       .then(data => {
