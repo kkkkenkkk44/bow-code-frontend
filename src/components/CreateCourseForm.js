@@ -148,9 +148,10 @@ export default function CreatCourseForm() {
         difficulty: parseInt(difficulty),
         isPublish,
       }
-      fetch("http://140.112.106.174:8087/course", {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/course`, {
         method: 'POST',
-        body: JSON.stringify(course_info)
+        body: JSON.stringify(course_info),
+        credential: true
         })
       .then(res => res.json())
       .then(data => {
