@@ -8,8 +8,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 function CourseList() {
     const dispatch = useDispatch()
-    const courseList = useSelector(state => state.courseReducer.courseList);
-    const isfetching = useSelector(state => state.courseReducer.isfetching);
+    const courseList = useSelector(state => state.courseListReducer.courseList);
+    const isfetching = useSelector(state => state.courseListReducer.isfetching);
     var cardList = []
     useEffect(() => {
         dispatch(fetchCourseListAsync())

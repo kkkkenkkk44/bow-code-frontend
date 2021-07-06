@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-export default function EditCoursePage(props){
+export default function CourseEditorPage(props){
 
     const classes = useStyles()
 
