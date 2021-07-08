@@ -7,13 +7,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { GoogleLogin } from 'react-google-login';
 import { loginAsync } from '../actions/login'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function responseGoogle (dispatch) {
+function responseGoogle(dispatch) {
     return (res) => {
         var payload = {
             method: "google",
@@ -49,88 +49,90 @@ function responseGoogle (dispatch) {
 export default function LoginPage() {
     const classes = useStyles();
     const dispatch = useDispatch()
+    const isLogin = useSelector(state => state.loginReducer.isLogin)
 
     return (
-        <div>
-            <NavBar context="Bow-Code" />
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <div className={classes.paper}>
-                    <Typography component="h1" variant="h5">
-                        Sign in
-                    </Typography>
-                    <form className={classes.form} noValidate>
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                        />
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                        >
-                            Sign In
-                        </Button>
-                    </form>
-                    <Typography component="h5" variant="h5">
-                        or
-                    </Typography>
-                    <GoogleLogin
-                        clientId="821743361233-bij4mhcnsi20f4nsia9psq87kuo2gp67.apps.googleusercontent.com"
-                        buttonText="Login"
-                        render={renderProps => (
+        isLogin ? <Redirect to='/home' /> :
+            <div>
+                <NavBar context="Bow-Code" />
+                <Container component="main" maxWidth="xs">
+                    <CssBaseline />
+                    <div className={classes.paper}>
+                        <Typography component="h1" variant="h5">
+                            Sign in
+                        </Typography>
+                        <form className={classes.form} noValidate>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                autoFocus
+                            />
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                            />
+                            <FormControlLabel
+                                control={<Checkbox value="remember" color="primary" />}
+                                label="Remember me"
+                            />
                             <Button
                                 type="submit"
                                 fullWidth
                                 variant="contained"
-                                onClick={renderProps.onClick}
+                                color="primary"
                                 className={classes.submit}
-                            > Continue with Google </Button>
-                        )}
-                        onSuccess={responseGoogle(dispatch)}
-                        onFailure={(res) => console.log(res)}
-                        cookiePolicy={'single_host_origin'}
-                    />
+                            >
+                                Sign In
+                            </Button>
+                        </form>
+                        <Typography component="h5" variant="h5">
+                            or
+                        </Typography>
+                        <GoogleLogin
+                            clientId="821743361233-bij4mhcnsi20f4nsia9psq87kuo2gp67.apps.googleusercontent.com"
+                            buttonText="Login"
+                            render={renderProps => (
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    onClick={renderProps.onClick}
+                                    className={classes.submit}
+                                > Continue with Google </Button>
+                            )}
+                            onSuccess={responseGoogle(dispatch)}
+                            onFailure={(res) => console.log(res)}
+                            cookiePolicy={'single_host_origin'}
+                        />
 
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
-                            </Link>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="#" variant="body2">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="#" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
 
-                </div>
-            </Container>
-        </div>
+                    </div>
+                </Container>
+            </div>
     );
 }
