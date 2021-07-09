@@ -32,7 +32,9 @@ const useStyles = makeStyles((theme) => ({
     },
     appbar: {
         height: "60px",
-        background: "rgba(104, 144, 79, 0.9)"
+        background: "rgba(104, 144, 79, 0.9)",
+        zIndex: "100",
+        position: "relative"
 
     },
     toolbarButton: {
@@ -113,7 +115,7 @@ export default function NavBar(props) {
                                         </Grow>
                                     )}
                                 </Popper>
-                                <Button className={classes.toolbarButton} href="#">
+                                <Button className={classes.toolbarButton} href="/user">
                                     {user.userInfo.name}
                                 </Button>
                             </div> :

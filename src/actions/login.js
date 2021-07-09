@@ -1,4 +1,3 @@
-import { useHistory } from "react-router-dom";
 export const LOG_IN_START = 'LOG_IN_START'
 export const LOGGED_IN = 'LOGGED_IN'
 export const LOG_OUT = 'LOG_OUT'
@@ -63,6 +62,7 @@ export function registerAsync(payload) {
 
 export function auth() {
     return (dispatch) => {
+        console.log("auth start")
         dispatch(loginStart())
         fetch(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
             method: "GET",

@@ -12,10 +12,12 @@ export const fetchCourseList = (new_list) => ({
     },
 });
 
-export function fetchCourseListAsync() {
+export function fetchCourseListAsync(filter = {}) {
+    var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/course`)
+    Object.keys(filter).forEach(key => url.searchParams.append(key, filter[key]))
     return (dispatch) => {
         dispatch(fetchCourseListRequest())
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/course`, { method: "GET" })
+        fetch(url, { method: "GET" })
             .then(res => res.json())
             .then(data => {
                 let new_list = data

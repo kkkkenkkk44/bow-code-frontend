@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import NavBar from '../components/NavBar'
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';

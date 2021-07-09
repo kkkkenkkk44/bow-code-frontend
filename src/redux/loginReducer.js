@@ -3,6 +3,7 @@ const initialLoginState = {
     isLogin: false,
     isLoggingIn: false,
     newLogin: false,
+    authFinish: false,
     user: {}
 }
 
@@ -11,14 +12,16 @@ const loginReducer = (state = initialLoginState, action) => {
         case LOG_IN_START:
             return {
                 ...state,
-                isLoggingIn: true
+                isLoggingIn: true,
+                authFinish: false,
             }
         case LOGGED_IN:
             return {
                 ...state,
                 isLoggingIn: false,
                 isLogin: true,
-                user: action.payload.user
+                user: action.payload.user,
+                authFinish: true
             }
         case NEW_LOGIN:
             return {
@@ -26,10 +29,14 @@ const loginReducer = (state = initialLoginState, action) => {
                 isLoggingIn: false,
                 isLogin: true,
                 user: action.payload.user,
-                newLogin: true
+                newLogin: true,
+                authFinish: true
             }
         case LOG_OUT:
-            return initialLoginState
+            return {
+                ...initialLoginState,
+                authFinish: true
+            }
         default:
             return state;
     }

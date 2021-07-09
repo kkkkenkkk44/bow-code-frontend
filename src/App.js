@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import { Redirect, Route, Switch } from "react-router";
 import { auth } from "./actions/login"
+import UserPage from "./pages/UserPage";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       <Route path='/courseList' component={CourseListPage} />
       <Route path='/login' component={LoginPage} />
       <Route path='/signup' component={SignUpPage} />
+      <Route path='/user' component={UserPage} />
       <Route path='/createCourse' component={CreateCoursePage} />
       <Route path='/courseEditor/:CourseID' component={CourseEditorPage} />
       <Redirect from='/' to='/home' />
