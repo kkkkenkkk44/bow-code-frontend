@@ -7,6 +7,7 @@ import { Avatar } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { switchTo } from '../actions/userPage';
 
+import Overview from './UserPages/Overview'
 import MyCourse from './UserPages/MyCourse'
 
 import List from '@material-ui/core/List';
@@ -24,7 +25,9 @@ function MainWindow(props) {
     const currentTab = useSelector(state => state.userPageReducer.currentTab)
     return (
         <div>
-            <div hidden={currentTab !== "overview"}>overview</div>
+            <div hidden={currentTab !== "overview"}>
+                <Overview />
+            </div>
             <div hidden={currentTab !== "myCourse"}>
                 <MyCourse />
             </div>
