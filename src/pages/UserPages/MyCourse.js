@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import CourseCard from '../../components/CourseCard'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchOwnCourseAsync } from '../../actions/userPage'
+import { fetchOwnCourseAsync, fetchFavCourseAsync } from '../../actions/userPage'
 import { CircularProgress } from '@material-ui/core'
 import { Typography } from '@material-ui/core'
 import { Divider } from '@material-ui/core'
@@ -32,16 +32,27 @@ export default function CourseListPage() {
     const classes = useStyles();
     const dispatch = useDispatch()
     const user = useSelector(state => state.loginReducer.user);
-    const isfetching = useSelector(state => state.courseListReducer.isfetching);
+    const favFetching = useSelector(state => state.userPageReducer.favCourseFetching);
+    const ownFetching = useSelector(state => state.userPageReducer.ownCourseFetching);
     var ownCourse = useSelector(state => state.userPageReducer.ownCourse)
-    var cardList = []
+    var favCourse = useSelector(state => state.userPageReducer.favCourse)
+    var ownCardList = []
+    var favCardList = []
     useEffect(() => {
         if (typeof user.id !== 'undefined') {
             dispatch(fetchOwnCourseAsync(user.ownCourseList))
+            dispatch(fetchFavCourseAsync(user.favoriteCourseList))
         }
     }, [user])
-    if (!isfetching) {
-        cardList = ownCourse.map((course) =>
+    if (!ownFetching) {
+        ownCardList = ownCourse.map((course) =>
+            <div key={course.id} className={classes.courseCard}>
+                <CourseCard course={course} />
+            </div>
+        )
+    }
+    if (!favFetching) {
+        favCardList = favCourse.map((course) =>
             <div key={course.id} className={classes.courseCard}>
                 <CourseCard course={course} />
             </div>
@@ -55,15 +66,22 @@ export default function CourseListPage() {
             </Typography>
             <div className={classes.root}>
                 {
-                    isfetching ?
+                    ownFetching ?
                         <CircularProgress /> :
-                        cardList
+                        ownCardList
                 }
             </div>
             <Typography className={classes.sectionTitle} variant="h5" component="h2">
                 收藏
                 <Divider className={classes.divider}></Divider>
             </Typography>
+            <div className={classes.root}>
+                {
+                    favFetching ?
+                        <CircularProgress /> :
+                        favCardList
+                }
+            </div>
         </div>
     )
 }
