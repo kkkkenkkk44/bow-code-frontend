@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
     title: {
         marginLeft: theme.spacing(1),
         flexGrow: 1,
-        fontFamily: "Comic Sans MS"
     },
     toolbar: {
         height: '100%'

@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
     publicText:{
       margin: '40px'
     },
+
+    categoryText: {
+      margin: '20px'
+    },
   }));
 
 const BootstrapInput = withStyles((theme) => ({
@@ -115,6 +119,11 @@ export default function CreatCourseForm() {
   setIsPublish(event.target.value);
   };
 
+  const [category, setCategory] = useState("")
+  const handleCategory = (event) => {
+  setCategory(event.target.value);
+  };
+
 
   const handleSubmit = (event) => {
     if (name === ""){
@@ -134,6 +143,7 @@ export default function CreatCourseForm() {
         tags,
         difficulty: parseInt(difficulty),
         isPublish,
+        category,
       }
       fetch(`${process.env.REACT_APP_BACKEND_URL}/course`, {
         method: 'POST',
@@ -144,8 +154,6 @@ export default function CreatCourseForm() {
       .then(data => {
         setCourseID(data.CourseID);
         setIsSuccessful(true);
-        console.log('Success:', CourseID)
-        console.log(isSuccessful)
       })
       .catch(error => console.error('Error:', error))
       
@@ -220,6 +228,21 @@ export default function CreatCourseForm() {
               >
                 <option value={true}>公開課程</option>
                 <option value={false}>私人課程</option>
+              </Select>
+            </FormControl>
+            <span className={classes.categoryText}>課程類別</span>
+            <FormControl className={classes.formControl}>
+              <Select
+                native
+                value={category}
+                onChange={handleCategory}
+                label="課程類別"
+                inputProps={{
+                  name: 'category',
+                }}
+              >
+                <option value={"teach"}>教學用課程</option>
+                <option value={"self-learn"}>自學用課程</option>
               </Select>
             </FormControl>
             <Button
