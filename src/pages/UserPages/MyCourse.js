@@ -44,14 +44,14 @@ export default function CourseListPage() {
             dispatch(fetchFavCourseAsync(user.favoriteCourseList))
         }
     }, [user])
-    if (!ownFetching) {
+    if (!ownFetching && ownCourse != null) {
         ownCardList = ownCourse.map((course) =>
             <div key={course.id} className={classes.courseCard}>
                 <CourseCard course={course} />
             </div>
         )
     }
-    if (!favFetching) {
+    if (!favFetching && favCourse != null) {
         favCardList = favCourse.map((course) =>
             <div key={course.id} className={classes.courseCard}>
                 <CourseCard course={course} />
