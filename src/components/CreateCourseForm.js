@@ -103,7 +103,6 @@ export default function CreatCourseForm() {
   const [tags, setTags] = useState("")
   const handleTags = (event) => {
     setTags(event.target.value);
-    tags.split(' ');
   };
 
   const [difficulty, setDifficulty] = useState("")
@@ -111,9 +110,9 @@ export default function CreatCourseForm() {
   setDifficulty(event.target.value);
   };
 
-  const [isPublish, setIsPublish] = useState(Boolean)
-  const handleIsPublish = (event) => {
-  setIsPublish(event.target.value);
+  const [isPublic, setIsPublic] = useState(Boolean)
+  const handleIsPublic = (event) => {
+  setIsPublic(event.target.value);
   };
 
 
@@ -132,9 +131,9 @@ export default function CreatCourseForm() {
         name,
         abstract,
         creator: exampleCreator,
-        tags,
+        tags: tags.split(' '),
         difficulty: parseInt(difficulty),
-        isPublish,
+        isPublic: isPublic === 'true',
       }
       fetch(`${process.env.REACT_APP_BACKEND_URL}/course`, {
         method: 'POST',
@@ -203,17 +202,17 @@ export default function CreatCourseForm() {
                   name: 'difficulty',
                 }}
               >
-                <option value={1}>初級</option>
-                <option value={2}>中級</option>
-                <option value={3}>進階</option>
+                <option value={0}>初級</option>
+                <option value={1}>中級</option>
+                <option value={2}>進階</option>
               </Select>
             </FormControl>
             <span className={classes.publicText}>是否公開課程</span>
             <FormControl className={classes.formControl}>
               <Select
                 native
-                value={isPublish}
-                onChange={handleIsPublish}
+                value={isPublic}
+                onChange={handleIsPublic}
                 label="公開課程"
                 inputProps={{
                   name: 'isPublic',
