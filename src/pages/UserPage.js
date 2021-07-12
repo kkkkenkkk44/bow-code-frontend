@@ -84,7 +84,7 @@ export default function UserPage(props) {
 
                     <Avatar className={classes.avatar} alt="Remy Sharp" src="https://www.pikpng.com/pngl/m/80-805523_default-avatar-svg-png-icon-free-download-264157.png" />
                     <Typography className={classes.userName} variant="h4" component="h2">
-                        {"George"}
+                        {typeof user.userInfo === 'undefined'? "" : user.userInfo.name}
                     </Typography>
                     <Divider />
                     <List>

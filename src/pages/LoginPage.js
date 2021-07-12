@@ -102,7 +102,7 @@ export default function LoginPage() {
                             or
                         </Typography>
                         <GoogleLogin
-                            clientId="821743361233-bij4mhcnsi20f4nsia9psq87kuo2gp67.apps.googleusercontent.com"
+                            clientId={process.env.REACT_APP_GOOGLE_LOGIN}
                             buttonText="Login"
                             render={renderProps => (
                                 <Button
