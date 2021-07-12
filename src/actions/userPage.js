@@ -42,7 +42,7 @@ export function fetchOwnCourseAsync(ids) {
         fetch(url, { method: "GET" })
         .then(res => res.json())
         .then(data => {
-            dispatch(fetchOwnCourse(data))
+            dispatch(fetchOwnCourse(data.courseList))
         })
         .catch(e => {
             // error handling
@@ -59,7 +59,7 @@ export function fetchFavCourseAsync(ids) {
         fetch(url, { method: "GET" })
         .then(res => res.json())
         .then(data => {
-            dispatch(fetchFavCourse(data))
+            dispatch(fetchFavCourse(data.courseList))
         })
         .catch(e => {
             // error handling

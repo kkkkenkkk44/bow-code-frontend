@@ -49,12 +49,6 @@ export default function CourseCard(props) {
                         tagClass={'className'}
                         debounceTimeoutOnResize={200}
                         useJsOnly={true}
-                        onResult={(result) => {
-                            if (result === TextEllipsis.RESULT.TRUNCATED)
-                                console.log('text get truncated');
-                            else
-                                console.log('text does not get truncated');
-                        }}
                     >{abstract}</TextEllipsis>
                 </CardContent>
             </CardActionArea>
