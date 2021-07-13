@@ -4,6 +4,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import { makeStyles } from '@material-ui/core/styles';
 import TextEllipsis from 'react-text-ellipsis'
+import { useHistory } from "react-router-dom";
 
 
 export default function CourseCard(props) {
@@ -23,6 +24,7 @@ export default function CourseCard(props) {
         }
     }));
     const classes = useStyles();
+    const history = useHistory();
 
     var abstract = props.course.abstract
 
@@ -40,7 +42,7 @@ export default function CourseCard(props) {
     }
     return (
         <Card>
-            <CardActionArea>
+            <CardActionArea onClick={()=>history.push(`/course/${props.course.id}`)}>
                 <CardContent className={classes.title}>
                     <h3>{props.course.name}</h3>
                 </CardContent>
