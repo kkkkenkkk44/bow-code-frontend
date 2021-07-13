@@ -22,17 +22,19 @@ import SearchIcon from '@material-ui/icons/Search';
 export default function CourseListPage() {
     const useStyles = makeStyles((theme) => ({
         root: {
-            height: theme.spacing(100),
-            margin: theme.spacing(5)
+            height: "calc(100vh - 180px)",
+            margin: theme.spacing(5),
+            overflow: "visible"
         },
         courseAll: {
             display: 'flex',
             flexWrap: 'wrap',
-            marginTop: '15px'
+            marginTop: '15px',
+            height: '100%'
         },
         filter: {
             flex: 1,
-            flexBasis: theme.spacing(5),
+            flexBasis: theme.spacing(15),
             height: '100%',
             margin: theme.spacing(2),
         },
@@ -50,16 +52,13 @@ export default function CourseListPage() {
         },
         courseAllCourseList: {
             flex: 6,
-            display: 'flex',
-            flexWrap: 'wrap',
-            marginTop: '15px'
+            marginTop: '15px',
+            overflowY: 'scroll',
+            maxHeight: '100%'
         },
         courseCard: {
             flex: 1,
             margin: theme.spacing(2),
-            flexShrink: 0,
-            flexGrow: 0,
-            flexBasis: theme.spacing(40),
         },
     }));
     const classes = useStyles();

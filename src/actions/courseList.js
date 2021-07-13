@@ -78,7 +78,6 @@ export function fetchCourseListAsync(filter = {}) {
             .then(res => res.json())
             .then(data => {
                 let new_list = data
-                console.log(new_list)
                 dispatch(fetchCourseList(new_list))
             })
             .catch(e => {

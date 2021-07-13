@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
+import { Avatar } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -117,6 +118,7 @@ export default function NavBar(props) {
                                 </Popper>
                                 <Button className={classes.toolbarButton} href="/user">
                                     {user.userInfo.name}
+                                    <Avatar alt={user.userInfo.name} src={user.userInfo.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
                                 </Button>
                             </div> :
                             <Button className={classes.toolbarButton} href="/login">

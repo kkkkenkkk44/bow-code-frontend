@@ -82,7 +82,7 @@ export default function UserPage(props) {
             <div className={classes.root}>
                 <Paper className={classes.userInfo} square elevation={4}>
 
-                    <Avatar className={classes.avatar} alt="Remy Sharp" src="https://www.pikpng.com/pngl/m/80-805523_default-avatar-svg-png-icon-free-download-264157.png" />
+                    <Avatar className={classes.avatar} alt="Remy Sharp" src={typeof user.userInfo === 'undefined'? null: user.userInfo.avatar} />
                     <Typography className={classes.userName} variant="h4" component="h2">
                         {typeof user.userInfo === 'undefined'? "" : user.userInfo.name}
                     </Typography>
