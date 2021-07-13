@@ -10,21 +10,24 @@ export default function BlockDetailPage () {
 
     const [blockContent, setBlockContent] = useState()
 
+    function fetchBlockDetail() {
 
-    fetch(`http://api.ramen-live.com:5050/file-server/files/course/${CourseID}/block/${index}/`, {
-        method: 'GET',
-        credentials: "include"
+        fetch(`http://api.ramen-live.com:5050/file-server/files/course/${CourseID}/block/${index}/`, {
+            method: 'GET',
+            credentials: "include"
+            })
+        .then(res => res.text())
+        .then(data => {
+            setBlockContent(data)
+
         })
-    .then(res => res.text())
-    .then(data => {
-        setBlockContent(data)
+        .catch(error => console.error('Error:', error))
+    }
 
-    })
-    .catch(error => console.error('Error:', error))
+    useEffect(() => {
+        fetchBlockDetail()
+    }, [])
 
-
-
-    
     return (
         <div>
             <NavBar context="Bow-Code" />

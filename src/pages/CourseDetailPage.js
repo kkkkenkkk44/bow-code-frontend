@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import NavBar from '../components/NavBar'
 import BlockCard from '../components/BlockCard'
+import CourseInfoBar from '../components/CourseInfoBar'
 import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@progress/kendo-react-buttons'
 import { useParams } from 'react-router-dom'
+import { Typography } from '@material-ui/core';
 
 
 export default function CourseDetailPage() {
@@ -13,8 +15,8 @@ export default function CourseDetailPage() {
         root: {
             display: 'flex',
             flexWrap: 'wrap',
-            height: theme.spacing(100),
-            margin: theme.spacing(5)
+            height: theme.spacing(1),
+            margin: theme.spacing(5),
         },
         blockListStyle: {
             flex: 3,
@@ -29,6 +31,10 @@ export default function CourseDetailPage() {
 
     //const exampleCourseID = '60ebca1c14447a1cc7d84bc0'
     const { CourseID } = useParams()
+
+    const [name, setName] = useState("")
+    const [abstract, setAbstract] = useState("")
+    const [creator, setCreator] = useState("")
     const [displayBlockList, setDisplayBlockList] = useState([])
 
     function BlockList() {
@@ -44,7 +50,7 @@ export default function CourseDetailPage() {
         )
     }
     
-    const fetchCourseDetail = (e) => {
+    function fetchCourseDetail() {
 
         fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${CourseID}`, {
             method: 'GET',
@@ -52,15 +58,22 @@ export default function CourseDetailPage() {
             })
           .then(res => res.json())
           .then(data => {
+                setName(data.name)
+                setAbstract(data.abstract)
+                setCreator(data.creator)
                 setDisplayBlockList(() => data.blockList)
           })
           .catch(error => console.error('Error:', error))
     }
 
+    useEffect(() => {
+        fetchCourseDetail()
+    }, [])
+
     return (
         <div>
             <NavBar context="Bow-Code" />
-            <Button onClick={fetchCourseDetail}>fetch course detail</Button>
+            <CourseInfoBar context={name} abstract={abstract} creator={creator}/>
             {BlockList()}
         </div>
     )

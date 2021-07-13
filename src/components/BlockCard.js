@@ -8,10 +8,17 @@ import { useHistory, Link } from "react-router-dom";
 import { useParams } from 'react-router-dom'
 
 
+
 export default function BlockCard(props) {
     const useStyles = makeStyles((theme) => ({
         title: {
+
         },
+        card: {
+            width: '60%',
+            margin: '20px',
+            marginLeft: '280px',
+        }
     }));
     const classes = useStyles();
     //const exampleCourseID = '60ebca1c14447a1cc7d84bc0'
@@ -19,11 +26,11 @@ export default function BlockCard(props) {
     var blockIndex = props.value.id
        
     return (
-        <Card>
+        <Card className={classes.card}>
             <Link to={`/course/${CourseID}/${blockIndex}`}>
-            <CardActionArea >
+            <CardActionArea>
                 <CardContent className={classes.title}>
-                    <h3>{props.value.title}</h3>
+                    <h2>{props.value.title}</h2>
                 </CardContent>
             </CardActionArea>
             </Link>
