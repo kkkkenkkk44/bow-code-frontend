@@ -1,28 +1,55 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import { Grid, Popper, Paper, MenuList, MenuItem, ClickAwayListener, makeStyles, IconButton } from '@material-ui/core'
+// import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
+import { Grid, Popper, Paper, MenuList, MenuItem, ClickAwayListener, makeStyles, IconButton, Button, Box, Typography } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
-import { useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+// import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder';
+// import Context from '@ckeditor/ckeditor5-core/src/context';
 
 const useStyles = makeStyles((theme) => ({
     button_container: {
         display: "flex",
         justifyContent: "center"
+    },
+    block_typography: {
+        padding: "1px 20px 1px 20px",
+        minHeight: "30px"
     }
-  }));
+}));
 
-export default function CourseBlockEditor(props){
+const EditorPreview = (props) => {
+
+    const classes = useStyles();
+
+    return (
+        <div className="editor-preview">
+            <Paper onClick={props.onClick} elevation={3}>
+                <Typography className={classes.block_typography} variant="h5" dangerouslySetInnerHTML={{ __html: props.data }}></Typography>
+            </Paper>
+        </div>
+    );
+}
+
+export default function CourseBlockEditor(props) {
 
     const classes = useStyles();
     const dispatch = useDispatch()
+    const blockCount = useSelector(state => state.courseEditorReducer.blocks.length)
     const [focus, setFocus] = useState(false)
     const [createBlockOptionConfig, setCreateBlockOptionConfig] = useState({
         open: false,
         anchor: null,
         placement: 'right-start'
     })
+
+    useEffect(() => {
+
+    }, [])
 
     const handleClose = () => {
         setCreateBlockOptionConfig({
@@ -32,65 +59,109 @@ export default function CourseBlockEditor(props){
         })
     }
 
-    return(
-        <ClickAwayListener 
-            onClickAway={()=>{
+    return (
+        <ClickAwayListener
+            onClickAway={() => {
                 setFocus(false)
                 handleClose()
             }
-        }>
-            <Grid container justify="center" alignItems="center" onFocus={()=>setFocus(true)}>
-                {focus?
+            }>
+            <Grid container justify="center" alignItems="center">
+                {focus ?
                     <Grid item xs={1} className={classes.button_container}>
-                        <IconButton
-                            onClick={()=>dispatch({ type: "DELETE_BLOCK", payload: { index: props.index }})}
-                        >
-                            <DeleteIcon />
-                        </IconButton>                    
+                        <Grid container direction="column" justify="center" alignItems="center">
+                            <IconButton
+                                onClick={() => {
+                                    dispatch({ type: "MOVE_UP", payload: { index: props.index } })
+                                    setFocus(false)
+                                }}
+                                disabled={props.index === 0 ? true : false}
+                            >
+                                <ArrowUpwardIcon />
+                            </IconButton>
+                            <IconButton
+                                onClick={() => {
+                                    dispatch({ type: "MOVE_DOWN", payload: { index: props.index } })
+                                    setFocus(false)
+                                }}
+                                disabled={props.index === blockCount - 1 ? true : false}
+                            >
+                                <ArrowDownwardIcon />
+                            </IconButton>
+                        </Grid>
                     </Grid>
                     :
                     <></>
                 }
                 <Grid item xs={10}>
-                    <CKEditor
-                        editor={ClassicEditor}
-                        data={props.block.content}
-                        onChange={(event, editor)=>{
-                            dispatch({ type: "MODIFY_CONTENT", payload: { index: props.index, content: editor.getData() }})
-                        }}
-                    />
+                    {focus ?
+                        <Paper onClick={() => setFocus(true)}>
+                            <CKEditor
+                                editor={ClassicEditor}
+                                data={props.block.content}
+                                onChange={(event, editor) => {
+                                    dispatch({ type: "MODIFY_CONTENT", payload: { index: props.index, content: editor.getData() } })
+                                }}
+                            /></Paper>
+                        :
+                        <EditorPreview data={props.block.content} onClick={() => setFocus(true)} />
+                    }
                 </Grid>
-                {focus?
+                {focus ?
                     <Grid item xs={1} className={classes.button_container}>
-                        <IconButton 
-                            id={`addBlockButton_${props.index}`}
-                            onClick={(e)=>{
-                                setCreateBlockOptionConfig({
-                                    open: !createBlockOptionConfig.open,
-                                    anchor: document.getElementById(`addBlockButton_${props.index}`),
-                                    placement: 'right-start'
-                                })
-                            }
-                        }>
-                            <AddIcon />
-                        </IconButton>
-                        <Popper 
+                        <Grid container direction="column" justify="center" alignItems="center">
+                            <IconButton
+                                id={`addBlockButton_${props.index}`}
+                                onClick={(e) => {
+                                    setCreateBlockOptionConfig({
+                                        open: !createBlockOptionConfig.open,
+                                        anchor: document.getElementById(`addBlockButton_${props.index}`),
+                                        placement: 'right-start'
+                                    })
+                                }
+                                }>
+                                <AddIcon />
+                            </IconButton>
+                            <IconButton
+                                onClick={() => {
+                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block/${props.blockID}`, {
+                                        method: "DELETE",
+                                        credentials: "include"
+                                    })
+                                    .then(res => {
+                                        dispatch({ type: "DELETE_BLOCK", payload: { index: props.index } })
+                                    })
+                                }}
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        </Grid>
+                        <Popper
                             open={createBlockOptionConfig.open}
                             anchorEl={createBlockOptionConfig.anchor}
                             placement={createBlockOptionConfig.placement}
                             transition
                         >
                             <Paper>
-                                <ClickAwayListener 
-                                    onClickAway={()=>{
+                                <ClickAwayListener
+                                    onClickAway={() => {
                                         handleClose()
                                     }
-                                }>
+                                    }>
                                     <MenuList>
-                                        <MenuItem onClick={(e)=>{
+                                        <MenuItem onClick={(e) => {
+                                            fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block`, {
+                                                method: "POST",
+                                                body: "<p>test</p>",
+                                                credentials: "include"
+                                            })
+                                            .then(res => res.json())
+                                            .then(res => {
+                                                console.log(res)
+                                            })
                                             dispatch({ type: "ADD_NEW_BLOCK", payload: { index: props.index } })
-                                            handleClose()
                                             setFocus(false)
+                                            handleClose()
                                         }}>
                                             新增文字
                                         </MenuItem>
@@ -102,7 +173,7 @@ export default function CourseBlockEditor(props){
                     :
                     <></>
                 }
-                
+
             </Grid>
         </ClickAwayListener>
     )

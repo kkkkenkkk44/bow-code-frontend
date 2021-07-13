@@ -7,7 +7,8 @@ import { useState } from "react"
 
 const useStyles = makeStyles((theme) => ({
     finishButton: {
-        background: "rgba(104, 144, 79, 0.9)"
+        background: "rgba(104, 144, 79, 0.9)",
+        margin: "20px 0 20px 0"
     }
 }))
 
@@ -20,7 +21,7 @@ export default function CourseEditorPage(props){
     return(
         <div>
             <NavBar context="Bow-Code"/>
-            <CourseEditor/>
+            <CourseEditor CourseID={props.match.params.CourseID}/>
             <Grid container justify="center">
                 <Grid item xs={10}>
                     <Grid container justify="center">
