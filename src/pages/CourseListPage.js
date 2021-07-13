@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import NavBar from '../components/NavBar'
 import CourseCard from '../components/CourseCard'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchCourseListAsync, changeDifficulty, changeCategory, changeTagsFilter } from '../actions/courseList'
-import { CircularProgress } from '@material-ui/core'
+import { fetchCourseListAsync, changeDifficulty, changeCategory, changeTagsFilter, clickAllTags, handleChangeKeyword } from '../actions/courseList'
+import { CircularProgress, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core'
 import { ListItem } from '@material-ui/core'
@@ -13,8 +13,10 @@ import { FormGroup } from '@material-ui/core'
 import { FormControlLabel } from '@material-ui/core'
 import { Divider } from '@material-ui/core'
 import { TextField } from '@material-ui/core'
+import { InputAdornment } from '@material-ui/core'
 import { Slider } from '@material-ui/core'
 import { Checkbox } from '@material-ui/core'
+import SearchIcon from '@material-ui/icons/Search';
 
 
 export default function CourseListPage() {
@@ -40,7 +42,7 @@ export default function CourseListPage() {
             marginTop: theme.spacing(2),
         },
         searchFont: {
-            fontSize: '16pt'
+            fontSize: '14pt'
         },
         difficulty: {
             display: 'flex',
@@ -68,6 +70,8 @@ export default function CourseListPage() {
     const difficultyRange = useSelector(state => state.courseListReducer.difficultyRange);
     const category = useSelector(state => state.courseListReducer.category);
     const checked = useSelector(state => state.courseListReducer.checked);
+    const allChecked = useSelector(state => state.courseListReducer.allChecked);
+    const keyword = useSelector(state => state.courseListReducer.keyword)
     var cardList = []
     var tagList = []
     useEffect(() => {
@@ -81,14 +85,14 @@ export default function CourseListPage() {
         if (category != "all" && course.category != category) {
             return false
         }
-        if (course.tags == null){
+        if (course.tags == null) {
             return false
         }
-        for (var i = 0; i < course.tags.length; i++){
-            if (checked[course.tags[i]]){
+        for (var i = 0; i < course.tags.length; i++) {
+            if (checked[course.tags[i]]) {
                 break
             }
-            if (i == course.tags.length - 1){
+            if (i == course.tags.length - 1) {
                 return false
             }
         }
@@ -96,26 +100,41 @@ export default function CourseListPage() {
     }
 
     if (!isfetching) {
-        console.log(checked)
         cardList = courseList.map((course) =>
             filter(course) ?
                 <div key={course.id} className={classes.courseCard}>
                     <CourseCard course={course} />
                 </div> : null
         )
+        var firstCheckbox = [
+            <FormControlLabel
+                control={<Checkbox
+                    checked={allChecked}
+                    onChange={() => dispatch(clickAllTags())}
+                    color="primary"
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                />}
+                label={"全選"}
+                labelPlacement="end"
+                key={"all"}
+            />
+        ]
         tagList = tagsCount.map((tag) =>
             <FormControlLabel
-                value="top"
                 control={<Checkbox
                     checked={checked[tag.tag]}
                     onChange={() => dispatch(changeTagsFilter(tag.tag))}
                     color="primary"
                     inputProps={{ 'aria-label': 'primary checkbox' }}
+                    style={{
+                        marginLeft: "15px"
+                    }}
                 />}
                 label={`${tag.tag} (${tag.count})`}
                 labelPlacement="end"
                 key={tag.tag}
             />)
+        tagList = firstCheckbox.concat(tagList)
     }
 
 
@@ -134,10 +153,21 @@ export default function CourseListPage() {
                                 id="standard-full-width"
                                 placeholder="搜尋課程"
                                 fullWidth
+                                onChange={(e)=>dispatch(handleChangeKeyword(e.target.value))}
                                 InputProps={{
                                     classes: {
                                         input: classes.searchFont,
                                     },
+                                    endAdornment: <InputAdornment position="end">
+                                        <IconButton onClick={() => {
+                                            filter = {
+                                                "keyword": keyword.split(/[\s,]+/).filter((w) => w != "")
+                                            }
+                                            dispatch(fetchCourseListAsync(filter))
+                                        }}>
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </InputAdornment>,
                                 }}
                             />
                         </div>
@@ -197,7 +227,15 @@ export default function CourseListPage() {
                                     <option value={"self-learn"}>自學用教材</option>
                                 </Select>
                             </ListItem>
-                            <ListItem>
+                            <ListItem style={{ marginTop: '8px' }}>
+                                <Typography id="tags"
+                                    style={{
+                                        flex: 1,
+                                        marginRight: '10px',
+                                        alignSelf: 'flex-start'
+                                    }}>
+                                    標籤
+                                </Typography>
                                 <FormGroup aria-label="position">
                                     {tagList}
                                 </FormGroup>
