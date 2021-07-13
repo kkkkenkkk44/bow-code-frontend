@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@progress/kendo-react-buttons'
 import { useParams } from 'react-router-dom'
-import { Typography } from '@material-ui/core';
+
 
 
 export default function CourseDetailPage() {

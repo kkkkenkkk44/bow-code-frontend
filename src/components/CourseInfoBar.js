@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Toolbar, Typography, Link } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
+import { useParams } from 'react-router-dom';
+import loginReducer from '../redux/loginReducer.js';
+import { useSelector } from 'react-redux';
+import {useHistory} from "react-router-dom";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(1),
         flexGrow: 1,
         margin: '20px',
-        //marginLeft: '280px',
+        
     },
     toolbar: {
         height: '100%'
@@ -36,13 +37,13 @@ const useStyles = makeStyles((theme) => ({
     abstract: {
         marginLeft: theme.spacing(1),
         margin: '20px',
-        //marginLeft: '280px',
+        
         
     },
     creator: {
         marginLeft: theme.spacing(1),
         margin: '20px',
-        //marginLeft: '280px',
+
     },
     button: {
         margin: theme.spacing(1),
@@ -56,25 +57,51 @@ const useStyles = makeStyles((theme) => ({
         width: '8%',
         position: 'absolute',
         right: '0',
+
     },
 }));
 
 export default function NavBar(props) {
     const classes = useStyles()
 
+    const { CourseID } = useParams()
+
     const [open, setOpen] = useState(false);
 
     const [isCreator, setIsCreator] = useState(false)
 
-    /*if (props.creator === user.id) {
-        setIsCreator(true)
+    const user = useSelector(state => state.loginReducer.user)
+
+    const history = useHistory();
+
+    const  route2PreviousPage = () => {
+        history.goBack()
     }
-    else {
-        setIsCreator(false)
-    }*/
+
+    function checkUserIsCreator () {
+        if (props.creator === user.id) {
+            setIsCreator(true)
+        }
+        else {
+            setIsCreator(false)
+        }
+    }
+    
+    useEffect(() => {
+        checkUserIsCreator()
+    }, [])
+    
 
     const handleFavoriteCourse = () => {
         //send request to favorite the course.
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${CourseID}/favorite`, {
+            method: 'POST',
+            credentials: "include"
+            })
+            .then(
+              console.log('Success', '200 OK')
+            )
+            .catch(error => console.error('Error:', error))
     }
 
     const handleDeleteCourseButton = () => {
@@ -87,7 +114,14 @@ export default function NavBar(props) {
 
     const handleDeleteCourse = () => {
         //send a request to delete the course.
-
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${CourseID}`, {
+            method: 'DELETE',
+            credentials: "include"
+            })
+            .then(
+                console.log('Success', '200 OK')
+            )
+            .catch(error => console.error('Error:', error))
     }
 
     return (
@@ -110,7 +144,7 @@ export default function NavBar(props) {
                         onClick={handleFavoriteCourse}
                         >  
                         收藏課程
-                    </Button>    
+                    </Button> 
                     <Button
                         variant="contained"
                         color="secondary"
@@ -132,7 +166,7 @@ export default function NavBar(props) {
                         <Button onClick={handleClose} color="primary">
                             取消
                         </Button>
-                        <Button onClick={handleDeleteCourse} color="secondary">
+                        <Button onClick={handleDeleteCourse, route2PreviousPage} color="secondary">
                             刪除
                         </Button>
                         </DialogActions>
