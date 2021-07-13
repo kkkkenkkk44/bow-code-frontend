@@ -25,6 +25,9 @@ export default function CourseCard(props) {
     const classes = useStyles();
 
     var abstract = props.course.abstract
+
+    var CourseID = props.course.id
+
     if (abstract.length > 80) {
         abstract = abstract.substring(0, 80) + "..."
     }
@@ -52,7 +55,6 @@ export default function CourseCard(props) {
                     >{abstract}</TextEllipsis>
                 </CardContent>
             </CardActionArea>
-
         </Card>
     )
 }

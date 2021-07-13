@@ -11,6 +11,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { Avatar } from '@material-ui/core';
+import zIndex from '@material-ui/core/styles/zIndex';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
     title: {
         marginLeft: theme.spacing(1),
         flexGrow: 1,
-        fontFamily: "Comic Sans MS"
     },
     toolbar: {
         height: '100%'
@@ -96,7 +96,7 @@ export default function NavBar(props) {
                                 >
                                     我的教學
                                 </Button>
-                                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal style={{zIndex: '1'}}>
                                     {({ TransitionProps, placement }) => (
                                         <Grow
                                             {...TransitionProps}

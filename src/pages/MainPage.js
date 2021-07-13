@@ -1,6 +1,7 @@
 import { Typography, List, ListItem, ListItemText, Link, makeStyles } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 import NavBar from '../components/NavBar'
+import  React, { useState } from 'react'
 
 
 export default function MainPage() {
