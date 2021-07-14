@@ -40,6 +40,9 @@ export default function CourseBlockEditor(props) {
     const classes = useStyles();
     const dispatch = useDispatch()
     const blockCount = useSelector(state => state.courseEditorReducer.blocks.length)
+    const blocksID = Array.from(useSelector(state => state.courseEditorReducer.blocksID))
+    const content = useSelector(state => state.courseEditorReducer.blocks[props.index].content)
+
     const [focus, setFocus] = useState(false)
     const [createBlockOptionConfig, setCreateBlockOptionConfig] = useState({
         open: false,
@@ -62,6 +65,13 @@ export default function CourseBlockEditor(props) {
     return (
         <ClickAwayListener
             onClickAway={() => {
+                if(focus){
+                    fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block/${props.blockID}`, {
+                        method: "PUT",
+                        credentials: "include",
+                        body: content
+                    })
+                }
                 setFocus(false)
                 handleClose()
             }
@@ -72,8 +82,20 @@ export default function CourseBlockEditor(props) {
                         <Grid container direction="column" justify="center" alignItems="center">
                             <IconButton
                                 onClick={() => {
-                                    dispatch({ type: "MOVE_UP", payload: { index: props.index } })
-                                    setFocus(false)
+                                    var temp = blocksID[props.index]
+                                    blocksID.splice(props.index, 1)
+                                    blocksID.splice(props.index - 1, 0, temp)
+                                    console.log(blocksID)
+
+                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/blockOrder`, {
+                                        method: "PUT",
+                                        credentials: "include",
+                                        body: JSON.stringify(blocksID)
+                                    })
+                                        .then(res => {
+                                            dispatch({ type: "MOVE_UP", payload: { index: props.index, blocksID } })
+                                            setFocus(false)
+                                        })
                                 }}
                                 disabled={props.index === 0 ? true : false}
                             >
@@ -81,8 +103,20 @@ export default function CourseBlockEditor(props) {
                             </IconButton>
                             <IconButton
                                 onClick={() => {
-                                    dispatch({ type: "MOVE_DOWN", payload: { index: props.index } })
-                                    setFocus(false)
+                                    var temp = blocksID[props.index]
+                                    blocksID.splice(props.index, 1)
+                                    blocksID.splice(props.index + 1, 0, temp)
+                                    console.log(blocksID)
+
+                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/blockOrder`, {
+                                        method: "PUT",
+                                        credentials: "include",
+                                        body: JSON.stringify(blocksID)
+                                    })
+                                        .then(res => {
+                                            dispatch({ type: "MOVE_DOWN", payload: { index: props.index, blocksID } })
+                                            setFocus(false)
+                                        })
                                 }}
                                 disabled={props.index === blockCount - 1 ? true : false}
                             >
@@ -124,13 +158,15 @@ export default function CourseBlockEditor(props) {
                             </IconButton>
                             <IconButton
                                 onClick={() => {
+
                                     fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block/${props.blockID}`, {
                                         method: "DELETE",
                                         credentials: "include"
                                     })
-                                    .then(res => {
-                                        dispatch({ type: "DELETE_BLOCK", payload: { index: props.index } })
-                                    })
+                                        .then(res => {
+                                            dispatch({ type: "DELETE_BLOCK", payload: { index: props.index } })
+                                        })
+                                        .catch(e => console.log(e))
                                 }}
                             >
                                 <DeleteIcon />
@@ -146,21 +182,27 @@ export default function CourseBlockEditor(props) {
                                 <ClickAwayListener
                                     onClickAway={() => {
                                         handleClose()
-                                    }
-                                    }>
+                                    }}>
                                     <MenuList>
                                         <MenuItem onClick={(e) => {
                                             fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block`, {
                                                 method: "POST",
-                                                body: "<p>test</p>",
                                                 credentials: "include"
                                             })
-                                            .then(res => res.json())
-                                            .then(res => {
-                                                console.log(res)
-                                            })
-                                            dispatch({ type: "ADD_NEW_BLOCK", payload: { index: props.index } })
-                                            setFocus(false)
+                                                .then(res => res.json())
+                                                .then(res => {
+                                                    //res = blockid
+                                                    blocksID.splice(props.index + 1, 0, { title: "", id: res })
+                                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/blockOrder`, {
+                                                        method: "PUT",
+                                                        credentials: "include",
+                                                        body: JSON.stringify(blocksID),
+                                                    })
+                                                        .then(res => {
+                                                            dispatch({ type: "ADD_NEW_BLOCK", payload: { index: props.index, blocksID } })
+                                                            setFocus(false)
+                                                        })
+                                                })
                                             handleClose()
                                         }}>
                                             新增文字

@@ -3,6 +3,7 @@ import CourseEditor from "../components/CourseEditor"
 import { Grid, Button, makeStyles } from "@material-ui/core"
 import { Redirect } from "react-router"
 import { useState } from "react"
+import { useSelector } from "react-redux"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -15,6 +16,8 @@ const useStyles = makeStyles((theme) => ({
 export default function CourseEditorPage(props){
 
     const classes = useStyles()
+
+    const blocks = useSelector(state => state.courseEditorReducer.blocks)
 
     const [done, setDone] = useState(false)
 
@@ -45,7 +48,7 @@ export default function CourseEditorPage(props){
                 </Grid>
             </Grid>
             {done?
-                <Redirect to="/home"/>
+                <Redirect to={`/course/${props.match.params.CourseID}`}/>
                 :
                 <></>
             }

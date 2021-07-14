@@ -1,7 +1,7 @@
 // import { ADD_NEW_BLOCK, FETCH_LIST_START } from '../actions/courseList'
 
 const initialCourseEditorState = {
-    isFetchingCourse: false,
+    isFetching: false,
     blocksID: [],
     name: "",
     abstract: "",
@@ -10,11 +10,12 @@ const initialCourseEditorState = {
 
 const courseEditorReducer = (state = initialCourseEditorState, action) => {
     let newBlocks
+    let newBlocksID
     switch (action.type) {
         case "FETCH_COURSE_START":
             return {
                 ...state,
-                isFetchingCourse: true
+                isFetching: true
             }
         // case "FETCH_COURSEBLOCK":
         //     return{
@@ -22,27 +23,30 @@ const courseEditorReducer = (state = initialCourseEditorState, action) => {
         //         blocks
         //     }
         case "FETCH_COURSE_END":
+            newBlocks = Array.from(action.payload.blockDetailList)
             return {
                 ...state,
-                isFetchingCourse: false,
+                isFetching: false,
                 name: action.payload.name,
                 abstract: action.payload.abstract,
                 blocksID: action.payload.blockList,
-                blocks: action.payload.blockDetailList
+                blocks: newBlocks
             }
         case "ADD_NEW_BLOCK":
             newBlocks = Array.from(state.blocks)
-            newBlocks.splice(action.payload.index+1, 0, {content: "<p>請輸入文字</p>"})
+            newBlocks.splice(action.payload.index+1, 0, {content: ""})
             return {
                 ...state,
-                blocks: newBlocks
+                isFetching: false,
+                blocks: newBlocks,
+                blocksID: action.payload.blocksID
             }
         case "MODIFY_CONTENT":
-            console.log(state.blocks)
             newBlocks = Array.from(state.blocks)
             newBlocks[action.payload.index].content = action.payload.content
             return {
                 ...state,
+                isFetching: false,
                 blocks: newBlocks
             }
         case "DELETE_BLOCK":
@@ -50,6 +54,7 @@ const courseEditorReducer = (state = initialCourseEditorState, action) => {
             newBlocks.splice(action.payload.index, 1)
             return {
                 ...state,
+                isFetching: false,
                 blocks: newBlocks
             }
         case "MOVE_UP":
@@ -60,7 +65,9 @@ const courseEditorReducer = (state = initialCourseEditorState, action) => {
             console.log(newBlocks)
             return {
                 ...state,
-                blocks: newBlocks
+                isFetching: false,
+                blocks: newBlocks,
+                blocksID: action.payload.blocksID
             }
         case "MOVE_DOWN":
             newBlocks = Array.from(state.blocks)
@@ -70,7 +77,9 @@ const courseEditorReducer = (state = initialCourseEditorState, action) => {
             console.log(newBlocks)
             return {
                 ...state,
-                blocks: newBlocks
+                isFetching: false,
+                blocks: newBlocks,
+                blocksID: action.payload.blocksID
             }
         default:
             return state;

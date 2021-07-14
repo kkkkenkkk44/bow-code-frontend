@@ -25,6 +25,7 @@ const TitleBLock = (props) => {
         anchor: null,
         placement: 'right-start'
     })
+    const blocksID = Array.from(useSelector(state => state.courseEditorReducer.blocksID))
 
     const handleClose = () => {
         setCreateBlockOptionConfig({
@@ -73,9 +74,25 @@ const TitleBLock = (props) => {
                                     }>
                                     <MenuList>
                                         <MenuItem onClick={(e) => {
-                                            dispatch({ type: "ADD_NEW_BLOCK", payload: { index: -1 } })
+                                            fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block`, {
+                                                method: "POST",
+                                                credentials: "include"
+                                            })
+                                                .then(res => res.json())
+                                                .then(res => {
+                                                    //res = blockid
+                                                    blocksID.splice(0, 0, { title: "", id: res })
+                                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/blockOrder`, {
+                                                        method: "PUT",
+                                                        credentials: "include",
+                                                        body: JSON.stringify(blocksID),
+                                                    })
+                                                        .then(res => {
+                                                            dispatch({ type: "ADD_NEW_BLOCK", payload: { index: -1, blocksID } })
+                                                            setFocus(false)
+                                                        })
+                                                })
                                             handleClose()
-                                            setFocus(false)
                                         }}>
                                             新增文字
                                         </MenuItem>
@@ -96,8 +113,7 @@ const TitleBLock = (props) => {
 export default function CourseEditor(props) {
 
     const classes = useStyles()
-
-    const { blocks, blocksID, isFetchingCourse, name } = useSelector(state => state.courseEditorReducer)
+    const { blocks, blocksID, isFetching, name } = useSelector(state => state.courseEditorReducer)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -109,27 +125,24 @@ export default function CourseEditor(props) {
         })
             .then(res => res.json())
             .then(res => {
-                console.log(res)
                 // tell redux that fetch end
                 const { name, abstract, blockList } = res
                 var blockDetailList = []
-                blockList.map(block => {
-                    fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/files/course/${props.CourseID}/block/${block.id}/`, {
+                Promise.all(blockList.map(block => {
+                    return fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/files/course/${props.CourseID}/block/${block.id}/`, {
                         method: "GET",
                         credentials: "include"
                     })
-                        .then(res => res.text())
-                        .then(res => {
-                            console.log(res)
-                            // add to blockDetailList
-                            blockDetailList.push({ content: res })
-                        })
-                        .catch(e => {
-                            //error handle
-                            console.log(e)
-                        })
-                })
-                dispatch({ type: "FETCH_COURSE_END", payload: { name, abstract, blockList, blockDetailList } })
+                }))
+                    .then(res => {
+                        Promise.all(res.map(r => (r.text())))
+                            .then(res => {
+                                res.map((r, index) => {
+                                    blockDetailList.push({ content: r, id: blockList[index].id })
+                                })
+                                dispatch({ type: "FETCH_COURSE_END", payload: { name, abstract, blockList, blockDetailList } })
+                            })
+                    })
             })
             .catch(e => {
                 // error handle
@@ -140,12 +153,12 @@ export default function CourseEditor(props) {
     return (
         <Grid container justify="center">
             <Grid item xs={10}>
-                {isFetchingCourse ?
+                {isFetching ?
                     <CircularProgress />
                     :
                     <>
                         <div className={classes.courseBlockEditor}>
-                            <TitleBLock title={name} />
+                            <TitleBLock title={name} courseID={props.CourseID}/>
                         </div>
                         {
                             blocks.length !== 0 ?
@@ -156,14 +169,14 @@ export default function CourseEditor(props) {
                                                 index={index}
                                                 block={block}
                                                 courseID={props.CourseID}
-                                                blockID={blocksID[index]}
+                                                blockID={blocksID[index].id}
                                                 id={`courseBlockEditor_${index}`}
                                             />
                                         </div>
                                     )
                                 })
                                 :
-                                <></>
+                                <button onClick={() => console.log(blocks.length)}>no block</button>
                         }
                     </>
                 }
