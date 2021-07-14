@@ -2,6 +2,7 @@ import React, { Component, useEffect } from "react";
 import './App.css';
 import MainPage from "./pages/MainPage";
 import CreateCoursePage from "./pages/CreateCoursePage";
+import CreateProblemPage from "./pages/CreateProblemPage";
 import CourseListPage from "./pages/CourseListPage";
 import CourseEditorPage from "./pages/CourseEditorPage";
 import LoginPage from "./pages/LoginPage";
@@ -32,6 +33,7 @@ function App() {
       <Route path='/courseEditor/:CourseID' component={CourseEditorPage} />
       <Route path='/course/:CourseID/:index' component={BlockDetailPage} />
       <Route path='/course/:CourseID' component={CourseDetailPage} />
+      <Route path='/createProblem' component={CreateProblemPage} />
       <Redirect from='/' to='/home' />
     </Switch>
   );

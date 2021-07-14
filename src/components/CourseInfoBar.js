@@ -31,7 +31,9 @@ const useStyles = makeStyles((theme) => ({
     appbar: {
         height: "100%",
         background: "rgba(104, 144, 79, 0.3)",
-        color: '#000000'
+        color: '#000000',
+        paddingLeft: '100px',
+        paddingRight: '100px',
 
     },
     abstract: {
@@ -80,16 +82,18 @@ export default function NavBar(props) {
 
     function checkUserIsCreator () {
         if (props.creator === user.id) {
+            //console.log(user.id)
             setIsCreator(true)
         }
         else {
+            //console.log(user.id)
             setIsCreator(false)
         }
     }
     
     useEffect(() => {
         checkUserIsCreator()
-    }, [])
+    }, [user])
     
 
     const handleFavoriteCourse = () => {
@@ -98,10 +102,10 @@ export default function NavBar(props) {
             method: 'POST',
             credentials: "include"
             })
-            .then(
-              console.log('Success', '200 OK')
-            )
-            .catch(error => console.error('Error:', error))
+        .then(
+            console.log('Success', '200 OK')
+        )
+        .catch(error => console.error('Error:', error))
     }
 
     const handleDeleteCourseButton = () => {
@@ -112,16 +116,20 @@ export default function NavBar(props) {
         setOpen(false);
     };
 
-    const handleDeleteCourse = () => {
+    const handleDeleteCourseAndRoute2PrevPage = () => {
         //send a request to delete the course.
         fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${CourseID}`, {
             method: 'DELETE',
             credentials: "include"
             })
-            .then(
-                console.log('Success', '200 OK')
-            )
-            .catch(error => console.error('Error:', error))
+        .then(
+            console.log('Success: ', '200 OK')
+        )
+        .then(
+            route2PreviousPage
+        )
+        .catch(error => console.error('Error:', error))
+    
     }
 
     return (
@@ -166,7 +174,7 @@ export default function NavBar(props) {
                         <Button onClick={handleClose} color="primary">
                             取消
                         </Button>
-                        <Button onClick={handleDeleteCourse, route2PreviousPage} color="secondary">
+                        <Button onClick={handleDeleteCourseAndRoute2PrevPage} color="secondary">
                             刪除
                         </Button>
                         </DialogActions>

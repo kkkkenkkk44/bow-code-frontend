@@ -7,6 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
 import { Redirect } from "react-router";
+import { useSelector } from 'react-redux';
 
 
 
@@ -91,7 +92,7 @@ export default function CreatCourseForm() {
   const dispatch = useDispatch();
 
   const exampleBlockList = [];
-  const exampleCreator = "60d8b6e607304cf14a3a9faa"
+  //const exampleCreator = "60d8b6e607304cf14a3a9faa"
 
   const [name, setName] = useState("")
   const handleName= (event) => {
@@ -102,6 +103,8 @@ export default function CreatCourseForm() {
   const handleAbstract = (event) => {
     setAbstract(event.target.value);
   };
+
+  const user = useSelector(state => state.loginReducer.user)
 
   const [tags, setTags] = useState("")
   const handleTags = (event) => {
@@ -138,7 +141,7 @@ export default function CreatCourseForm() {
         blockList: exampleBlockList,
         name,
         abstract,
-        creator: exampleCreator,
+        creator: user.id,
         tags: tags.split(' '),
         difficulty: parseInt(difficulty),
         isPublic: isPublic === 'true',
