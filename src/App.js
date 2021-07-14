@@ -5,6 +5,7 @@ import CreateCoursePage from "./pages/CreateCoursePage";
 import CourseListPage from "./pages/CourseListPage";
 import CourseEditorPage from "./pages/CourseEditorPage";
 import LoginPage from "./pages/LoginPage";
+import LogoutPage from "./pages/LogoutPage";
 import SignUpPage from "./pages/SignUpPage";
 import CourseDetailPage from "./pages/CourseDetailPage";
 import BlockDetailPage from "./pages/BlockDetailPage";
@@ -26,6 +27,7 @@ function App() {
       <Route path='/home' component={MainPage} />
       <Route path='/courseList' component={CourseListPage} />
       <Route path='/login' component={LoginPage} />
+      <Route path='/logout' component={LogoutPage} />
       <Route path='/signup' component={SignUpPage} />
       <Route path='/user' component={UserPage} />
       <Route path='/createCourse' component={CreateCoursePage} />

@@ -49,10 +49,16 @@ export default function NavBar(props) {
     const isLogin = useSelector(state => state.loginReducer.isLogin)
 
     const [open, setOpen] = React.useState(false);
+    const [userOpen, setUserOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
+    const userAnchorRef = React.useRef(null);
 
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
+    };
+
+    const handleUserToggle = () => {
+        setUserOpen((prevOpen) => !prevOpen);
     };
 
     const handleClose = (event) => {
@@ -62,7 +68,6 @@ export default function NavBar(props) {
 
         setOpen(false);
     };
-
 
     return (
         <div>
@@ -116,10 +121,35 @@ export default function NavBar(props) {
                                         </Grow>
                                     )}
                                 </Popper>
-                                <Button className={classes.toolbarButton} href="/user">
+                                <Button 
+                                    ref={userAnchorRef}
+                                    aria-controls={userOpen ? 'menu-list-grow' : undefined}
+                                    aria-haspopup="true"
+                                    onClick={handleUserToggle} className={classes.toolbarButton}>
                                     {user.userInfo.name}
                                     <Avatar alt={user.userInfo.name} src={user.userInfo.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
                                 </Button>
+                                <Popper open={userOpen} anchorEl={userAnchorRef.current} role={undefined} transition disablePortal style={{zIndex: '1'}}>
+                                    {({ TransitionProps, placement }) => (
+                                        <Grow
+                                            {...TransitionProps}
+                                            style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                                        >
+                                            <Paper>
+                                                <ClickAwayListener onClickAway={handleClose}>
+                                                    <MenuList autoFocusItem={userOpen} id="menu-list-grow" >
+                                                        <Link component={RouterLink} to={"/user"} color="inherit" aria-label="menu">
+                                                            <MenuItem onClick={handleClose}>用戶主頁</MenuItem>
+                                                        </Link>
+                                                        <Link component={RouterLink} to={"/logout"} color="inherit" aria-label="menu">
+                                                            <MenuItem onClick={handleClose}>登出</MenuItem>
+                                                        </Link>
+                                                    </MenuList>
+                                                </ClickAwayListener>
+                                            </Paper>
+                                        </Grow>
+                                    )}
+                                </Popper>
                             </div> :
                             <Button className={classes.toolbarButton} href="/login">
                                 登入
