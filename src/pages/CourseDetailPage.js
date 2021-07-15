@@ -34,36 +34,38 @@ export default function CourseDetailPage() {
 
     const [name, setName] = useState("")
     const [abstract, setAbstract] = useState("")
-    const [creator, setCreator] = useState("")
+    const [creator, setCreator] = useState({})
     const [displayBlockList, setDisplayBlockList] = useState([])
+    const [isFetched, setIsFetched] = useState(false)
 
     function BlockList() {
 
         var cardList = []
-        cardList = displayBlockList.map((value) => 
+        cardList = displayBlockList.map((value) =>
             <BlockCard key={value.id} value={value} />)
-        
+
         return (
             <div>
                 {cardList}
             </div>
         )
     }
-    
+
     function fetchCourseDetail() {
 
         fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${CourseID}`, {
             method: 'GET',
             credentials: "include"
-            })
-          .then(res => res.json())
-          .then(data => {
+        })
+            .then(res => res.json())
+            .then(data => {
                 setName(data.name)
                 setAbstract(data.abstract)
                 setCreator(data.creator)
                 setDisplayBlockList(() => data.blockList)
-          })
-          .catch(error => console.error('Error:', error))
+                setIsFetched(true)
+            })
+            .catch(error => console.error('Error:', error))
     }
 
     useEffect(() => {
@@ -73,8 +75,13 @@ export default function CourseDetailPage() {
     return (
         <div>
             <NavBar context="Bow-Code" />
-            <CourseInfoBar context={name} abstract={abstract} creator={creator}/>
-            {BlockList()}
+            {
+                isFetched ? 
+                    <div>
+                        <CourseInfoBar context={name} abstract={abstract} creator={creator} />
+                        {BlockList()}
+                    </div> : null
+            }
         </div>
     )
 }

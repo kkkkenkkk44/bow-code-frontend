@@ -10,7 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { useParams } from 'react-router-dom';
 import loginReducer from '../redux/loginReducer.js';
 import { useSelector } from 'react-redux';
-import {useHistory} from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(1),
         flexGrow: 1,
         margin: '20px',
-        
+
     },
     toolbar: {
         height: '100%'
@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
     abstract: {
         marginLeft: theme.spacing(1),
         margin: '20px',
-        
-        
+
+
     },
     creator: {
         marginLeft: theme.spacing(1),
@@ -74,11 +74,11 @@ export default function NavBar(props) {
 
     const history = useHistory();
 
-    const  route2PreviousPage = () => {
+    const route2PreviousPage = () => {
         history.goBack()
     }
 
-    function checkUserIsCreator () {
+    function checkUserIsCreator() {
         if (props.creator === user.id) {
             setIsCreator(true)
         }
@@ -86,20 +86,20 @@ export default function NavBar(props) {
             setIsCreator(false)
         }
     }
-    
+
     useEffect(() => {
         checkUserIsCreator()
-    }, [])
-    
+    }, [user])
+
 
     const handleFavoriteCourse = () => {
         //send request to favorite the course.
         fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${CourseID}/favorite`, {
             method: 'POST',
             credentials: "include"
-            })
+        })
             .then(
-              console.log('Success', '200 OK')
+                console.log('Success', '200 OK')
             )
             .catch(error => console.error('Error:', error))
     }
@@ -117,7 +117,7 @@ export default function NavBar(props) {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${CourseID}`, {
             method: 'DELETE',
             credentials: "include"
-            })
+        })
             .then(
                 console.log('Success', '200 OK')
             )
@@ -127,50 +127,54 @@ export default function NavBar(props) {
     return (
         <div>
             <AppBar position="static" className={classes.appbar} elevation={3}>
-                    <Typography variant="h4" className={classes.title}>
-                        {props.context}
-                    </Typography>
-                    <Typography variant="h6" className={classes.abstract}>
-                        {props.abstract}
-                    </Typography>
-                    <Typography className={classes.creator}>
-                        {`創建者：${props.creator}`}
-                    </Typography>
-                    <Button 
-                        variant="contained"
-                        color="secondary"
-                        className={classes.favoriteButton}
-                        startIcon={<FavoriteIcon />}
-                        onClick={handleFavoriteCourse}
-                        >  
-                        收藏課程
-                    </Button> 
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        className={classes.button}
-                        startIcon={<DeleteIcon />}
-                        style={isCreator ? {display:''} : {display: 'none'}}
-                        onClick={handleDeleteCourseButton}
-                    >
-                        刪除課程
-                    </Button>
-                    <Dialog
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">{"是否要刪除此課程?"}</DialogTitle>
-                        <DialogActions>
+                <Typography variant="h4" className={classes.title}>
+                    {props.context}
+                </Typography>
+                <Typography variant="h6" className={classes.abstract}>
+                    {props.abstract}
+                </Typography>
+                <Typography className={classes.creator}>
+                    {`創建者：${props.creator}`}
+                </Typography>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.favoriteButton}
+                    startIcon={<FavoriteIcon />}
+                    onClick={handleFavoriteCourse}
+                >
+                    收藏課程
+                </Button>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                    startIcon={<DeleteIcon />}
+                    style={isCreator ? { display: '' } : { display: 'none' }}
+                    onClick={handleDeleteCourseButton}
+                >
+                    刪除課程
+                </Button>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"是否要刪除此課程?"}</DialogTitle>
+                    <DialogActions>
                         <Button onClick={handleClose} color="primary">
                             取消
                         </Button>
-                        <Button onClick={handleDeleteCourse, route2PreviousPage} color="secondary">
+                        <Button onClick={() => {
+                            handleDeleteCourse()
+                            route2PreviousPage()
+                        }
+                        } color="secondary">
                             刪除
                         </Button>
-                        </DialogActions>
-                    </Dialog>
+                    </DialogActions>
+                </Dialog>
             </AppBar>
         </div>
     )

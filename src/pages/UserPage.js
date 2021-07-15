@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import NavBar from '../components/NavBar'
 import { Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core';
@@ -6,6 +6,7 @@ import { Typography } from '@material-ui/core';
 import { Avatar } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { switchTo } from '../actions/userPage';
+import { auth } from "../actions/login"
 
 import Overview from './UserPages/Overview'
 import MyCourse from './UserPages/MyCourse'
@@ -74,17 +75,19 @@ export default function UserPage(props) {
     const classes = useStyles();
     const dispatch = useDispatch();
     const user = useSelector(state => state.loginReducer.user)
-
+    const authFinish = useSelector(state => state.loginReducer.authFinish)
+    useEffect(() => {
+        dispatch(auth())
+    }, [])
     return (
         <div>
             <NavBar context="Bow-Code" />
-
             <div className={classes.root}>
                 <Paper className={classes.userInfo} square elevation={4}>
 
-                    <Avatar className={classes.avatar} alt="Remy Sharp" src={typeof user.userInfo === 'undefined'? null: user.userInfo.avatar} />
+                    <Avatar className={classes.avatar} alt="Remy Sharp" src={typeof user.userInfo === 'undefined' ? null : user.userInfo.avatar} />
                     <Typography className={classes.userName} variant="h4" component="h2">
-                        {typeof user.userInfo === 'undefined'? "" : user.userInfo.name}
+                        {typeof user.userInfo === 'undefined' ? "" : user.userInfo.name}
                     </Typography>
                     <Divider />
                     <List>
@@ -121,9 +124,12 @@ export default function UserPage(props) {
                     </List>
 
                 </Paper>
-                <div className={classes.main}>
-                    <MainWindow />
-                </div>
+                {
+                    authFinish ?
+                        <div className={classes.main}>
+                            <MainWindow />
+                        </div> : null
+                }
             </div>
         </div>
     )
