@@ -1,11 +1,8 @@
 import { CircularProgress, Grid, IconButton, makeStyles, Typography, Popper, Paper, MenuItem, ClickAwayListener, MenuList } from "@material-ui/core"
-import { useDebugValue, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CourseBlockEditor from "./CourseBlockEditor";
 import { useDispatch, useSelector } from "react-redux";
 import AddIcon from '@material-ui/icons/Add';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-
 const useStyles = makeStyles((theme) => ({
     courseBlockEditor: {
         margin: "20px 0 20px 0"
@@ -96,6 +93,14 @@ const TitleBLock = (props) => {
                                         }}>
                                             新增文字
                                         </MenuItem>
+                                        <MenuItem
+                                            onClick={() => {
+                                                console.log("open dialog")
+                                                dispatch({ type: "IMPORT_START", payload: { importFromIndex: -1 } })
+                                            }}
+                                        >
+                                            匯入文字
+                                        </MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>
                             </Paper>
@@ -137,9 +142,11 @@ export default function CourseEditor(props) {
                     .then(res => {
                         Promise.all(res.map(r => (r.text())))
                             .then(res => {
-                                res.map((r, index) => {
+                                console.log(res)
+                                res.forEach((r, index) => {
                                     blockDetailList.push({ content: r, id: blockList[index].id })
                                 })
+                                console.log(blockDetailList)
                                 dispatch({ type: "FETCH_COURSE_END", payload: { name, abstract, blockList, blockDetailList } })
                             })
                     })

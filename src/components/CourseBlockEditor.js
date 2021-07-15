@@ -1,7 +1,7 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 // import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
-import { Grid, Popper, Paper, MenuList, MenuItem, ClickAwayListener, makeStyles, IconButton, Button, Box, Typography } from '@material-ui/core'
+import { Grid, Popper, Paper, MenuList, MenuItem, ClickAwayListener, makeStyles, IconButton, Typography } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
@@ -65,7 +65,7 @@ export default function CourseBlockEditor(props) {
     return (
         <ClickAwayListener
             onClickAway={() => {
-                if(focus){
+                if (focus) {
                     fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block/${props.blockID}`, {
                         method: "PUT",
                         credentials: "include",
@@ -206,6 +206,14 @@ export default function CourseBlockEditor(props) {
                                             handleClose()
                                         }}>
                                             新增文字
+                                        </MenuItem>
+                                        <MenuItem
+                                            onClick={() => {
+                                                console.log("open dialog")
+                                                dispatch({ type: "IMPORT_START", payload: { importFromIndex: props.index } })
+                                            }}
+                                        >
+                                            匯入文字
                                         </MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>
