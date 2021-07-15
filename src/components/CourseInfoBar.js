@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import loginReducer from '../redux/loginReducer.js';
 import { useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
+import CreateIcon from '@material-ui/icons/Create';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -57,6 +58,14 @@ const useStyles = makeStyles((theme) => ({
         width: '8%',
         position: 'absolute',
         right: '0',
+
+    },
+    editButton: {
+        margin: theme.spacing(1),
+        width: '8%',
+        position: 'absolute',
+        right: '0',
+        marginTop: '100px',
 
     },
 }));
@@ -144,6 +153,16 @@ export default function NavBar(props) {
                     onClick={handleFavoriteCourse}
                 >
                     收藏課程
+                </Button>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.editButton}
+                    startIcon={<CreateIcon />}
+                    style={isCreator ? { display: '' } : { display: 'none' }}
+                    onClick={()=>history.push(`/courseEditor/${CourseID}`)}
+                >
+                    編輯
                 </Button>
                 <Button
                     variant="contained"
