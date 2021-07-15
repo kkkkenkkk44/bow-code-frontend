@@ -81,6 +81,8 @@ export default function NavBar(props) {
 
     const user = useSelector(state => state.loginReducer.user)
 
+    const isLogin = useSelector(state => state.loginReducer.isLogin)
+
     const history = useHistory();
 
     const route2PreviousPage = () => {
@@ -150,6 +152,7 @@ export default function NavBar(props) {
                     color="secondary"
                     className={classes.favoriteButton}
                     startIcon={<FavoriteIcon />}
+                    style={isLogin ? { display: '' } : { display: 'none' }}
                     onClick={handleFavoriteCourse}
                 >
                     收藏課程
