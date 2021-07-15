@@ -139,7 +139,7 @@ export default function CreatCourseForm() {
         name,
         abstract,
         creator: exampleCreator,
-        tags: tags.split(' '),
+        tags: tags.split(/[\s,]+/).filter((w) => w != ""),
         difficulty: parseInt(difficulty),
         isPublic: isPublic === 'true',
         category,
