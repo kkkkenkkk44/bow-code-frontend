@@ -87,12 +87,17 @@ export default function CourseListPage() {
         if (course.tags == null) {
             return false
         }
-        for (var i = 0; i < course.tags.length; i++) {
-            if (checked[course.tags[i]]) {
-                break
-            }
-            if (i == course.tags.length - 1) {
+        if (!allChecked){
+            if (course.tags.length == 0){
                 return false
+            }
+            for (var i = 0; i < course.tags.length; i++) {
+                if (checked[course.tags[i]]) {
+                    break
+                }
+                if (i == course.tags.length - 1) {
+                    return false
+                }
             }
         }
         return true

@@ -41,6 +41,7 @@ const courseListReducer = (state = initialCourseListState, action) => {
             newChecked[action.payload.toggledTag] = !newChecked[action.payload.toggledTag]
             return {
                 ...state,
+                allChecked: false,
                 checked: newChecked
             }
         case CLICK_ALL_TAG:
