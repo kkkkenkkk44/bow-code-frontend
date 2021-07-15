@@ -222,8 +222,8 @@ export default function CourseListPage() {
                                     onChange={(e) => { dispatch(changeCategory(e.target.value)) }}
                                 >
                                     <option value={"all"}>全部</option>
-                                    <option value={"teach"}>教學用教材</option>
-                                    <option value={"self-learn"}>自學用教材</option>
+                                    <option value={"teach"}>教學用課程</option>
+                                    <option value={"self-learn"}>自學用課程</option>
                                 </Select>
                             </ListItem>
                             <ListItem style={{ marginTop: '8px' }}>

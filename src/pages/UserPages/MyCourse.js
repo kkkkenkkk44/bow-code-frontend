@@ -47,14 +47,14 @@ export default function CourseListPage() {
     if (!ownFetching && ownCourse != null) {
         ownCardList = ownCourse.map((course) =>
             <div key={course.id} className={classes.courseCard}>
-                <CourseCard course={course} />
+                <CourseCard brief course={course} />
             </div>
         )
     }
     if (!favFetching && favCourse != null) {
         favCardList = favCourse.map((course) =>
             <div key={course.id} className={classes.courseCard}>
-                <CourseCard course={course} />
+                <CourseCard brief course={course} />
             </div>
         )
     }
