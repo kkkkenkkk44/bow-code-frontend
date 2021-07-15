@@ -118,7 +118,7 @@ export default function CreatCourseForm() {
   setIsPublic(event.target.value);
   };
 
-  const [category, setCategory] = useState("")
+  const [category, setCategory] = useState("teach")
   const handleCategory = (event) => {
   setCategory(event.target.value);
   };
