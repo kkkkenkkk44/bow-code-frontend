@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import NavBar from "../components/NavBar"
 import CourseEditor from "../components/CourseEditor"
 import { Grid, Button, makeStyles } from "@material-ui/core"
 import { Redirect } from "react-router"
 import { useState } from "react"
 import { useSelector } from "react-redux"
+import ImportBlockDialog from '../components/ImportBlockDialog'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -17,8 +18,6 @@ const useStyles = makeStyles((theme) => ({
 export default function CourseEditorPage(props){
 
     const classes = useStyles()
-
-    const blocks = useSelector(state => state.courseEditorReducer.blocks)
 
     const [done, setDone] = useState(false)
 
@@ -53,6 +52,7 @@ export default function CourseEditorPage(props){
                 :
                 <></>
             }
+            <ImportBlockDialog CourseID={props.match.params.CourseID}/>
         </div>
     )
 }

@@ -2,6 +2,7 @@
 
 const initialCourseEditorState = {
     isFetching: false,
+    isImporting: false,
     blocksID: [],
     name: "",
     abstract: "",
@@ -9,9 +10,19 @@ const initialCourseEditorState = {
 }
 
 const courseEditorReducer = (state = initialCourseEditorState, action) => {
-    let newBlocks
-    let newBlocksID
+    let newBlocks, temp
     switch (action.type) {
+        case "IMPORT_START": 
+            return {
+                ...state,
+                isImporting: true,
+                importFromIndex: action.payload.importFromIndex
+            }
+        case "IMPORT_END":
+            return {
+                ...state,
+                isImporting: false
+            }
         case "FETCH_COURSE_START":
             return {
                 ...state,
@@ -59,7 +70,7 @@ const courseEditorReducer = (state = initialCourseEditorState, action) => {
             }
         case "MOVE_UP":
             newBlocks = Array.from(state.blocks)
-            var temp = newBlocks[action.payload.index]
+            temp = newBlocks[action.payload.index]
             newBlocks.splice(action.payload.index, 1)
             newBlocks.splice(action.payload.index-1, 0, temp)
             console.log(newBlocks)
@@ -71,7 +82,7 @@ const courseEditorReducer = (state = initialCourseEditorState, action) => {
             }
         case "MOVE_DOWN":
             newBlocks = Array.from(state.blocks)
-            var temp = newBlocks[action.payload.index]
+            temp = newBlocks[action.payload.index]
             newBlocks.splice(action.payload.index, 1)
             newBlocks.splice(action.payload.index+1, 0, temp)
             console.log(newBlocks)
