@@ -18,7 +18,7 @@ export default function ProblemSubmissionPage() {
         },
         submissionListTile: {
             width: '75%',
-            marginBottom: theme.spacing(3),
+            marginBottom: theme.spacing(2),
             display: 'inline-block'
         }
     }));
