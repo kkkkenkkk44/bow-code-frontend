@@ -13,7 +13,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(8),
+      marginTop: theme.spacing(1),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -33,14 +33,22 @@ const useStyles = makeStyles((theme) => ({
     },
 
     difficultyText: {
-        marginRight: '50px',
+      marginRight: '20px',
         
     },
 
     contentText: {
-        textAlign: 'center',
+      marginTop: theme.spacing(8),
+      textAlign: 'center',
     },
-    
+
+    categoryText: {
+      margin: '20px',
+    },
+
+    visibilityText: {
+      margin: '20px',
+    },
 
   }));
 
@@ -96,9 +104,19 @@ export default function CreatProblemForm() {
         setTags(event.target.value);
     };
 
-    const [difficulty, setDifficulty] = useState("")
+    const [difficulty, setDifficulty] = useState("easy")
     const handleDifficulty = (event) => {
     setDifficulty(event.target.value);
+    };
+
+    const [category, setCategory] = useState("exam")
+    const handleCategory = (event) => {
+    setCategory(event.target.value);
+    };
+
+    const [visibility, setVisibility] = useState("self")
+    const handleVisibility = (event) => {
+    setVisibility(event.target.value);
     };
 
     const [content, setContent] = useState("")
@@ -116,6 +134,8 @@ export default function CreatProblemForm() {
             tags: tags.split(' '),
             difficulty,
             creator: user.id,
+            category,
+            visibility,
             content: content,
         }
         fetch(`${process.env.REACT_APP_BACKEND_URL}/problem`, {
@@ -158,8 +178,9 @@ export default function CreatProblemForm() {
                 type="tags"
                 id="tags"
                 onChange={handleTags}
+                style={{marginBottom: '20px'}}
             />
-            <span className={classes.difficultyText}>選擇題目難度</span>
+            <span className={classes.difficultyText}>題目難度</span>
             <FormControl className={classes.formControl}>
               <Select
                 native
@@ -170,12 +191,44 @@ export default function CreatProblemForm() {
                   name: 'difficulty',
                 }}
               >
-                <option value={"easy"}>Easy</option>
-                <option value={"medium"}>Medium</option>
-                <option value={"hard"}>Hard</option>
+                <option value={"easy"}>簡單</option>
+                <option value={"medium"}>中等</option>
+                <option value={"hard"}>困難</option>
               </Select>
             </FormControl>
-            <h4 className={classes.contentText}>題目內容</h4>
+            <span className={classes.categoryText}>題目類別</span>
+            <FormControl className={classes.formControl}>
+              <Select
+                native
+                value={category}
+                onChange={handleCategory}
+                label="題目類別"
+                inputProps={{
+                  name: 'category',
+                }}
+              >
+                <option value={"exam"}>考試題</option>
+                <option value={"homework"}>作業題</option>
+                <option value={"practice"}>練習題</option>
+              </Select>
+            </FormControl>
+            <span className={classes.visibilityText}>題目權限</span>
+            <FormControl className={classes.formControl}>
+              <Select
+                native
+                value={visibility}
+                onChange={handleVisibility}
+                label="題目權限"
+                inputProps={{
+                  name: 'visibility',
+                }}
+              >
+                <option value={""}>限定自己瀏覽</option>
+                <option value={""}>題庫存取者可瀏覽</option>
+                <option value={""}>所有人皆可瀏覽</option>
+              </Select>
+            </FormControl>
+            <h4 className={classes.contentText}>題目敘述</h4>
                 <CKEditor
                     editor={ ClassicEditor }
                     data=""
