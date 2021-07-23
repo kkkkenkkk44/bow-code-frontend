@@ -39,7 +39,8 @@ const useStyles = makeStyles((theme) => ({
 
     contentText: {
         textAlign: 'center',
-    }
+    },
+    
 
   }));
 
