@@ -81,7 +81,7 @@ export default function NavBar(props) {
                     <Button className={classes.toolbarButton} href="/courseList">
                         課程列表
                     </Button>
-                    <Button className={classes.toolbarButton}>
+                    <Button className={classes.toolbarButton} href="/problemList">
                         題目列表
                     </Button>
 
