@@ -1,0 +1,156 @@
+import NavBar from "../components/NavBar";
+import Editor from "@monaco-editor/react";
+import { Divider, Grid, Typography, makeStyles, List, ListItem, Chip, Dialog, DialogContentText, DialogTitle, DialogContent, DialogActions, Select } from "@material-ui/core";
+import SubmitBar from "../components/SubmitBar"
+import { useDispatch, useSelector } from "react-redux";
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import { useEffect, useState } from "react";
+import { useParams } from 'react-router-dom'
+
+export default function ProblemPage() {
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            height: "calc(100vh - 165px)",
+            padding: theme.spacing(5),
+            overflow: "visible"
+        },
+        root2: {
+            padding: theme.spacing(3),
+            overflow: "visible"
+        },
+        name: {
+            flexGrow: 1
+        },
+        submitBar: {
+            height: "10vh"
+        },
+        taglist: {
+            padding: theme.spacing(1),
+            marginRight: theme.spacing(1)
+        },
+        tagChip: {
+            margin: '3px'
+        },
+        languageSelector: {
+            margin: theme.spacing(1),
+            marginLeft: theme.spacing(3.5),
+        }
+    }))
+    const classes = useStyles()
+
+    const { name, description, defaultContent, difficulty } = useSelector(state => state.problemPageReducer)
+    const [sourceCode, setSourceCode] = useState(defaultContent)
+    const [language, setLanguage] = useState("cpp")
+    const [openSubmissions, setOpenSubmissions] = useState(false)
+    const { ProblemID } = useParams()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch({ type: "FETCH_PROBLEM_START" })
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/problem/${ProblemID}`, {
+            method: 'GET',
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(res => {
+                dispatch({ type: "FETCH_PROBLEM_END", payload: res })
+            })
+    }, [])
+
+    const difficultyStars = () => {
+        var stars = []
+        for (var i = 0; i < difficulty; i++) {
+            stars.push("s")
+        }
+        for (var i = 0; i < 3 - difficulty; i++) {
+            stars.push("sb")
+        }
+        return stars
+    }
+
+    const TagList = () => {
+        const tags = useSelector(state => state.problemPageReducer.tags)
+        return (
+            <div className={classes.taglist}>
+                {tags.map(tag => {
+                    return <Chip className={classes.tagChip} key={tag} label={tag} variant="outlined" />
+                })}
+            </div>
+        )
+    }
+
+    const handleEditorChange = (value, event) => {
+        setSourceCode(value)
+    }
+
+    const handleCloseSubmission = () => {
+        setOpenSubmissions(false)
+    }
+
+    return (
+        <div>
+            <NavBar context="Bow-Code" />
+            <Grid container>
+                <Grid item xs={6}>
+                    <div className={classes.rootHeight}><div className={classes.root}>
+                        <Grid container alignItems="center">
+                            <Typography variant="h5" component="h2" className={classes.name}>
+                                {name}
+                            </Typography>
+                            <TagList />
+                            <div id="difficulty">
+                                <div>difficulty</div>
+                                {difficultyStars().map((icon, index) => {
+                                    if (icon === "sb") return <StarBorderIcon key={index} />
+                                    if (icon === "s") return <StarIcon key={index} />
+                                })}
+                            </div>
+                        </Grid>
+                        <Divider />
+                        <List>
+                            <ListItem>
+                                <Typography>
+                                    {description}
+                                </Typography>
+                            </ListItem>
+                        </List>
+                    </div></div>
+                </Grid>
+                <Grid item xs={6}>
+                    <div className={classes.root2}>
+                        <Select
+                            native
+                            autoWidth
+                            labelId="language"
+                            value={language}
+                            onChange={(e) => { setLanguage(e.target.value) }}
+                            className={classes.languageSelector}
+                        >
+                            <option value={"cpp"}>C++</option>
+                            <option value={"c"}>C</option>
+                            <option value={"csp"}>C#</option>
+                            <option value={"python"}>Python</option>
+                        </Select>
+                        <Editor
+                            height="calc(100vh - 85px)"
+                            language={language}
+                            defaultValue={defaultContent}
+                            onChange={handleEditorChange}
+                        />
+                    </div>
+                </Grid>
+            </Grid>
+            <SubmitBar ProblemID={ProblemID} sourceCode={sourceCode} language={language} setOpenSubmissions={setOpenSubmissions} />
+            <Dialog open={openSubmissions} onClose={handleCloseSubmission} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">submissions</DialogTitle>
+                <DialogContent>
+
+                </DialogContent>
+                <DialogActions>
+
+                </DialogActions>
+            </Dialog>
+        </div>
+    )
+}

@@ -9,6 +9,7 @@ import LogoutPage from "./pages/LogoutPage";
 import SignUpPage from "./pages/SignUpPage";
 import CourseDetailPage from "./pages/CourseDetailPage";
 import BlockDetailPage from "./pages/BlockDetailPage";
+import ProblemPage from "./pages/ProblemPage";
 import { Redirect, Route, Switch } from "react-router";
 import { auth } from "./actions/login"
 import UserPage from "./pages/UserPage";
@@ -34,6 +35,7 @@ function App() {
       <Route path='/courseEditor/:CourseID' component={CourseEditorPage} />
       <Route path='/course/:CourseID/:index' component={BlockDetailPage} />
       <Route path='/course/:CourseID' component={CourseDetailPage} />
+      <Route path='/problem/:ProblemID' component={ProblemPage} />
       <Redirect from='/' to='/home' />
     </Switch>
   );
