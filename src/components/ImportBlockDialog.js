@@ -129,7 +129,7 @@ export default function ImportBlockDialog(props) {
 
 
     return (
-        <Dialog open={isImporting} onClose={handleClose} aria-labelledby="form-dialog-title" >
+        <Dialog open={isImporting} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth="lg">
             <DialogTitle id="form-dialog-title">匯入課程</DialogTitle>
             <DialogContent>
                 <TextField
