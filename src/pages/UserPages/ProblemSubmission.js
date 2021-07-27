@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import SubmissionListTile from '../../components/submissionListTile'
+import SubmissionListTile from '../../components/SubmissionListTile'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchSubmissionAsync } from '../../actions/userPage'
 import { CircularProgress } from '@material-ui/core'
