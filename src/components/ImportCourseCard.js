@@ -112,14 +112,14 @@ export default function ImportCourseCard(props) {
     return (
         props.brief ?
             <Card>
-                <CardActionArea >
+                <CardActionArea onClick={() => props.setImportCourseID(props.course.id)}>
                     <CardContent className={classes.title}>
                         <h3>{props.course.name}</h3>
                     </CardContent>
                 </CardActionArea>
             </Card> :
             <Card>
-                <CardActionArea  className={classes.root}>
+                <CardActionArea  onClick={() => props.setImportCourseID(props.course.id)} className={classes.root}>
                     <CardMedia
                         className={classes.cover}
                         children={<img
