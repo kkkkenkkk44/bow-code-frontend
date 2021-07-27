@@ -1,36 +1,42 @@
-export const FETCH_LIST_START = 'FETCH_LIST';
-export const FETCH_LIST_FINISH = 'FETCH_LIST_FINISH';
-export const DIFFICULTY_CHANGE = 'DIFFICULTY_CHANGE';
-export const CATEGORY_CHANGE = 'CATEGORY_CHANGE';
-export const TAGS_FILTER_CHANGE = 'TAGS_FILTER_CHANGE';
-export const CLICK_ALL_TAG = 'CLICK_ALL_TAG'
-export const KEYWORD_CHANGE = 'KEYWORD_CHANGE';
-export const SHOW_PROBLEM_INFO = 'SHOW_PROBLEM_INFO'
+export const FETCH_LIST_START = 'PROBLEM_FETCH_LIST';
+export const FETCH_LIST_FINISH = 'PROBLEM_FETCH_LIST_FINISH';
+export const FETCH_TAGS_FINISH = 'PROBLEM_FETCH_TAGS_FINISH'
+export const DIFFICULTY_CHANGE = 'PROBLEM_DIFFICULTY_CHANGE';
+export const CATEGORY_CHANGE = 'PROBLEM_CATEGORY_CHANGE';
+export const TAGS_FILTER_CHANGE = 'PROBLEM_TAGS_FILTER_CHANGE';
+export const CLICK_ALL_TAG = 'PROBLEM_CLICK_ALL_TAG'
+export const KEYWORD_CHANGE = 'PROBLEM_KEYWORD_CHANGE';
+export const SHOW_PROBLEM_INFO = 'PROBLEM_SHOW_PROBLEM_INFO'
 
 export const fetchProblemListRequest = () => ({
     type: FETCH_LIST_START
 })
 
-export const fetchProblemList = (new_list) => {
-    if (new_list.tagsCount == null) {
-        new_list.tagsCount = []
+export const fetchProblemList = (problemList) => {
+    if (problemList == null) {
+        problemList = []
     }
-    if (new_list.problemList == null) {
-        new_list.problemList = []
-    }
-    var checked = {}
-    new_list.tagsCount.map((tag) => {
-        checked[tag.tag] = true
-    })
     return {
         type: FETCH_LIST_FINISH,
         payload: {
-            problemList: new_list.problemList,
-            tagsCount: new_list.tagsCount,
-            checked: checked
+            problemList: problemList,
         },
     }
 };
+
+export const fetchTagsList = (tagsCount) => {
+    var checked = {}
+    tagsCount.map((tag) => {
+        checked[tag.tag] = false
+    })
+    return {
+        type: FETCH_TAGS_FINISH,
+        payload: {
+            tagsCount: tagsCount,
+            checked: checked
+        },
+    }
+}
 
 export const changeDifficulty = (val) => ({
     type: DIFFICULTY_CHANGE,
@@ -46,12 +52,19 @@ export const changeCategory = (val) => ({
     }
 })
 
-export const changeTagsFilter = (tag) => ({
-    type: TAGS_FILTER_CHANGE,
-    payload: {
-        toggledTag: tag
+export const changeTagsFilter = (checked, tag) => {
+    return (dispatch)=>{
+        var newChecked = JSON.parse(JSON.stringify(checked))
+        newChecked[tag] = !newChecked[tag]
+        dispatch(fetchProblemListAsync(newChecked, false))
+        dispatch({
+            type: TAGS_FILTER_CHANGE,
+            payload: {
+                toggledTag: tag
+            }
+        })
     }
-})
+}
 
 export const clickAllTags = () => ({
     type: CLICK_ALL_TAG
@@ -71,67 +84,27 @@ export const showProblemInfo = (problem) => ({
     }
 })
 
-export function fetchProblemListAsync(filter = {}) {
+export function fetchProblemListAsync(checked = {}, refreshTag = true) {
     var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/problem`)
+    Object.keys(checked).forEach(tag => {
+        if (checked[tag]) {
+            url.searchParams.append("tag", tag)
+        }
+    })
     return (dispatch) => {
         dispatch(fetchProblemListRequest())
-        var mock_problemList = [
-            {
-                id: "123456",
-                name: "範例題目 1",
-                creator: "google_103217405870903044474",
-                tags: ["tag 1", "tag 2"],
-                difficulty: 0,
-                category: "practice",
-                visibility: "everyone",
-                createTime: "2021/05/24 10:24:12",
-                description: "This is how you solve this problem"
-            },
-            {
-                id: "123457",
-                name: "範例題目 2",
-                creator: "google_103217405870903044474",
-                tags: ["tag 1", "tag 3"],
-                difficulty: 1,
-                category: "practice",
-                visibility: "everyone",
-                createTime: "2021/05/24 10:24:12",
-                description: `
-                Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
-
-You may assume that each input would have exactly one solution, and you may not use the same element twice.
-
-You can return the answer in any order.`
-            },
-        ]
-        var tag_count = [
-            {
-                tag: "tag 1",
-                count: 2
-            },
-            {
-                tag: "tag 2",
-                count: 1
-            },
-            {
-                tag: "tag 3",
-                count: 1
-            },
-        ]
-        const mock_result = {
-            tagsCount: tag_count,
-            problemList: mock_problemList
-        }
-        dispatch(fetchProblemList(mock_result))
-        // fetch(url, { method: "GET" })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         let new_list = data
-        //         dispatch(fetchProblemList(new_list))
-        //     })
-        //     .catch(e => {
-        //         // error handling
-        //         console.log(e)
-        //     })
+        fetch(url, { method: "GET" })
+            .then(res => res.json())
+            .then(data => {
+                let new_list = data
+                if(refreshTag){
+                    dispatch(fetchTagsList(new_list.tagsCount))
+                }
+                dispatch(fetchProblemList(new_list.problemList))
+            })
+            .catch(e => {
+                // error handling
+                console.log(e)
+            })
     };
 }

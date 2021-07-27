@@ -82,72 +82,17 @@ export function fetchFavCourseAsync(ids) {
 }
 
 export function fetchSubmissionAsync() {
+    var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/submit/user`)
     return (dispatch) => {
         dispatch(fetchSubmissionStart())
-        var example_submission = [
-            {
-                id: "10001",
-                judgementCompleted: true,
-                testcaseCnt: 10,
-                judgementCompleted: 10,
-                problem: {
-                    id: "123456",
-                    name: "範例題目",
-                    category: "exam",
-                },
-                judgements: [
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                ],
-                createTime: "2021/05/24 20:30:31",
-                status: "AC"
-            },
-            {
-                id: "10002",
-                judgementCompleted: true,
-                testcaseCnt: 8,
-                judgementCompleted: 10,
-                problem: {
-                    id: "123456",
-                    name: "範例題目2",
-                    category: "exam",
-                },
-                createTime: "2021/05/24 20:30:31",
-            },
-            {
-                id: "10003",
-                judgementCompleted: true,
-                testcaseCnt: 10,
-                judgementCompleted: 10,
-                problem: {
-                    id: "123456",
-                    name: "範例題目3",
-                    category: "homework",
-                },
-                judgements: [
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "WA"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                    {status: "AC"},
-                ],
-                createTime: "2021/05/24 20:30:31",
-                status: "WA"
-            },
-        ]
-        dispatch(fetchSubmission(example_submission))
+        fetch(url, { method: "GET", credentials: "include" })
+        .then(res => res.json())
+        .then(data => {
+            dispatch(fetchSubmission(data))
+        })
+        .catch(e => {
+            // error handling
+            console.log(e)
+        })
     }
 }

@@ -4,9 +4,9 @@ import {
     DIFFICULTY_CHANGE,
     CATEGORY_CHANGE,
     TAGS_FILTER_CHANGE,
-    CLICK_ALL_TAG,
     KEYWORD_CHANGE,
-    SHOW_PROBLEM_INFO
+    SHOW_PROBLEM_INFO,
+    FETCH_TAGS_FINISH
 } from '../actions/problemList'
 
 const initialProblemListState = {
@@ -16,8 +16,6 @@ const initialProblemListState = {
     difficultyRange: [0, 2],
     category: "all",
     checked: {},
-    checkedCnt: 0,
-    allChecked: true,
     keyword: "",
     showingInfoProblem: null
 }
@@ -28,10 +26,13 @@ const problemListReducer = (state = initialProblemListState, action) => {
             return {
                 ...state,
                 problemList: action.payload.problemList,
-                tagsCount: action.payload.tagsCount,
                 isfetching: false,
-                checked: action.payload.checked,
-                checkedCnt: Object.keys(action.payload.checked).length
+            }
+        case FETCH_TAGS_FINISH:
+            return {
+                ...state,
+                tagsCount: action.payload.tagsCount,
+                checked: action.payload.checked
             }
         case FETCH_LIST_START:
             return {
@@ -51,21 +52,9 @@ const problemListReducer = (state = initialProblemListState, action) => {
         case TAGS_FILTER_CHANGE:
             var newChecked = JSON.parse(JSON.stringify(state.checked))
             newChecked[action.payload.toggledTag] = !newChecked[action.payload.toggledTag]
-            var cntAdjust = newChecked[action.payload.toggledTag]? 1 : -1
-            return {
-                ...state,
-                allChecked: state.checkedCnt + cntAdjust == Object.keys(state.checked).length,
-                checked: newChecked,
-                checkedCnt: state.checkedCnt + cntAdjust
-            }
-        case CLICK_ALL_TAG:
-            var newChecked = JSON.parse(JSON.stringify(state.checked))
-            Object.keys(newChecked).forEach(function (key) { newChecked[key] = !state.allChecked });
             return {
                 ...state,
                 checked: newChecked,
-                allChecked: !state.allChecked,
-                checkedCnt: state.allChecked ? 0 : Object.keys(state.checked).length
             }
         case KEYWORD_CHANGE:
             return {

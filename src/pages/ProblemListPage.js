@@ -79,9 +79,7 @@ export default function ProblemListPage() {
     const showingInfoProblem = useSelector(state => state.problemListReducer.showingInfoProblem);
     const difficultyRange = useSelector(state => state.problemListReducer.difficultyRange)
     const tagsCount = useSelector(state => state.problemListReducer.tagsCount)
-    const allChecked = useSelector(state => state.problemListReducer.allChecked)
     const checked = useSelector(state => state.problemListReducer.checked)
-    const checkedCnt = useSelector(state => state.problemListReducer.checkedCnt)
     const keyword = useSelector(state => state.problemListReducer.keyword)
     var problemBoard = []
     var tagList
@@ -92,21 +90,6 @@ export default function ProblemListPage() {
     function filter(problem) {
         if (problem.difficulty > difficultyRange[1] || problem.difficulty < difficultyRange[0]) {
             return false
-        }
-        if (!allChecked) {
-            var cnt = 0
-            if (problem.tags.length == 0) {
-                return false
-            }
-            for (var i = 0; i < problem.tags.length; i++) {
-                if (checked[problem.tags[i]]) {
-                    cnt += 1
-                }
-            }
-            if (cnt != checkedCnt) {
-                console.log("Failed check count", cnt, checkedCnt)
-                return false
-            }
         }
         if (keyword != "") {
             var keys = keyword.split(/[\s,]+/).filter((w) => w != "")
@@ -130,24 +113,11 @@ export default function ProblemListPage() {
                     <ProblemListTile problem={problem} />
                 </div> : null
         )
-        var firstCheckbox = [
-            <FormControlLabel
-                control={<Checkbox
-                    checked={allChecked}
-                    onChange={() => dispatch(clickAllTags())}
-                    color="primary"
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                />}
-                label={"全選"}
-                labelPlacement="end"
-                key={"all"}
-            />
-        ]
-        tagList = tagsCount.map((tag) =>
+        var tagList = tagsCount.map((tag) =>
             <FormControlLabel
                 control={<Checkbox
                     checked={checked[tag.tag]}
-                    onChange={() => dispatch(changeTagsFilter(tag.tag))}
+                    onChange={() => dispatch(changeTagsFilter(checked, tag.tag))}
                     color="primary"
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                     style={{
@@ -158,7 +128,6 @@ export default function ProblemListPage() {
                 labelPlacement="end"
                 key={tag.tag}
             />)
-        tagList = firstCheckbox.concat(tagList)
     }
 
 
