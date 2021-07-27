@@ -3,6 +3,8 @@ export const FETCH_OWN_COURSE_START = 'FETCH_OWN_COURSE_START';
 export const FETCH_OWN_COURSE = 'FETCH_OWN_COURSE';
 export const FETCH_FAV_COURSE_START = 'FETCH_FAV_COURSE_START';
 export const FETCH_FAV_COURSE = 'FETCH_FAV_COURSE';
+export const FETCH_SUBMISSION_START = 'FETCH_SUBMISSION_START';
+export const FETCH_SUBMISSION = 'FETCH_SUBMISSION';
 
 export const switchTo = (tab) => ({
     type: SWITCH_TO,
@@ -33,6 +35,17 @@ export const fetchFavCourse = (courses) => ({
     }
 })
 
+export const fetchSubmissionStart = () => ({
+    type: FETCH_SUBMISSION_START
+})
+
+export const fetchSubmission = (submissions) => ({
+    type: FETCH_SUBMISSION,
+    payload:{
+        submissions: submissions
+    }
+})
+
 
 export function fetchOwnCourseAsync(ids) {
     var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/course/multiple`)
@@ -60,6 +73,22 @@ export function fetchFavCourseAsync(ids) {
         .then(res => res.json())
         .then(data => {
             dispatch(fetchFavCourse(data.courseList))
+        })
+        .catch(e => {
+            // error handling
+            console.log(e)
+        })
+    }
+}
+
+export function fetchSubmissionAsync() {
+    var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/submit/user`)
+    return (dispatch) => {
+        dispatch(fetchSubmissionStart())
+        fetch(url, { method: "GET", credentials: "include" })
+        .then(res => res.json())
+        .then(data => {
+            dispatch(fetchSubmission(data))
         })
         .catch(e => {
             // error handling

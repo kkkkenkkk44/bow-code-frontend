@@ -3,6 +3,7 @@ import './App.css';
 import MainPage from "./pages/MainPage";
 import CreateCoursePage from "./pages/CreateCoursePage";
 import CourseListPage from "./pages/CourseListPage";
+import ProblemListPage from "./pages/ProblemListPage"
 import CourseEditorPage from "./pages/CourseEditorPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
@@ -27,6 +28,7 @@ function App() {
     <Switch>
       <Route path='/home' component={MainPage} />
       <Route path='/courseList' component={CourseListPage} />
+      <Route path='/problemList' component={ProblemListPage} />
       <Route path='/login' component={LoginPage} />
       <Route path='/logout' component={LogoutPage} />
       <Route path='/signup' component={SignUpPage} />

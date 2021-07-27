@@ -10,6 +10,7 @@ import { auth } from "../actions/login"
 
 import Overview from './UserPages/Overview'
 import MyCourse from './UserPages/MyCourse'
+import ProblemSubmission from './UserPages/ProblemSubmission';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -21,6 +22,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import SchoolIcon from '@material-ui/icons/School';
+import HistoryIcon from '@material-ui/icons/History';
 
 function MainWindow(props) {
     const currentTab = useSelector(state => state.userPageReducer.currentTab)
@@ -31,6 +33,9 @@ function MainWindow(props) {
             </div>
             <div hidden={currentTab !== "myCourse"}>
                 <MyCourse />
+            </div>
+            <div hidden={currentTab !== "problemSubmission"}>
+                <ProblemSubmission />
             </div>
         </div>
     )
@@ -102,6 +107,12 @@ export default function UserPage(props) {
                                 <MenuBookIcon />
                             </ListItemIcon>
                             <ListItemText primary="教材" />
+                        </ListItem>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("problemSubmission"))}>
+                            <ListItemIcon>
+                                <HistoryIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="作答紀錄" />
                         </ListItem>
                         <ListItem className={classes.listItem} button>
                             <ListItemIcon>
