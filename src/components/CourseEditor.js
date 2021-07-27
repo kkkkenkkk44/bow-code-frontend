@@ -101,6 +101,14 @@ const TitleBLock = (props) => {
                                         >
                                             匯入文字
                                         </MenuItem>
+                                        <MenuItem
+                                            onClick={() => {
+                                                console.log("open problem dialog")
+                                                dispatch({ type: "IMPORT_PROBLEM_START", payload: { importFromIndex: -1 } })
+                                            }}
+                                        >
+                                            匯入題目
+                                        </MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>
                             </Paper>
