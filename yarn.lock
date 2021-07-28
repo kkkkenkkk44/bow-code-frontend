@@ -1196,6 +1196,31 @@
     "@ckeditor/ckeditor5-table" "^29.0.0"
     "@ckeditor/ckeditor5-typing" "^29.0.0"
 
+"@ckeditor/ckeditor5-build-inline@^29.0.0":
+  version "29.0.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-build-inline/-/ckeditor5-build-inline-29.0.0.tgz#f119fc4fa8cebbd1b79865511a93ee34af932ca6"
+  integrity sha512-kCjKxpA9DtF9uLLulsfz538/sVwuN4TWGGKCH+aHW9S8KHSXSTQ3zfg+iwatlZrgy3oudJYveR4urLWSNzN46w==
+  dependencies:
+    "@ckeditor/ckeditor5-adapter-ckfinder" "^29.0.0"
+    "@ckeditor/ckeditor5-autoformat" "^29.0.0"
+    "@ckeditor/ckeditor5-basic-styles" "^29.0.0"
+    "@ckeditor/ckeditor5-block-quote" "^29.0.0"
+    "@ckeditor/ckeditor5-ckfinder" "^29.0.0"
+    "@ckeditor/ckeditor5-cloud-services" "^29.0.0"
+    "@ckeditor/ckeditor5-easy-image" "^29.0.0"
+    "@ckeditor/ckeditor5-editor-inline" "^29.0.0"
+    "@ckeditor/ckeditor5-essentials" "^29.0.0"
+    "@ckeditor/ckeditor5-heading" "^29.0.0"
+    "@ckeditor/ckeditor5-image" "^29.0.0"
+    "@ckeditor/ckeditor5-indent" "^29.0.0"
+    "@ckeditor/ckeditor5-link" "^29.0.0"
+    "@ckeditor/ckeditor5-list" "^29.0.0"
+    "@ckeditor/ckeditor5-media-embed" "^29.0.0"
+    "@ckeditor/ckeditor5-paragraph" "^29.0.0"
+    "@ckeditor/ckeditor5-paste-from-office" "^29.0.0"
+    "@ckeditor/ckeditor5-table" "^29.0.0"
+    "@ckeditor/ckeditor5-typing" "^29.0.0"
+
 "@ckeditor/ckeditor5-ckfinder@^29.0.0":
   version "29.0.0"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-ckfinder/-/ckeditor5-ckfinder-29.0.0.tgz#9e842c47afb108316fa0ad9cbe42a3dc2ab1759e"
@@ -1242,6 +1267,14 @@
   version "29.0.0"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-classic/-/ckeditor5-editor-classic-29.0.0.tgz#19b574f58c9f5c9917d44f0bf04ed7069daf0569"
   integrity sha512-wn1Y99Fkw/GZYrv2CaYA3pb5SDY8Yr39F6rr/95DpOSzUCrtryHUDvORLVfosAf25rTxka4b+gK9Ts0SKa6K1Q==
+  dependencies:
+    ckeditor5 "^29.0.0"
+    lodash-es "^4.17.15"
+
+"@ckeditor/ckeditor5-editor-inline@^29.0.0":
+  version "29.0.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-inline/-/ckeditor5-editor-inline-29.0.0.tgz#f21b0831eb987996b818cd7c19b19fcd790fec5c"
+  integrity sha512-vUXUXdL+435G5vXm97lTdjr7X0tRxSijU4luX+F/2XBkRmUQhuID4XZaDGo8+dN5H4JCRv1CK5nLSMtQydzvPQ==
   dependencies:
     ckeditor5 "^29.0.0"
     lodash-es "^4.17.15"

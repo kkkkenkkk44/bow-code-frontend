@@ -121,7 +121,7 @@ export default function CreatCourseForm() {
   setIsPublic(event.target.value);
   };
 
-  const [category, setCategory] = useState("")
+  const [category, setCategory] = useState("teach")
   const handleCategory = (event) => {
   setCategory(event.target.value);
   };
@@ -141,8 +141,8 @@ export default function CreatCourseForm() {
         blockList: exampleBlockList,
         name,
         abstract,
-        creator: user.id,
-        tags: tags.split(' '),
+        creator: exampleCreator,
+        tags: tags.split(/[\s,]+/).filter((w) => w != ""),
         difficulty: parseInt(difficulty),
         isPublic: isPublic === 'true',
         category,
