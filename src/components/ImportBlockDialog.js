@@ -10,6 +10,7 @@ export default function ImportBlockDialog(props) {
     const blocks = Array.from(useSelector(state => state.courseEditorReducer.blocks))
     const dispatch = useDispatch()
     const [importCourseID, setImportCourseID] = useState("")
+    const name = useSelector(state => state.courseEditorReducer.name)
 
     const handleClose = () => {
         dispatch({ type: "IMPORT_END" })
@@ -48,7 +49,7 @@ export default function ImportBlockDialog(props) {
                         })
                             .then(res => res.json())
                             .then(res => {
-                                const { name, abstract, blockList } = res
+                                const { abstract, blockList } = res
                                 Promise.all(blockList.map(block => {
                                     return fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/files/course/${importCourseID}/block/${block.id}/`, {
                                         method: "GET",
