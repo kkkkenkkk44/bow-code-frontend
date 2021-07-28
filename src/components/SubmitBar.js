@@ -40,7 +40,7 @@ export default function SubmitBar(props) {
     const handleSubmit = () => {
         var submission = {
             sourceCode: props.sourceCode,
-            language: getLanguageID(props.language)
+            languageID: getLanguageID(props.language)
         }
         fetch(`${process.env.REACT_APP_BACKEND_URL}/submit/problem/${props.ProblemID}`, {
             method: 'POST',
@@ -49,25 +49,20 @@ export default function SubmitBar(props) {
         })
             .then(res => res.json())
             .then(res => {
-                props.setOpenSubmissions(true)
+                props.handleCheckSubmission()
             })
-        // console.log(props.sourceCode, props.language, getLanguageID(props.language))
-    }
-
-    const handleCheckSubmission = () => {
-        props.setOpenSubmissions(true)
     }
 
     return (
         <AppBar position="fixed" color="primary" className={classes.appbar} elevation={3}>
             <Toolbar className={classes.toolbar}>
                 {/* <Typography className={classes.context}>123</Typography> */}
-                <Button className={classes.submissionButton} onClick={handleCheckSubmission}>
-                    check submissions
+                <Button className={classes.submissionButton} onClick={props.handleCheckSubmission}>
+                    作答紀錄
                 </Button>
                 <div className={classes.context}></div>
                 <Button className={classes.submitButton} onClick={handleSubmit}>
-                    submit
+                    提交
                 </Button>
             </Toolbar>
         </AppBar>

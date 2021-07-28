@@ -1,12 +1,13 @@
 import NavBar from "../components/NavBar";
 import Editor from "@monaco-editor/react";
-import { Divider, Grid, Typography, makeStyles, List, ListItem, Chip, Dialog, DialogContentText, DialogTitle, DialogContent, DialogActions, Select } from "@material-ui/core";
+import { CircularProgress, Divider, Grid, Typography, makeStyles, List, ListItem, Chip, Dialog, DialogContentText, DialogTitle, DialogContent, DialogActions, Select } from "@material-ui/core";
 import SubmitBar from "../components/SubmitBar"
 import { useDispatch, useSelector } from "react-redux";
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom'
+import SubmissionListTile from "../components/SubmissionListTile";
 
 export default function ProblemPage() {
     const useStyles = makeStyles((theme) => ({
@@ -17,7 +18,8 @@ export default function ProblemPage() {
         },
         root2: {
             padding: theme.spacing(3),
-            overflow: "visible"
+            overflow: "visible",
+            width: "100%"
         },
         name: {
             flexGrow: 1
@@ -35,11 +37,28 @@ export default function ProblemPage() {
         languageSelector: {
             margin: theme.spacing(1),
             marginLeft: theme.spacing(3.5),
+        },
+        container: {
+            display: "flex",
+            flexDirection: "row",
+            width: "100%"
+        },
+        submissionListRoot: {
+            textAlign: 'center'
+        },
+        submissionListTile: {
+            width: '75%',
+            marginBottom: theme.spacing(2),
+            display: 'inline-block'
+        },
+        difficulty: {
+            display: "flex",
+            justifyContent: "center"
         }
     }))
     const classes = useStyles()
 
-    const { name, description, defaultContent, difficulty } = useSelector(state => state.problemPageReducer)
+    const { isFetchingSubmission, submissions, isFetching, name, description, defaultContent, difficulty } = useSelector(state => state.problemPageReducer)
     const [sourceCode, setSourceCode] = useState(defaultContent)
     const [language, setLanguage] = useState("cpp")
     const [openSubmissions, setOpenSubmissions] = useState(false)
@@ -60,10 +79,10 @@ export default function ProblemPage() {
 
     const difficultyStars = () => {
         var stars = []
-        for (var i = 0; i < difficulty; i++) {
+        for (var i = 0; i < difficulty + 1; i++) {
             stars.push("s")
         }
-        for (var i = 0; i < 3 - difficulty; i++) {
+        for (var i = 0; i < 2 - difficulty; i++) {
             stars.push("sb")
         }
         return stars
@@ -88,69 +107,101 @@ export default function ProblemPage() {
         setOpenSubmissions(false)
     }
 
+    const handleCheckSubmission = () => {
+        setOpenSubmissions(true)
+        dispatch({ type: "FETCH_SUBMISSION_START" })
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/submit/user?pid=${ProblemID}`, {
+            method: 'GET',
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(res => {
+                console.log(res)
+                dispatch({ type: "FETCH_SUBMISSION_END", payload: { submissions: res } })
+            })
+    }
+
+    if (!isFetchingSubmission && submissions != null) {
+        var submissionList = submissions.map((submission) =>
+            <div key={submission.id} className={classes.submissionListTile}>
+                <SubmissionListTile submission={submission} />
+            </div>
+        )
+    }
+
     return (
-        <div>
-            <NavBar context="Bow-Code" />
-            <Grid container>
-                <Grid item xs={6}>
-                    <div className={classes.rootHeight}><div className={classes.root}>
-                        <Grid container alignItems="center">
-                            <Typography variant="h5" component="h2" className={classes.name}>
-                                {name}
-                            </Typography>
-                            <TagList />
-                            <div id="difficulty">
-                                <div>difficulty</div>
-                                {difficultyStars().map((icon, index) => {
-                                    if (icon === "sb") return <StarBorderIcon key={index} />
-                                    if (icon === "s") return <StarIcon key={index} />
-                                })}
-                            </div>
-                        </Grid>
-                        <Divider />
-                        <List>
-                            <ListItem>
-                                <Typography>
-                                    {description}
+        isFetching ?
+            <CircularProgress />
+            :
+            <div>
+                <NavBar context="Bow-Code" />
+                <Grid container justify="center">
+                    <Grid item xs={5}>
+                        <div className={classes.rootHeight}><div className={classes.root}>
+                            <Grid container alignItems="center">
+                                <Typography variant="h5" component="h2" className={classes.name}>
+                                    {name}
                                 </Typography>
-                            </ListItem>
-                        </List>
-                    </div></div>
+                                <TagList />
+                                <div id="difficulty">
+                                    <div className={classes.difficulty}>
+                                        {difficulty === 0 ? "簡單" : difficulty === 1 ? "挑戰" : "專精"}
+                                    </div>
+                                    {difficultyStars().map((icon, index) => {
+                                        if (icon === "sb") return <StarBorderIcon key={index} />
+                                        if (icon === "s") return <StarIcon key={index} />
+                                    })}
+                                </div>
+                            </Grid>
+                            <Divider />
+                            <List>
+                                <ListItem>
+                                    <Typography>
+                                        {description}
+                                    </Typography>
+                                </ListItem>
+                            </List>
+                        </div></div>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <div className={classes.container}>
+                            <Divider orientation="vertical" flexItem />
+                            <div className={classes.root2}>
+                                <Select
+                                    native
+                                    autoWidth
+                                    labelId="language"
+                                    value={language}
+                                    onChange={(e) => { setLanguage(e.target.value) }}
+                                    className={classes.languageSelector}
+                                >
+                                    <option value={"cpp"}>C++</option>
+                                    <option value={"c"}>C</option>
+                                    <option value={"csp"}>C#</option>
+                                    <option value={"python"}>Python</option>
+                                </Select>
+                                <Editor
+
+                                    height="calc(100vh - 220px)"
+                                    language={language}
+                                    defaultValue={defaultContent}
+                                    onChange={handleEditorChange}
+                                />
+                            </div>
+                        </div>
+                    </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                    <div className={classes.root2}>
-                        <Select
-                            native
-                            autoWidth
-                            labelId="language"
-                            value={language}
-                            onChange={(e) => { setLanguage(e.target.value) }}
-                            className={classes.languageSelector}
-                        >
-                            <option value={"cpp"}>C++</option>
-                            <option value={"c"}>C</option>
-                            <option value={"csp"}>C#</option>
-                            <option value={"python"}>Python</option>
-                        </Select>
-                        <Editor
-                            height="calc(100vh - 85px)"
-                            language={language}
-                            defaultValue={defaultContent}
-                            onChange={handleEditorChange}
-                        />
+                <SubmitBar ProblemID={ProblemID} sourceCode={sourceCode} language={language} handleCheckSubmission={handleCheckSubmission} />
+                <Dialog open={openSubmissions} onClose={handleCloseSubmission} aria-labelledby="form-dialog-title">
+                    <DialogTitle id="form-dialog-title">submissions</DialogTitle>
+                    <div className={classes.submissionListRoot}>
+                        {
+                            isFetchingSubmission ?
+                                <CircularProgress /> :
+                                submissionList
+                        }
                     </div>
-                </Grid>
-            </Grid>
-            <SubmitBar ProblemID={ProblemID} sourceCode={sourceCode} language={language} setOpenSubmissions={setOpenSubmissions} />
-            <Dialog open={openSubmissions} onClose={handleCloseSubmission} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">submissions</DialogTitle>
-                <DialogContent>
-
-                </DialogContent>
-                <DialogActions>
-
-                </DialogActions>
-            </Dialog>
-        </div>
+                </Dialog>
+            </div>
     )
 }

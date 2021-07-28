@@ -7,11 +7,13 @@ const initialProblemPageState = {
     difficulty: 2,
     category: "default",
     isPublic: true,
+    isFetchingSubmission: false,
+    submissionIDs: [],
     submissions: []
 }
 
 const problemPageReducer = (state = initialProblemPageState, action) => {
-        switch (action.type) {
+    switch (action.type) {
         case "FETCH_PROBLEM_START":
             return {
                 ...state,
@@ -29,6 +31,19 @@ const problemPageReducer = (state = initialProblemPageState, action) => {
                 difficulty,
                 category,
                 isPublic
+            }
+        case "FETCH_SUBMISSION_START":
+            return {
+                ...state,
+                isFetchingSubmission: true
+            }
+        case "FETCH_SUBMISSION_END":
+            const { submissions } = action.payload
+            console.log(submissions)
+            return {
+                ...state,
+                isFetchingSubmission: false,
+                submissions
             }
         default:
             return state;
