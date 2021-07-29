@@ -126,7 +126,14 @@ export default function ImportBlockDialog(props) {
         )
     }
     
-
+    const handleEnterSearch = (event) => {
+        if(event.key === 'Enter') {
+            filter = {
+                "keyword": keyword.split(/[\s,]+/).filter((w) => w != "")
+            }
+            dispatch(fetchCourseListAsync(filter))
+        }
+    }
 
     return (
         <Dialog open={isImporting} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth="lg">
@@ -137,6 +144,7 @@ export default function ImportBlockDialog(props) {
                     placeholder="搜尋課程"
                     fullWidth
                     onChange={(e)=>dispatch(handleChangeKeyword(e.target.value))}
+                    onKeyDown={handleEnterSearch}
                     InputProps={{
                         classes: {
                             input: classes.searchFont,
