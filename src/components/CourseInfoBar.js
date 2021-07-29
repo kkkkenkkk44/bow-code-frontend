@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(1),
         flexGrow: 1,
         margin: '20px',
+        marginLeft: '280px',
 
     },
     toolbar: {
@@ -32,40 +33,56 @@ const useStyles = makeStyles((theme) => ({
     appbar: {
         height: "100%",
         background: "rgba(104, 144, 79, 0.3)",
-        color: '#000000'
+        color: '#000000',
+        display: 'flex',
 
     },
     abstract: {
         marginLeft: theme.spacing(1),
         margin: '20px',
+        marginLeft: '280px',
 
 
     },
     creator: {
         marginLeft: theme.spacing(1),
         margin: '20px',
+        marginLeft: '280px',
 
+    },
+    left: {
+        float: 'left'
+        //flexShrink: '0',
     },
     button: {
         margin: theme.spacing(1),
-        width: '8%',
-        position: 'absolute',
-        right: '0',
-        marginTop: '50px',
+        width: '100%',
+        //position: 'relative',
+        paddingLeft: '1030px',
+        flex: '1',
+        //right: '0',
+        //marginTop: '50px',
     },
     favoriteButton: {
         margin: theme.spacing(1),
         width: '8%',
-        position: 'absolute',
-        right: '0',
+        position: 'relative',
+        //right: '0',
+
+    },
+    deleteButton: {
+        margin: theme.spacing(1),
+        width: '8%',
+        position: 'relative',
+        //right: '0',
 
     },
     editButton: {
         margin: theme.spacing(1),
         width: '8%',
-        position: 'absolute',
-        right: '0',
-        marginTop: '100px',
+        position: 'relative',
+        //right: '0',
+        //marginTop: '100px',
 
     },
 }));
@@ -138,6 +155,7 @@ export default function NavBar(props) {
     return (
         <div>
             <AppBar position="static" className={classes.appbar} elevation={3}>
+                <div className={classes.left}>
                 <Typography variant="h4" className={classes.title}>
                     {props.context}
                 </Typography>
@@ -147,6 +165,8 @@ export default function NavBar(props) {
                 <Typography className={classes.creator}>
                     {`創建者：${props.creator}`}
                 </Typography>
+                </div>
+                <div className={classes.button}>
                 <Button
                     variant="contained"
                     color="secondary"
@@ -155,7 +175,7 @@ export default function NavBar(props) {
                     style={isLogin ? { display: '' } : { display: 'none' }}
                     onClick={handleFavoriteCourse}
                 >
-                    收藏課程
+                    收藏
                 </Button>
                 <Button
                     variant="contained"
@@ -170,13 +190,14 @@ export default function NavBar(props) {
                 <Button
                     variant="contained"
                     color="secondary"
-                    className={classes.button}
+                    className={classes.deleteButton}
                     startIcon={<DeleteIcon />}
                     style={isCreator ? { display: '' } : { display: 'none' }}
                     onClick={handleDeleteCourseButton}
                 >
-                    刪除課程
+                    刪除
                 </Button>
+                </div>
                 <Dialog
                     open={open}
                     onClose={handleClose}
