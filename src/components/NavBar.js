@@ -113,7 +113,9 @@ export default function NavBar(props) {
                                                         <Link component={RouterLink} to={"/createCourse"} color="inherit" aria-label="menu">
                                                             <MenuItem onClick={handleClose}>建立課程</MenuItem>
                                                         </Link>
-                                                        <MenuItem onClick={handleClose}>建立題目</MenuItem>
+                                                        <Link component={RouterLink} to={"/createProblem"} color="inherit" aria-label="menu">
+                                                            <MenuItem onClick={handleClose}>建立題目</MenuItem>
+                                                        </Link>
                                                         <MenuItem onClick={handleClose}>建立教室</MenuItem>
                                                     </MenuList>
                                                 </ClickAwayListener>
