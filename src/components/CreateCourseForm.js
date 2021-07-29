@@ -104,7 +104,6 @@ export default function CreatCourseForm() {
     setAbstract(event.target.value);
   };
 
-  const user = useSelector(state => state.loginReducer.user)
 
   const [tags, setTags] = useState("")
   const handleTags = (event) => {
@@ -141,7 +140,6 @@ export default function CreatCourseForm() {
         blockList: exampleBlockList,
         name,
         abstract,
-        creator: exampleCreator,
         tags: tags.split(/[\s,]+/).filter((w) => w != ""),
         difficulty: parseInt(difficulty),
         isPublic: isPublic === 'true',

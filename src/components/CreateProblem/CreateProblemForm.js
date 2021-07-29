@@ -7,9 +7,9 @@ import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
 import { Redirect } from "react-router";
 import { useSelector } from 'react-redux';
+import { resetForm } from '../../actions/createProblem';
+import { useDispatch } from 'react-redux';
 
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      width: '80%',
+      width: '100%',
     },
 
     avatar: {
@@ -122,6 +122,10 @@ export default function CreatProblemForm() {
     const [content, setContent] = useState("")
 
     const user = useSelector(state => state.loginReducer.user)
+    const desc = useSelector(state => state.createProblemReducer.description)
+    const testdatas = useSelector(state => state.createProblemReducer.testdatas)
+
+    const dispatch = useDispatch()
 
     const handleSubmit = (event) => {
         if (name === ""){
@@ -129,12 +133,24 @@ export default function CreatProblemForm() {
           document.getElementById("name").focus()
         }
         else{
+          var testcase_input = []
+          var testcase_output = []
+          testdatas.forEach((data)=>{
+            testcase_input.push(data.input)
+            testcase_output.push(data.output)
+          })
           var problem_info = {
             name,
             tags: tags.split(' '),
             difficulty,
             creator: user.id,
             category,
+            testcase: {
+              testcaseCnt: testcase_input.length,
+              input: testcase_input,
+              expectedOutput: testcase_output
+            },
+            description: desc,
             visibility,
             content: content,
         }
@@ -147,6 +163,7 @@ export default function CreatProblemForm() {
         .then(data => {
             setProblemID(data.id);
             setIsSuccessful(true);
+            dispatch(resetForm())
         })
         .catch(error => console.error('Error:', error))
         }
@@ -228,19 +245,6 @@ export default function CreatProblemForm() {
                 <option value={""}>所有人皆可瀏覽</option>
               </Select>
             </FormControl>
-            <h4 className={classes.contentText}>題目敘述</h4>
-                <CKEditor
-                    editor={ ClassicEditor }
-                    data=""
-                    onReady={ editor => {
-                        // You can store the "editor" and use when it is needed.
-                        console.log( 'Editor is ready to use!', editor );
-                    } }
-                    onChange={ ( event, editor ) => {
-                        setContent(editor.getData())
-                        //console.log( { event, editor, data } );
-                    } }
-                />
             <Button
                 //type="submit"
                 fullWidth
