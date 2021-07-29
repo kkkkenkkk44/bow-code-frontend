@@ -64,10 +64,12 @@ export default function ImportBlockDialog(props) {
                                                     var newBlockID =
                                                         await fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.CourseID}/block`, {
                                                             method: "POST",
-                                                            credentials: "include"
+                                                            credentials: "include",
+                                                            body: JSON.stringify({title: res[i].title})
+
                                                         })
                                                             .then(res => res.json())
-                                                    newBlocksID.push({ title: "", id: newBlockID })
+                                                    newBlocksID.push({ title: res[i].title, id: newBlockID })
                                                     newBlocks.push({ content: res[i], id: newBlockID })
                                                     //舊的 course: importCourseID, block: blockList[i].id
                                                     //新的 course: props.CourseID, block: newBlockID
