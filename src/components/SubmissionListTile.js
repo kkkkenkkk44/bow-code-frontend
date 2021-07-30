@@ -4,6 +4,22 @@ import { CardActionArea } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 
+function statusText(code) {
+    if (code & 0x8000) {
+        return "伺服器錯誤"
+    } else if (code & 0x1000) {
+        return "Runtime Error"
+    } else if (code & 0x2000) {
+        return "Compile Error"
+    } else if (code & 0x0008) {
+        return "TLE"
+    } else if (code & 0x0010) {
+        return "WA"
+    } else if (!code) {
+        return "AC"
+    }
+}
+
 export default function SubmissionListTile(props) {
     const submission = props.submission
     const useStyles = makeStyles((theme) => ({
@@ -52,13 +68,13 @@ export default function SubmissionListTile(props) {
     if (submission.testcaseCnt != submission.judgementCompleted) {
         paperClass = classes.grey
         score = "-/-"
-    } else if (submission.status == "AC") {
+    } else if (statusText(submission.status) == "AC") {
         paperClass = classes.green
         score = `${submission.judgementCompleted}/${submission.judgementCompleted}`
     } else {
         paperClass = classes.red
         var ac = 0
-        submission.judgements.forEach((jug) => { if (jug.status == "AC") { ac += 1 } })
+        submission.judgements.forEach((jug) => { if (statusText(jug.status) == "AC") { ac += 1 } })
         score = `${ac}/${submission.judgementCompleted}`
         console.log(score)
     }
@@ -69,7 +85,7 @@ export default function SubmissionListTile(props) {
         <CardActionArea className={paperClass} onClick={() => { }}>
             <div className={classes.status}>
                 <Typography className={classes.statusText} variant="h6" component="h5">
-                    {submission.testcaseCnt == submission.judgementCompleted ? submission.status : "處理中"}
+                    {submission.testcaseCnt == submission.judgementCompleted ? statusText(submission.status) : "處理中"}
                 </Typography>
             </div>
             <div className={classes.name}>
