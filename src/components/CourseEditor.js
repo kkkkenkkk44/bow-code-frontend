@@ -1,6 +1,7 @@
 import { CircularProgress, Grid, IconButton, makeStyles, Typography, Popper, Paper, MenuItem, ClickAwayListener, MenuList } from "@material-ui/core"
 import { useEffect, useState } from "react";
 import CourseBlockEditor from "./CourseBlockEditor";
+import { Redirect } from "react-router"
 import { useDispatch, useSelector } from "react-redux";
 import AddIcon from '@material-ui/icons/Add';
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +32,7 @@ const TitleBLock = (props) => {
             placement: 'right-start'
         })
     }
+
     return (
         <ClickAwayListener
             onClickAway={() => {
