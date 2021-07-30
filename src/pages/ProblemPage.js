@@ -156,8 +156,7 @@ export default function ProblemPage() {
                             <Divider />
                             <List>
                                 <ListItem>
-                                    <Typography>
-                                        {description}
+                                    <Typography dangerouslySetInnerHTML={{ __html: description }}>
                                     </Typography>
                                 </ListItem>
                             </List>

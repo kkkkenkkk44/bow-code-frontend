@@ -24,8 +24,7 @@ export default function ProblemInfo(props) {
         </Typography>
     </div>
         <div className={classes.description}>
-            <Typography variant="subtitle1">
-                {problem.description}
+            <Typography variant="subtitle1" dangerouslySetInnerHTML={{ __html: problem.description }}>
             </Typography>
         </div>
     </Paper>
