@@ -15,6 +15,7 @@ import { FormControlLabel } from '@material-ui/core'
 import { Checkbox } from '@material-ui/core'
 import { Popover } from '@material-ui/core'
 import { FormGroup } from '@material-ui/core'
+import { useHistory } from 'react-router'
 
 
 export default function ProblemListPage() {
@@ -81,6 +82,7 @@ export default function ProblemListPage() {
     const tagsCount = useSelector(state => state.problemListReducer.tagsCount)
     const checked = useSelector(state => state.problemListReducer.checked)
     const keyword = useSelector(state => state.problemListReducer.keyword)
+    const history = useHistory();
     var problemBoard = []
     var tagList
     useEffect(() => {
@@ -109,7 +111,13 @@ export default function ProblemListPage() {
     if (!isfetching) {
         problemBoard = problemList.map((problem) =>
             filter(problem) ?
-                <div key={problem.id} className={classes.problemTile} onClick={() => dispatch(showProblemInfo(problem))}>
+                <div key={problem.id} className={classes.problemTile} onClick={() => {
+                    if(showingInfoProblem == null || problem.id !== showingInfoProblem.id) {
+                        dispatch(showProblemInfo(problem))
+                    } else {
+                        history.push(`/problem/${problem.id}`)
+                    }
+                }}>
                     <ProblemListTile problem={problem} />
                 </div> : null
         )
