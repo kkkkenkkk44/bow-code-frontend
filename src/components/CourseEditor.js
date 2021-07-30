@@ -4,6 +4,13 @@ import CourseBlockEditor from "./CourseBlockEditor";
 import { Redirect } from "react-router"
 import { useDispatch, useSelector } from "react-redux";
 import AddIcon from '@material-ui/icons/Add';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+
 const useStyles = makeStyles((theme) => ({
     courseBlockEditor: {
         margin: "20px 0 20px 0"
@@ -25,6 +32,20 @@ const TitleBLock = (props) => {
     })
     const blocksID = Array.from(useSelector(state => state.courseEditorReducer.blocksID))
 
+    const [courseBlockTitle, setCourseBlockTitle] = useState("")
+    const [openBlockTitleDialog, setOpenBlockTitleDialog] = useState(false)
+
+    const handleOpenTitleDialog = () => {
+        setOpenBlockTitleDialog(true)
+    }
+
+    const handleCloseTitleDialog = () => {
+        setOpenBlockTitleDialog(false)
+    }
+
+    const handleBlockTitleValue = (e) => {
+        setCourseBlockTitle(e.target.value)
+    }
     const handleClose = () => {
         setCreateBlockOptionConfig({
             open: false,
@@ -33,6 +54,31 @@ const TitleBLock = (props) => {
         })
     }
 
+    const addNewBlock = () => {
+        var blockTitle = {
+            title: courseBlockTitle
+        }
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block`, {
+            method: "POST",
+            credentials: "include",
+            body: JSON.stringify(blockTitle),
+        })
+            .then(res => res.json())
+            .then(res => {
+                //res = blockid
+                blocksID.splice(0, 0, { title: courseBlockTitle, id: res })
+                fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/blockOrder`, {
+                    method: "PUT",
+                    credentials: "include",
+                    body: JSON.stringify(blocksID),
+                })
+                    .then(res => {
+                        dispatch({ type: "ADD_NEW_BLOCK", payload: { index: -1, blocksID } })
+                        setFocus(false)
+                    })
+            })
+        handleClose()
+    }
     return (
         <ClickAwayListener
             onClickAway={() => {
@@ -72,29 +118,35 @@ const TitleBLock = (props) => {
                                     }
                                     }>
                                     <MenuList>
-                                        <MenuItem onClick={(e) => {
-                                            fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block`, {
-                                                method: "POST",
-                                                credentials: "include"
-                                            })
-                                                .then(res => res.json())
-                                                .then(res => {
-                                                    //res = blockid
-                                                    blocksID.splice(0, 0, { title: "", id: res })
-                                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/blockOrder`, {
-                                                        method: "PUT",
-                                                        credentials: "include",
-                                                        body: JSON.stringify(blocksID),
-                                                    })
-                                                        .then(res => {
-                                                            dispatch({ type: "ADD_NEW_BLOCK", payload: { index: -1, blocksID } })
-                                                            setFocus(false)
-                                                        })
-                                                })
-                                            handleClose()
+                                        <MenuItem onClick={() => {
+                                            handleOpenTitleDialog()
                                         }}>
                                             新增文字
                                         </MenuItem>
+                                        <Dialog open={openBlockTitleDialog} onClose={handleCloseTitleDialog} aria-labelledby="form-dialog-title">
+                                            <DialogContent>
+                                            <DialogContentText>
+                                                請輸入課程方塊的標題
+                                            </DialogContentText>
+                                            <TextField
+                                                autoFocus
+                                                margin="dense"
+                                                id="title"
+                                                label="課程方塊標題"
+                                                type="title"
+                                                fullWidth
+                                                onChange={handleBlockTitleValue}
+                                            />
+                                            </DialogContent>
+                                            <DialogActions>
+                                            <Button onClick={handleCloseTitleDialog} color="primary">
+                                                取消
+                                            </Button>
+                                            <Button onClick={addNewBlock} color="primary">
+                                                確定
+                                            </Button>
+                                            </DialogActions>
+                                        </Dialog>
                                         <MenuItem
                                             onClick={() => {
                                                 console.log("open dialog")

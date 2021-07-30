@@ -12,28 +12,29 @@ import { useParams } from 'react-router-dom'
 export default function BlockCard(props) {
     const useStyles = makeStyles((theme) => ({
         title: {
-
+            marginLeft: '20px',
         },
         card: {
             width: '60%',
             margin: '20px',
             marginLeft: '280px',
-        }
+            borderColor: 'primary.main',
+        },
+        
     }));
     const classes = useStyles();
+    const history = useHistory();
     //const exampleCourseID = '60ebca1c14447a1cc7d84bc0'
     const { CourseID } = useParams()
     var blockIndex = props.value.id
        
     return (
-        <Card className={classes.card}>
-            <Link to={`/course/${CourseID}/${blockIndex}`}>
-            <CardActionArea>
-                <CardContent className={classes.title}>
-                    <h2>{props.value.title}</h2>
-                </CardContent>
-            </CardActionArea>
-            </Link>
-        </Card>
+            <Card className={classes.card}>
+                <CardActionArea onClick={() => history.push(`/course/${CourseID}/${blockIndex}`)}>
+                    <CardContent className={classes.title}>
+                        <h2>{props.value.title}</h2>
+                    </CardContent>
+                </CardActionArea>
+            </Card>
     )
 }
