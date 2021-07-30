@@ -141,6 +141,15 @@ export default function CourseListPage() {
         tagList = firstCheckbox.concat(tagList)
     }
 
+    const handleEnterSearch = (event) => {
+        if(event.key === 'Enter') {
+            filter = {
+                "keyword": keyword.split(/[\s,]+/).filter((w) => w != "")
+            }
+            dispatch(fetchCourseListAsync(filter))
+        }
+    }
+
 
     return (
         <div>
@@ -158,6 +167,7 @@ export default function CourseListPage() {
                                 placeholder="搜尋課程"
                                 fullWidth
                                 onChange={(e)=>dispatch(handleChangeKeyword(e.target.value))}
+                                onKeyDown={handleEnterSearch}
                                 InputProps={{
                                     classes: {
                                         input: classes.searchFont,
