@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Redirect } from "react-router";
 import { useHistory, Link } from "react-router-dom";
 import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
 
 
 
@@ -24,13 +25,21 @@ export default function BlockCard(props) {
     }));
     const classes = useStyles();
     const history = useHistory();
+    const isProblemBlock = useSelector(state => state.courseEditorReducer.isProblemBlock)
+    //console.log(isProblemBlock)
     //const exampleCourseID = '60ebca1c14447a1cc7d84bc0'
     const { CourseID } = useParams()
     var blockIndex = props.value.id
+    const route2ProblemOrCourse = () => {
+        isProblemBlock ?
+        history.push(`/problem/${blockIndex}`)
+        :
+        history.push(`/course/${CourseID}/${blockIndex}`)
+    }
        
     return (
             <Card className={classes.card}>
-                <CardActionArea onClick={() => history.push(`/course/${CourseID}/${blockIndex}`)}>
+                <CardActionArea onClick={route2ProblemOrCourse}>
                     <CardContent className={classes.title}>
                         <h2>{props.value.title}</h2>
                     </CardContent>
