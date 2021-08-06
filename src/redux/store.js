@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 import userPageReducer from "./userPageReducer";
 import problemPageReducer from "./problemPageReducer"
 import createProblemReducer from "./createProblemReducer";
+import classroomManagerPageReducer from "./classroomManagerPageReducer";
 
 const store = createStore(combineReducers({
     reducer,
@@ -17,7 +18,8 @@ const store = createStore(combineReducers({
     loginReducer,
     userPageReducer,
     problemPageReducer,
-    createProblemReducer
+    createProblemReducer,
+    classroomManagerPageReducer,
   }), applyMiddleware(thunk))
 
 export { store }
