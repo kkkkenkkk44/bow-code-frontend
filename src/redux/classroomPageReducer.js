@@ -1,10 +1,10 @@
-import { CLASSROOM_SWITCH_TO } from '../actions/classroomManagerPage'
+import { CLASSROOM_SWITCH_TO } from '../actions/classroomPage'
 
 const initialState = {
     currentTab: "overview",
 }
 
-const classroomManagerPageReducer = (state = initialState, action) => {
+const classroomPageReducer = (state = initialState, action) => {
     switch (action.type) {
         case CLASSROOM_SWITCH_TO:
             return {
@@ -16,4 +16,4 @@ const classroomManagerPageReducer = (state = initialState, action) => {
     }
 }
 
-export default classroomManagerPageReducer
+export default classroomPageReducer

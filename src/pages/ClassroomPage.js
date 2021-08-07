@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import { Avatar } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { switchTo } from '../actions/classroomManagerPage';
+import { switchTo } from '../actions/classroomPage';
 import { auth } from "../actions/login"
 
 import Overview from './UserPages/Overview'
@@ -25,7 +25,7 @@ import SchoolIcon from '@material-ui/icons/School';
 import HistoryIcon from '@material-ui/icons/History';
 
 function MainWindow(props) {
-    const currentTab = useSelector(state => state.classroomManagerPageReducer.currentTab)
+    const currentTab = useSelector(state => state.classroomPageReducer.currentTab)
     return (
         <div>
             <div hidden={currentTab !== "overview"}>
