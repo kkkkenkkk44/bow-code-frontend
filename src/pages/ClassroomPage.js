@@ -9,7 +9,7 @@ import { switchTo } from '../actions/classroomPage';
 import { auth } from "../actions/login"
 
 import Overview from './UserPages/Overview'
-import MyCourse from './UserPages/MyCourse'
+import ViewCourse from './ClassroomPages/ViewCourse'
 import ProblemSubmission from './UserPages/ProblemSubmission';
 
 import List from '@material-ui/core/List';
@@ -23,6 +23,7 @@ import FaceIcon from '@material-ui/icons/Face';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import SchoolIcon from '@material-ui/icons/School';
 import HistoryIcon from '@material-ui/icons/History';
+import { useParams } from 'react-router-dom';
 
 function MainWindow(props) {
     const currentTab = useSelector(state => state.classroomPageReducer.currentTab)
@@ -30,6 +31,9 @@ function MainWindow(props) {
         <div>
             <div hidden={currentTab !== "overview"}>
                 <Overview />
+            </div>
+            <div hidden={currentTab !== "viewcourse"}>
+                <ViewCourse />
             </div>
         </div>
     )
@@ -75,6 +79,8 @@ export default function ClassroomManagerPage(props) {
     const dispatch = useDispatch();
     const user = useSelector(state => state.loginReducer.user)
     const authFinish = useSelector(state => state.loginReducer.authFinish)
+    const { ClassroomID } = useParams()
+
     useEffect(() => {
         dispatch(auth())
     }, [])
@@ -96,7 +102,7 @@ export default function ClassroomManagerPage(props) {
                             </ListItemIcon>
                             <ListItemText primary="教案變更" />
                         </ListItem>
-                        <ListItem className={classes.listItem} button>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("viewcourse"))}>
                             <ListItemIcon>
                                 <HistoryIcon />
                             </ListItemIcon>
