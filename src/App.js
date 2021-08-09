@@ -3,8 +3,11 @@ import './App.css';
 import MainPage from "./pages/MainPage";
 import CreateCoursePage from "./pages/CreateCoursePage";
 import CreateProblemPage from "./pages/CreateProblemPage";
+import CreateClassroomPage from "./pages/CreateClassroomPage";
+import CreateCoursePlanPage from "./pages/CreateCoursePlanPage";
 import CourseListPage from "./pages/CourseListPage";
 import ProblemListPage from "./pages/ProblemListPage"
+import ClassroomPage from "./pages/ClassroomPage"
 import CourseEditorPage from "./pages/CourseEditorPage";
 import ClassroomPage from "./pages/ClassroomPage"
 import LoginPage from "./pages/LoginPage";
@@ -39,6 +42,9 @@ function App() {
       <Route path='/courseEditor/:CourseID' component={CourseEditorPage} />
       <Route path='/course/:CourseID/:index' component={BlockDetailPage} />
       <Route path='/course/:CourseID' component={CourseDetailPage} />
+      <Route path='/createClassroom' component={CreateClassroomPage} />
+      <Route path='/classroom/:ClassroomID' component={ClassroomPage} />
+      <Route path='/createCoursePlan' component={CreateCoursePlanPage} />
       <Route path='/problem/:ProblemID' component={ProblemPage} />
       <Route path='/createProblem' component={CreateProblemPage} />
       <Route path='/classroom/:ClassroomID' component={ClassroomPage}/>

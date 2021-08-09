@@ -4,6 +4,7 @@ import courseEditorReducer from "./courseEditorReducer";
 import courseListReducer from "./courseListReducer"
 import problemListReducer from "./problemListReducer";
 import loginReducer from "./loginReducer"
+import createClassroomReducer from "./createClassroomReducer"
 import thunk from 'redux-thunk';
 import userPageReducer from "./userPageReducer";
 import problemPageReducer from "./problemPageReducer"
@@ -20,6 +21,7 @@ const store = createStore(combineReducers({
     problemPageReducer,
     createProblemReducer,
     classroomPageReducer,
+    createClassroomReducer,
   }), applyMiddleware(thunk))
 
 export { store }
