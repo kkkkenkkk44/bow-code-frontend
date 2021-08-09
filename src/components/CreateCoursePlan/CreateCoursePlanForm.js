@@ -36,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
       margin: '20px',
     },
 
+    visibilityValue: {
+      marginLeft: '20px',
+    },
+
   }));
 
 const BootstrapInput = withStyles((theme) => ({
@@ -103,21 +107,24 @@ export default function CreateCoursePlanForm() {
                 name="name"
                 onChange={handleName}
             />
-            <span className={classes.visibilityText}>教案權限</span>
-            <FormControl className={classes.formControl}>
-              <Select
-                native
-                value={visibility}
-                onChange={handleVisibility}
-                label="教案權限"
-                inputProps={{
-                  name: 'visibility',
-                }}
-              >
-                <option value={0}>不公開</option>
-                <option value={1}>公開</option>
-              </Select>
-            </FormControl>
+            <div className={classes.visibilityText}>
+              <span>教案權限</span>
+              <FormControl className={classes.formControl}>
+                <Select
+                  native
+                  value={visibility}
+                  onChange={handleVisibility}
+                  label="教案權限"
+                  inputProps={{
+                    name: 'visibility',
+                  }}
+                  className={classes.visibilityValue}
+                >
+                  <option value={0}>不公開</option>
+                  <option value={1}>公開</option>
+                </Select>
+              </FormControl>
+              </div>
             </form>
         </div>
     )

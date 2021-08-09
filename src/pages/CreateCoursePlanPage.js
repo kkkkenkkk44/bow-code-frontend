@@ -13,6 +13,12 @@ const useStyles = makeStyles((theme) => ({
     root: {
       width: '100%',
     },
+    paper: {
+      marginTop: theme.spacing(8),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
     button: {
       marginRight: theme.spacing(1),
     },
@@ -68,6 +74,11 @@ export default function CreateProblemPage() {
     return (
       <div className={classes.root}>
         <NavBar context="Bow-Code" />
+        <div className={classes.paper}>
+          <Typography component="h1" variant="h6">
+              建立教案
+          </Typography>
+        </div>
         <Stepper className={classes.stepper} activeStep={activeStep}>
           {steps.map((label, index) => {
             const stepProps = {};
