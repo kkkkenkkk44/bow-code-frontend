@@ -7,7 +7,6 @@ import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
 import { Redirect } from "react-router";
 import { useSelector } from 'react-redux';
-import { resetForm } from '../../actions/createProblem';
 import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({

@@ -9,6 +9,7 @@ import { Redirect } from "react-router";
 import { useSelector } from 'react-redux';
 import { resetForm } from '../../actions/createProblem';
 import { useDispatch } from 'react-redux';
+import { changeName, changeVisibility } from '../../actions/createCoursePlan';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -76,22 +77,18 @@ const BootstrapInput = withStyles((theme) => ({
 export default function CreateCoursePlanForm() {
 
     const classes = useStyles();
-
-    const [name, setName] = useState("")
-    const handleName= (event) => {
-      setName(event.target.value);
-    };
-
-    const [visibility, setVisibility] = useState(0)
-    const handleVisibility = (event) => {
-    setVisibility(event.target.value);
-    };
-
     const dispatch = useDispatch()
 
-    const handleSubmit = (event) => {
+    const name = useSelector(state => state.createCoursePlanReducer.name)
+    const visibility = useSelector(state => state.createCoursePlanReducer.visibility)
 
-    }
+    const handleName= (event) => {
+      dispatch(changeName(event.target.value));
+    };
+
+    const handleVisibility = (event) => {
+      dispatch(changeVisibility(event.target.value));
+    };
 
     return (
         <div className={classes.paper}>
@@ -117,8 +114,8 @@ export default function CreateCoursePlanForm() {
                   name: 'visibility',
                 }}
               >
-                <option value={0}>000</option>
-                <option value={1}>111</option>
+                <option value={0}>不公開</option>
+                <option value={1}>公開</option>
               </Select>
             </FormControl>
             </form>
