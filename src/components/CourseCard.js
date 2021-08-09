@@ -49,9 +49,12 @@ export default function CourseCard(props) {
         },
         tags: {
             flex: 1,
+            display: 'flex',
+            justifyContent: 'flex-start'
         },
         tagChip: {
-            margin: '3px'
+            margin: '3px',
+            
         },
         difficulty: {
             marginRight: 0,
