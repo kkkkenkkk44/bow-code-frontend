@@ -4,6 +4,8 @@ import MainPage from "./pages/MainPage";
 import CreateCoursePage from "./pages/CreateCoursePage";
 import CreateProblemPage from "./pages/CreateProblemPage";
 import CreateClassroomPage from "./pages/CreateClassroomPage";
+import CreateSingleClassroomPage from "./pages/CreateSingleClassroomPage";
+import CreateMultipleClassroomPage from "./pages/CreateMultipleClassroomPage";
 import CreateCoursePlanPage from "./pages/CreateCoursePlanPage";
 import CourseListPage from "./pages/CourseListPage";
 import ProblemListPage from "./pages/ProblemListPage"
@@ -43,6 +45,8 @@ function App() {
       <Route path='/course/:CourseID/:index' component={BlockDetailPage} />
       <Route path='/course/:CourseID' component={CourseDetailPage} />
       <Route path='/createClassroom' component={CreateClassroomPage} />
+      <Route path='/createSingleClassroom' component={CreateSingleClassroomPage} />
+      <Route path='/createMultipleClassroom' component={CreateMultipleClassroomPage} />
       <Route path='/classroom/:ClassroomID' component={ClassroomPage} />
       <Route path='/createCoursePlan' component={CreateCoursePlanPage} />
       <Route path='/problem/:ProblemID' component={ProblemPage} />

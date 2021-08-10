@@ -1,106 +1,107 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
+import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
+import CameraIcon from '@material-ui/icons/PhotoCamera';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import CreateClassroomForm from '../components/CreateClassroom/CreateClassroomForm';
-import SelectCoursePlan from '../components/CreateClassroom/SelectCoursePlan';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import CardActionArea from '@material-ui/core/CardActionArea';
 import NavBar from '../components/NavBar'
+import Link from '@material-ui/core/Link';
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-      width: '100%',
-    },
-    button: {
-      marginRight: theme.spacing(1),
-    },
-    instructions: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-    stepContent: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center'
-    },
-    stepContentBody: {
-      width: '60%',
-      marginBottom: '20px'
-    },
-    stepper: {
-      marginLeft: '15%',
-      marginRight: '15%'
-    }
+    icon: {
+        marginRight: theme.spacing(2),
+      },
+      heroContent: {
+        backgroundColor: theme.palette.background.paper,
+        padding: theme.spacing(8, 0, 6),
+      },
+      heroButtons: {
+        marginTop: theme.spacing(4),
+      },
+      cardGrid: {
+        paddingTop: theme.spacing(8),
+        paddingBottom: theme.spacing(8),
+      },
+      card: {
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      },
+      cc: {
+        display: 'flex',
+        align: 'right',
+
+      },
+      cardMedia: {
+        paddingTop: '56.25%', // 16:9
+      },
+      cardContent: {
+        flexGrow: 1,
+        margin: '20px',
+        align: 'right',
+        //alignItems: 'center',
+      },
+      
   }));
 
-function getSteps() {
-return ['教室基本資訊', '選擇教案'];
-}
 
-function getStepContent(step) {
-switch (step) {
-    case 0:
-    return <CreateClassroomForm />
-    case 1:
-    return <SelectCoursePlan />;
-    default:
-    return null;
-}
-}
+export default function CreateClassroomPage () {
 
-export default function CreateClassroomPage() {
     const classes = useStyles();
-    const [activeStep, setActiveStep] = React.useState(0);
-    const steps = getSteps();
-  
-  
-    const handleNext = () => {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
-  
-    const handleBack = () => {
-      setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-  
-    console.log(activeStep, steps.length)
+    const history = useHistory();
+
     return (
-      <div className={classes.root}>
-        <NavBar context="Bow-Code" />
-        <Stepper className={classes.stepper} activeStep={activeStep}>
-          {steps.map((label, index) => {
-            const stepProps = {};
-            const labelProps = {};
-            return (
-              <Step key={label} {...stepProps}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-        <div className={classes.stepContent}>
-          <div className={classes.stepContentBody}>
-            {getStepContent(activeStep)}
-          </div>
-          <div>
-            {
-              activeStep !== 0 && <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                上一步
-              </Button>
-            }
-            {
-              activeStep !== steps.length - 1 && <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNext}
-                className={classes.button}
-              >
-                下一步
-              </Button>
-            }
-          </div>
+        <div>
+            <NavBar context="Bow-Code" />
+            <Container className={classes.cardGrid} maxWidth="md" >
+            {/* End hero unit */}
+            <Grid container spacing={4} className={classes.cc}>
+                <Grid item xs={12} sm={6} md={4} >
+                    <Card className={classes.card}>
+                        <CardActionArea onClick={() => history.push('/createSingleClassroom')}>
+                            <CardMedia
+                                className={classes.cardMedia}
+                                image="https://www.abccolumbia.com/content/uploads/2020/03/ea96b4263adb9ab60143f94ab8eba5a5f9bc954d_fl9-360p.jpg"
+                                title="Image title"
+                            />
+                            <CardContent className={classes.cardContent}>
+                                <Typography align={'center'}>
+                                    建立單一教室
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                    <Card className={classes.card}>
+                        <CardActionArea onClick={() => history.push('/createMultipleClassroom')}>
+                            <CardMedia
+                                className={classes.cardMedia}
+                                image="https://www.abccolumbia.com/content/uploads/2020/03/ea96b4263adb9ab60143f94ab8eba5a5f9bc954d_fl9-360p.jpg"
+                                title="Image title"
+                            />
+                            <CardContent className={classes.cardContent}>
+                                <Typography align={'center'}>
+                                    以一個教案建立多個教室
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                </Grid>
+            </Grid>
+            </Container>
         </div>
-      </div>
-    );
-  }
+
+    )
+}
+

@@ -1,4 +1,4 @@
-import { CHANGE_NAME, CHANGE_REVIEW, CHANGE_APPLY, CHANGE_VISIBILITY } from "../actions/createClassroom";
+import { CHANGE_NAME, CHANGE_REVIEW, CHANGE_APPLY, CHANGE_VISIBILITY, CHANGE_COURSEPLANID } from "../actions/createClassroom";
 
 const initState = {
     name: "",
@@ -15,6 +15,12 @@ const createClassroomReducer = (state = initState, action) => {
                 ...state,
                 name: action.payload.name
             }
+        case CHANGE_COURSEPLANID:
+        //console.log(action.payload.name)
+        return {
+            ...state,
+            coursePlanID: action.payload.coursePlanID
+        }
         case CHANGE_REVIEW:
             //console.log(action.payload.review)
             return {
