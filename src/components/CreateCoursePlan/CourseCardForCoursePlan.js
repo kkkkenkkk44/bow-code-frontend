@@ -17,6 +17,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import Alert from '@material-ui/lab/Alert'
+import Snackbar from '@material-ui/core/Snackbar';
 
 export default function CourseCardForCoursePlan(props) {
     const useStyles = makeStyles((theme) => ({
@@ -120,31 +122,42 @@ export default function CourseCardForCoursePlan(props) {
 
     const [selectCourseID, setSelectCourseID] = useState("")
 
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
     const clickAction = () => {
         console.log(props.course.id)
+        setOpenSnackbar(true)
         setSelectCourseID(props.course.id);
+        
         //console.log(selectCourseID)
 
+    }
+
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false)
     }
 
     const onCopy = () => {
         console.log('Copied')
     }
-    
+
     const tagChips = tags.map(tag => <Chip className={classes.tagChip} key={tag} label={tag} variant="outlined" />)
 
     return (
         props.brief ?
-            <Card>
-                
-                    <CardContent className={classes.title}>
-                        <h3>{props.course.name}</h3>
-                    </CardContent>
-                
+            <Card>          
+                <CardContent className={classes.title}>
+                    <h3>{props.course.name}</h3>
+                </CardContent>    
             </Card> :
             <Card>
                 <CopyToClipboard onCopy={onCopy} text={props.course.id}>
                     <CardActionArea onClick={clickAction}>
+                    <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+                        <Alert onClose={handleCloseSnackbar} severity="success">
+                            成功複製課程 id !
+                        </Alert>
+                    </Snackbar>
                     <CardContent className={classes.info}>
                         <div className={classes.title}>
                             <Typography variant="h5" component="h3">
