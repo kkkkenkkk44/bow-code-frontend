@@ -18,6 +18,13 @@ import Link from '@material-ui/core/Link';
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
+    paper: {
+        marginTop: theme.spacing(1),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+      },
     icon: {
         marginRight: theme.spacing(2),
       },
@@ -64,7 +71,6 @@ export default function CreateClassroomPage () {
         <div>
             <NavBar context="Bow-Code" />
             <Container className={classes.cardGrid} maxWidth="md" >
-            {/* End hero unit */}
             <Grid container spacing={4} className={classes.cc}>
                 <Grid item xs={12} sm={6} md={4} >
                     <Card className={classes.card}>
