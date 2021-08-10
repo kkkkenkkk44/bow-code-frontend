@@ -9,7 +9,7 @@ import { Redirect } from "react-router";
 import { useSelector } from 'react-redux';
 import { resetForm } from '../../actions/createProblem';
 import { useDispatch } from 'react-redux';
-import { changeName, changeReview, changeApply, changeVisibility } from "../../actions/createClassroom";
+import { changeReview, changeApply, changeVisibility, changeCoursePlanID } from "../../actions/createClassroom";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -94,9 +94,9 @@ const BootstrapInput = withStyles((theme) => ({
   },
 }))(InputBase);
 
-export default function CreateClassroomForm() {
+export default function CreateMultipleClassroomForm() {
 
-    const name = useSelector(state => state.createClassroomReducer.name)
+    const coursePlanID = useSelector(state => state.createClassroomReducer.coursePlanID)
     const review = useSelector(state => state.createClassroomReducer.review)
     const apply = useSelector(state => state.createClassroomReducer.apply)
     const visibility = useSelector(state => state.createClassroomReducer.visibility)
@@ -104,31 +104,30 @@ export default function CreateClassroomForm() {
     const classes = useStyles();
     const dispatch = useDispatch()
 
-    //const [name, setName] = useState("")
-    const handleName= (e) => {
-      //setName(event.target.value);
-      dispatch(changeName(e.target.value));
-    };
+    const handleCoursePlanID= (e) => {
+        //setName(event.target.value);
+        dispatch(changeCoursePlanID(e.target.value));
+      };
 
-    //const [review, setReview] = useState(false)
     const handleReview = (e) => {
-      //setReview(event.target.value);
-      dispatch(changeReview(e.target.value));
-    };
-
-    //const [apply, setApply] = useState(true)
-    const handleApply = (e) => {
-      //setApply(event.target.value);
-      dispatch(changeApply(e.target.value));
-    }
-
-    //const [visibility, setVisibility] = useState(0)
-    const handleVisibility = (e) => {
-      //setVisibility(event.target.value);
-      dispatch(changeVisibility(e.target.value));
-    };
+        //setReview(event.target.value);
+        dispatch(changeReview(e.target.value));
+      };
+  
+      //const [apply, setApply] = useState(true)
+      const handleApply = (e) => {
+        //setApply(event.target.value);
+        dispatch(changeApply(e.target.value));
+      }
+  
+      //const [visibility, setVisibility] = useState(0)
+      const handleVisibility = (e) => {
+        //setVisibility(event.target.value);
+        dispatch(changeVisibility(e.target.value));
+      };
 
     return (
+
         <div className={classes.paper}>
             <form className={classes.form} noValidate>
             <TextField
@@ -136,10 +135,10 @@ export default function CreateClassroomForm() {
                 margin="normal"
                 required
                 fullWidth
-                id="name"
-                label="教室名稱"
-                name="name"
-                onChange={handleName}
+                id="coursePlan_id"
+                label="教案 id"
+                name=""
+                onChange={handleCoursePlanID}
             />
             <div className={classes.reviewText}>
               <span>教室是否需要審核</span>
@@ -197,5 +196,7 @@ export default function CreateClassroomForm() {
             </div>
             </form>
         </div>
+
     )
+
 }

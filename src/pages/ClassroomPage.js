@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@progress/kendo-react-buttons'
 import { useParams } from 'react-router-dom'
 
-export default function CourseDetailPage() {
+export default function ClassroomPage() {
 
     return (
         <div>
