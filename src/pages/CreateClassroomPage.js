@@ -58,6 +58,13 @@ const useStyles = makeStyles((theme) => ({
         align: 'right',
         //alignItems: 'center',
       },
+
+      outsideCard: {
+        flexGrow: 1,
+        marginLeft: '350px',
+        marginRight: '350px',
+        marginTop: '100px',
+      }
       
   }));
 
@@ -70,9 +77,9 @@ export default function CreateClassroomPage () {
     return (
         <div>
             <NavBar context="Bow-Code" />
-            <Container className={classes.cardGrid} maxWidth="md" >
-            <Grid container spacing={4} className={classes.cc}>
-                <Grid item xs={12} sm={6} md={4} >
+            <div className={classes.outsideCard}>
+            <Grid container spacing={3}>
+                <Grid item xs={6} >
                     <Card className={classes.card}>
                         <CardActionArea onClick={() => history.push('/createSingleClassroom')}>
                             <CardMedia
@@ -88,7 +95,7 @@ export default function CreateClassroomPage () {
                         </CardActionArea>
                     </Card>
                 </Grid>
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid item xs={6}>
                     <Card className={classes.card}>
                         <CardActionArea onClick={() => history.push('/createMultipleClassroom')}>
                             <CardMedia
@@ -105,7 +112,7 @@ export default function CreateClassroomPage () {
                     </Card>
                 </Grid>
             </Grid>
-            </Container>
+            </div>
         </div>
 
     )
