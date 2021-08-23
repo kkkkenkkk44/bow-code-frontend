@@ -10,6 +10,7 @@ import { auth } from "../actions/login"
 
 import Overview from './UserPages/Overview'
 import BulletinBoard from './ClassroomTabs/BulletinBoard';
+import Quiz from './ClassroomTabs/Quiz'
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -32,6 +33,9 @@ function MainWindow(props) {
             </div>
             <div hidden={currentTab !== "bulletinBoard"}>
                 <BulletinBoard />
+            </div>
+            <div hidden={currentTab !== "quiz"}>
+                <Quiz />
             </div>
         </div>
     )
@@ -110,7 +114,7 @@ export default function ClassroomManagerPage(props) {
                             </ListItemIcon>
                             <ListItemText primary="學生" />
                         </ListItem>
-                        <ListItem className={classes.listItem} button>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("quiz"))}>
                             <ListItemIcon>
                                 <HistoryIcon />
                             </ListItemIcon>
