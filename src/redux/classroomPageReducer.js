@@ -1,4 +1,4 @@
-import { CLASSROOM_SWITCH_TO, FETCH_BULLETIN, FETCH_BULLETIN_START, REACT_TO_BULLETIN, REACT_TO_REPLY } from '../actions/classroomManagerPage'
+import { CLASSROOM_SWITCH_TO, FETCH_BULLETIN, FETCH_BULLETIN_START, REACT_TO_BULLETIN, REACT_TO_REPLY } from '../actions/classroomPage'
 
 const initialState = {
     currentTab: "overview",
