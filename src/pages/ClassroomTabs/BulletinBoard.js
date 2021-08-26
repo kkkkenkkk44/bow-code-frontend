@@ -6,7 +6,7 @@ import { CircularProgress } from '@material-ui/core'
 import { Typography } from '@material-ui/core'
 import { Divider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
-import { fetchBulletinAsync } from '../../actions/classroomManagerPage'
+import { fetchBulletinAsync } from '../../actions/classroomPage'
 import Bulletin from '../../components/Bulletin'
 
 export default function BulletinBoard() {

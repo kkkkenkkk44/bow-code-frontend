@@ -6,7 +6,7 @@ import CreateProblemPage from "./pages/CreateProblemPage";
 import CourseListPage from "./pages/CourseListPage";
 import ProblemListPage from "./pages/ProblemListPage"
 import CourseEditorPage from "./pages/CourseEditorPage";
-import ClassroomManagerPage from "./pages/ClassroomManagerPage"
+import ClassroomPage from "./pages/ClassroomPage"
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -41,7 +41,7 @@ function App() {
       <Route path='/course/:CourseID' component={CourseDetailPage} />
       <Route path='/problem/:ProblemID' component={ProblemPage} />
       <Route path='/createProblem' component={CreateProblemPage} />
-      <Route path='/classroomManager/:ClassroomID' component={ClassroomManagerPage}/>
+      <Route path='/classroom/:ClassroomID' component={ClassroomPage}/>
       <Redirect from='/' to='/home' />
     </Switch>
   );

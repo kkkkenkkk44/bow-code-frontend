@@ -38,20 +38,27 @@ export default function CourseCard(props) {
             alignItems: 'center'
         },
         abstract: {
+            display: 'flex',
             flex: 4,
             color: "#707070",
             height: theme.spacing(8.5),
             marginLeft: '10px',
             fontSize: '12pt'
         },
+        abstractText: {
+            flexGrow: 1
+        },
         tagAndDiff: {
             display: 'flex'
         },
         tags: {
             flex: 1,
+            display: 'flex',
+            justifyContent: 'flex-start'
         },
         tagChip: {
-            margin: '3px'
+            margin: '3px',
+
         },
         difficulty: {
             marginRight: 0,
@@ -144,15 +151,7 @@ export default function CourseCard(props) {
                             </div>
                         </div>
                         <div className={classes.abstract}>
-                            <TextEllipsis
-                                lines={3}
-                                tag={'p'}
-                                ellipsisChars={'...'}
-                                tagClass={'className'}
-                                debounceTimeoutOnResize={200}
-                                useJsOnly={true}
-                            >{abstract}
-                            </TextEllipsis>
+                            <p>{abstract}</p>
                         </div>
                         <div className={classes.tagAndDiff}>
                             <div className={classes.tags}>

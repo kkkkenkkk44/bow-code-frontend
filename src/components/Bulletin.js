@@ -10,7 +10,7 @@ import { TextField } from "@material-ui/core";
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbUpOutlinedIcon from '@material-ui/icons/ThumbUpOutlined';
 import { IconButton } from "@material-ui/core";
-import { reactToBulletin, reactToReply } from "../actions/classroomManagerPage";
+import { reactToBulletin, reactToReply } from "../actions/classroomPage";
 import { useDispatch } from "react-redux";
 
 function ReplyCard(props) {
