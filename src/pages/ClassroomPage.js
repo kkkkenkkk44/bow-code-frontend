@@ -8,12 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { auth } from "../actions/login"
 
 import Overview from './UserPages/Overview'
-import BulletinBoard from './ClassroomTabs/BulletinBoard';
-import Quiz from './ClassroomTabs/Quiz'
-import QuizManage from './ClassroomTabs/QuizManage'
+import BulletinBoard from './ClassroomPages/BulletinBoard';
+import Quiz from './ClassroomPages/Quiz'
+import QuizManage from './ClassroomPages/QuizManage'
 import { fetchClassroomAsync, switchTo } from '../actions/classroomPage';
 import ViewCourse from './ClassroomPages/ViewCourse'
-import ClassroomConfig from './ClassroomPages/ClassroomConfig'
+// import ClassroomConfig from './ClassroomPages/ClassroomConfig'
 import ProblemSubmission from './UserPages/ProblemSubmission';
 
 import List from '@material-ui/core/List';
@@ -49,9 +49,9 @@ function MainWindow(props) {
             <div hidden={currentTab !== "viewcourse"}>
                 <ViewCourse />
             </div>
-            <div hidden={currentTab !== "config"}>
+            {/* <div hidden={currentTab !== "config"}>
                 <ClassroomConfig />
-            </div>
+            </div> */}
         </div>
     )
 }

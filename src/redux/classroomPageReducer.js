@@ -1,4 +1,14 @@
-import { CLASSROOM_SWITCH_TO, FETCH_COURSEPLAN_START, FETCH_COURSEPLAN_FINISH, FETCH_CLASSROOM_START, FETCH_CLASSROOM_FINISH } from '../actions/classroomPage'
+import {
+    CLASSROOM_SWITCH_TO,
+    FETCH_COURSEPLAN_START,
+    FETCH_COURSEPLAN_FINISH,
+    FETCH_CLASSROOM_START,
+    FETCH_CLASSROOM_FINISH,
+    FETCH_BULLETIN_START,
+    FETCH_BULLETIN,
+    REACT_TO_BULLETIN,
+    REACT_TO_REPLY
+} from '../actions/classroomPage'
 import { FETCH_LIST_START } from '../actions/courseList';
 
 const initialState = {
@@ -43,7 +53,7 @@ const classroomPageReducer = (state = initialState, action) => {
         case REACT_TO_BULLETIN:
             return {
                 ...state,
-                bulletins: state.bulletins.map(bulletin=>{
+                bulletins: state.bulletins.map(bulletin => {
                     if (bulletin.id != action.payload.bulletinId) {
                         return bulletin
                     } else {

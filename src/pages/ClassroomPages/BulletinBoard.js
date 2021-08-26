@@ -33,8 +33,8 @@ export default function BulletinBoard() {
     const classes = useStyles();
     const dispatch = useDispatch()
     const user = useSelector(state => state.loginReducer.user);
-    var bulletins = useSelector(state => state.classroomManagerPageReducer.bulletins)
-    var fetchingBulletin = useSelector(state => state.classroomManagerPageReducer.fetchingBulletin)
+    var bulletins = useSelector(state => state.classroomPageReducer.bulletins)
+    var fetchingBulletin = useSelector(state => state.classroomPageReducer.fetchingBulletin)
     var bulletinList = []
     useEffect(() => {
         dispatch(fetchBulletinAsync())
