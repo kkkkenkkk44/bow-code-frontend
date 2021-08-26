@@ -7,7 +7,7 @@ import { Typography } from '@material-ui/core'
 import { Divider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom'
-import { fetchClassroomCourseListAsync } from '../../actions/classroomPage'
+import { fetchCoursePlanAsync } from '../../actions/classroomPage'
 import CourseCard from '../../components/CourseCard'
 
 export default function ViewCourse() {
@@ -36,11 +36,16 @@ export default function ViewCourse() {
     const classroom = useSelector(state => state.classroomPageReducer)
     var cardList = []
 
+    // console.log(coursePlan)
+
     useEffect(() => {
         //fetch classroom detail
         //dispatch classroom detail
-        dispatch(fetchClassroomCourseListAsync())
-    }, [])
+        //fetch courseplan detail
+        //dispatch courseplan detail
+        if(classroom.coursePlan)
+            dispatch(fetchCoursePlanAsync(classroom.coursePlan))
+    }, [classroom.coursePlan])
 
     if (!classroom.isfetching) {
         cardList = classroom.courseList.map((course) =>
