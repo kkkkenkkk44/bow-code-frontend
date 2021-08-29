@@ -50,13 +50,13 @@ function ReplyCard(props) {
     return <div className={classes.root} >
         <Card className={classes.card} square elevation={1}>
             <div className={classes.author}>
-                <Avatar alt={reply.author.name} src={reply.author.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
-                <Typography variant="subtitle2" style={{ marginLeft: '10px', marginRight: '10px' }}>{reply.author.name}</Typography>
+                <Avatar alt={reply.creator.name} src={reply.creator.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
+                <Typography variant="subtitle2" style={{ marginLeft: '10px', marginRight: '10px' }}>{reply.creator}</Typography>
             </div>
             <Typography variant="subtitle1" className={classes.content}>
                 {reply.content}
                 <div className={classes.thumbup}>
-                    <IconButton onClick={()=>dispatch(reactToReply(bulletinId, reply.id, user.id))}>
+                    <IconButton onClick={()=>dispatch(reactToReply(bulletinId, props.index, user.id))}>
                         {
                             typeof user.userInfo !== 'undefined' && (reply.reactions.includes(user.id) ? <ThumbUpIcon></ThumbUpIcon> : <ThumbUpOutlinedIcon></ThumbUpOutlinedIcon>)
                         }
@@ -131,7 +131,7 @@ export default function Bulletin(props) {
             marginRight: '15px'
         },
         expandedReplies: {
-            overflow: 'scroll',
+            overflowY: 'auto',
             marginLeft: '40px',
             marginRight: '40px',
             marginTop: '20px',
@@ -144,7 +144,7 @@ export default function Bulletin(props) {
             alignItems: 'center',
             margin: '20px',
             marginLeft: '30px',
-            marginRight: '40px'
+            marginRight: '40px',
         },
         replyInput: {
             borderRadius: '20px',
@@ -163,8 +163,8 @@ export default function Bulletin(props) {
     const [expanded, setExpanded] = useState(false)
     const classes = useStyle()
     const dispatch = useDispatch()
-    const replies = bulletin.replies.map((reply) => <div key={reply.timeStamp} className={classes.expandedReplyCard}>
-        <ReplyCard reply={reply} bulletinId={bulletin.id}/>
+    const replies = bulletin.replies.map((reply, i) => <div key={reply.createTime} className={classes.expandedReplyCard}>
+        <ReplyCard reply={reply} bulletinId={bulletin.id} index={i}/>
     </div>)
     return <div>
         <Card square elevation={5}>
@@ -173,11 +173,11 @@ export default function Bulletin(props) {
                     {bulletin.title}
                 </Typography>
                 <Typography variant='subtitle1' className={classes.author}>
-                    {bulletin.author.name}
+                    {bulletin.creator.name}
                 </Typography>
             </CardActionArea>
         </Card>
-        {expanded && <div className={classes.layer} onClick={() => setExpanded(false)}>opopop</div>}
+        {expanded && <div className={classes.layer} onClick={() => setExpanded(false)}></div>}
         <Zoom in={expanded}>
             <Card className={classes.expandedCard}>
                 <div>
@@ -198,8 +198,8 @@ export default function Bulletin(props) {
                                 {bulletin.reactions.length}
                             </Typography>
                         </div>
-                        <Avatar alt={bulletin.author.name} src={bulletin.author.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
-                        <Typography variant="subtitle2" style={{ marginLeft: '10px', marginRight: '10px' }}>{bulletin.author.name}</Typography>
+                        <Avatar alt={bulletin.creator} src={bulletin.creator.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
+                        <Typography variant="subtitle2" style={{ marginLeft: '10px', marginRight: '10px' }}>{bulletin.creator}</Typography>
                     </div>
 
                     <Divider className={classes.expandedDivider}></Divider>

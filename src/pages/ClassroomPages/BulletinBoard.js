@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react'
-import CourseCard from '../../components/CourseCard'
+
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchOwnCourseAsync, fetchFavCourseAsync } from '../../actions/userPage'
-import { CircularProgress } from '@material-ui/core'
-import { Typography } from '@material-ui/core'
-import { Divider } from '@material-ui/core'
+import { useState } from 'react';
+import { Button, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
-import { fetchBulletinAsync } from '../../actions/classroomPage'
+import { Card } from '@material-ui/core';
+import { CardActionArea } from '@material-ui/core';
 import Bulletin from '../../components/Bulletin'
+import { Zoom } from '@material-ui/core';
+import { Avatar } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
+import { newBulletinOnchange } from '../../actions/classroomPage';
+import CreateIcon from '@material-ui/icons/Create';
 
 export default function BulletinBoard() {
     const useStyles = makeStyles((theme) => ({
@@ -15,6 +19,16 @@ export default function BulletinBoard() {
             display: 'flex',
             flexWrap: 'wrap',
             margin: theme.spacing(5)
+        },
+        createRoot: {
+            minHeight: '250px',
+            minWidth: '280px',
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: '#efefef'
+        },
+        createTitle: {
+            padding: '15px'
         },
         bulletinPostit: {
             flex: 1,
@@ -28,33 +42,147 @@ export default function BulletinBoard() {
         },
         divider: {
             margin: theme.spacing(0.5)
+        },
+        layer: {
+            backgroundColor: "#000000",
+            opacity: 0.5,
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            height: '100vh',
+            width: '100vw',
+            zIndex: 99
+        },
+        expandedCard: {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            height: '80vh',
+            width: '80vh',
+            marginLeft: "calc(50vw - 40vh)",
+            marginTop: '10vh',
+            zIndex: 100,
+            display: 'flex',
+            flexDirection: 'column'
+        },
+        expandedTitle: {
+            margin: '25px'
+        },
+        expandedContent: {
+            marginLeft: '40px',
+            marginBottom: '20px'
+        },
+        expandedAuthor: {
+            marginRight: '20px',
+            marginBottom: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+        },
+        expandedDivider: {
+            marginLeft: '15px',
+            marginRight: '15px'
+        },
+        thumbup: {
+            float: 'right',
+            height: '40px',
+            width: '40px',
+            display: 'flex',
+            marginRight: '20px',
+            alignItems: 'center',
+            color: '#888888'
+        },
+        titleFont: {
+            fontSize: '20pt'
+        },
+        contentFont: {
+            fontSize: '14pt'
+        },
+        postButton: {
+            marginTop: 'auto',
+            marginRight: '20px',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
         }
     }));
     const classes = useStyles();
     const dispatch = useDispatch()
     const user = useSelector(state => state.loginReducer.user);
-    var bulletins = useSelector(state => state.classroomPageReducer.bulletins)
-    var fetchingBulletin = useSelector(state => state.classroomPageReducer.fetchingBulletin)
-    var bulletinList = []
-    useEffect(() => {
-        dispatch(fetchBulletinAsync())
-    }, [])
-    if (!fetchingBulletin) {
-        bulletinList = bulletins.map((bulletin) =>
-            <div key={bulletin.timeStamp} className={classes.bulletinPostit}>
-                <Bulletin bulletin={bulletin} />
-            </div>
-        )
-    }
+    const [expanded, setExpanded] = useState(false)
+    var bulletins = useSelector(state => state.classroomPageReducer.bulletinList)
+    var bulletinList = bulletins.map((bulletin) =>
+        <div key={bulletin.timeStamp} className={classes.bulletinPostit}>
+            <Bulletin bulletin={bulletin} />
+        </div>
+    )
+
     return (
-        <div>
-            <div className={classes.root}>
-                {
-                    fetchingBulletin ?
-                        <CircularProgress /> :
-                        bulletinList
-                }
+        <div className={classes.root}>
+            <div className={classes.bulletinPostit}>
+                <Card square elevation={5} onClick={() => setExpanded(true)}>
+                    <CardActionArea className={classes.createRoot}>
+                        <Typography variant='h5' className={classes.createTitle}>
+                            <div style={{display: 'flex', alignItems: 'center'}}>
+
+                                {"新增貼文"}<CreateIcon></CreateIcon>
+                            </div>
+                        </Typography>
+
+
+                    </CardActionArea>
+                </Card>
+                {expanded && <div className={classes.layer} onClick={() => setExpanded(false)}></div>}
+                <Zoom in={expanded}>
+                    <Card className={classes.expandedCard}>
+                        <div className={classes.expandedTitle}>
+                            <TextField
+                                placeholder="標題"
+                                fullWidth
+                                onChange={(e) => dispatch(newBulletinOnchange("title", e.target.value))}
+                                InputProps={{
+                                    classes: {
+                                        input: classes.titleFont,
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className={classes.expandedTitle}>
+                            <TextField
+                                placeholder="內文"
+                                multiline
+                                fullWidth
+                                rows={4}
+                                onChange={(e) => dispatch(newBulletinOnchange("content", e.target.value))}
+                                InputProps={{
+                                    classes: {
+                                        input: classes.contentFont,
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div>
+                            {
+                                typeof user.userInfo !== 'undefined' && <div className={classes.expandedAuthor}>
+                                    <Avatar alt={user.userInfo.name} src={user.userInfo.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
+                                    <Typography variant="subtitle2" style={{ marginLeft: '10px', marginRight: '10px' }}>{user.userInfo.name}</Typography>
+                                </div>
+                            }
+
+
+                        </div>
+                        <div className={classes.postButton}>
+                            <Button variant="contained" color="primary" size="large">
+                                發布
+                            </Button>
+                        </div>
+                    </Card>
+                </Zoom>
             </div>
+            {
+                bulletinList
+            }
         </div>
     )
 }

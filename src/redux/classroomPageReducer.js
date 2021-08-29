@@ -7,14 +7,13 @@ import {
     FETCH_BULLETIN_START,
     FETCH_BULLETIN,
     REACT_TO_BULLETIN,
-    REACT_TO_REPLY
+    REACT_TO_REPLY,
+    NEW_BULLETIN_ONCHANGE
 } from '../actions/classroomPage'
 import { FETCH_LIST_START } from '../actions/courseList';
 
 const initialState = {
     currentTab: "overview",
-    bulletins: [],
-    fetchingBulletin: false,
     isFetching: false,
     classroomID: "",
     applicants: [],
@@ -27,8 +26,12 @@ const initialState = {
     review: true,
     students: [],
     visibility: 0,
-
-    courseList: []
+    courseList: [],
+    bulletinList: [],
+    newBulletinTitle: "",
+    newBulletinContent: "",
+    homeworkList: [],
+    quizList: []
 }
 
 const classroomPageReducer = (state = initialState, action) => {
@@ -38,22 +41,10 @@ const classroomPageReducer = (state = initialState, action) => {
                 ...state,
                 currentTab: action.payload.tab
             }
-        case FETCH_BULLETIN_START: {
-            return {
-                ...state,
-                fetchingBulletin: true
-            }
-        }
-        case FETCH_BULLETIN:
-            return {
-                ...state,
-                bulletins: action.payload.bulletinList,
-                fetchingBulletin: false
-            }
         case REACT_TO_BULLETIN:
             return {
                 ...state,
-                bulletins: state.bulletins.map(bulletin => {
+                bulletinList: state.bulletinList.map(bulletin => {
                     if (bulletin.id != action.payload.bulletinId) {
                         return bulletin
                     } else {
@@ -72,7 +63,7 @@ const classroomPageReducer = (state = initialState, action) => {
         case REACT_TO_REPLY:
             return {
                 ...state,
-                bulletins: state.bulletins.map(bulletin => {
+                bulletinList: state.bulletinList.map((bulletin) => {
                     if (bulletin.id != action.payload.bulletinId) {
                         return bulletin
                     } else {
@@ -88,7 +79,20 @@ const classroomPageReducer = (state = initialState, action) => {
                     }
                 })
             }
-        case FETCH_COURSEPLAN_START:
+        case NEW_BULLETIN_ONCHANGE:
+            if (action.payload.field == "title"){
+                return {
+                    ...state,
+                    newBulletinTitle: action.payload.value,
+                }
+            } else if (action.payload.field == " content"){
+                return {
+                    ...state,
+                    newBulletinContent: action. payload.value
+                }
+            }
+            
+        case FETCH_CLASSROOM_START:
             return {
                 ...state,
                 isFetching: true,
@@ -108,6 +112,9 @@ const classroomPageReducer = (state = initialState, action) => {
                 review: action.payload.review,
                 students: action.payload.students,
                 visibility: action.payload.visibility,
+                bulletinList: action.payload.bulletinList,
+                homeworkList: action.payload.homeworkList,
+                quizList: action.payload.examList
             }
         case FETCH_COURSEPLAN_START:
             return {
