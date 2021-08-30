@@ -15,6 +15,9 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 // import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder';
 // import Context from '@ckeditor/ckeditor5-core/src/context';
 
@@ -176,18 +179,15 @@ export default function CourseBlockEditor(props) {
                     <></>
                 }
                 <Grid item xs={10}>
-                    {focus ?
-                        <Paper onClick={() => setFocus(true)}>
-                            <CKEditor
-                                editor={ClassicEditor}
-                                data={props.block.content}
-                                onChange={(event, editor) => {
-                                    dispatch({ type: "MODIFY_CONTENT", payload: { index: props.index, content: editor.getData() } })
-                                }}
-                            /></Paper>
-                        :
-                        <EditorPreview data={props.block.content} onClick={() => setFocus(true)} />
-                    }
+                    <Paper onClick={() => setFocus(true)}>
+                        <CKEditor
+                            editor={ClassicEditor}
+                            data={props.block.content}
+                            onChange={(event, editor) => {
+                                dispatch({ type: "MODIFY_CONTENT", payload: { index: props.index, content: editor.getData() } })
+                            }}
+                        />                        
+                    </Paper>
                 </Grid>
                 {focus ?
                     <Grid item xs={1} className={classes.button_container}>

@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(1),
         flexGrow: 1,
         margin: '20px',
+        marginLeft: '280px',
 
     },
     toolbar: {
@@ -33,41 +34,55 @@ const useStyles = makeStyles((theme) => ({
         height: "100%",
         background: "rgba(104, 144, 79, 0.3)",
         color: '#000000',
-        paddingLeft: '100px',
-        paddingRight: '100px',
+        display: 'flex',
 
     },
     abstract: {
         marginLeft: theme.spacing(1),
         margin: '20px',
+        marginLeft: '280px',
 
 
     },
     creator: {
         marginLeft: theme.spacing(1),
         margin: '20px',
+        marginLeft: '280px',
 
+    },
+    left: {
+        float: 'left'
+        //flexShrink: '0',
     },
     button: {
         margin: theme.spacing(1),
-        width: '8%',
-        position: 'absolute',
-        right: '0',
-        marginTop: '50px',
+        width: '100%',
+        //position: 'relative',
+        paddingLeft: '265px',
+        flex: '1',
+        //right: '0',
+        //marginTop: '50px',
     },
     favoriteButton: {
         margin: theme.spacing(1),
         width: '8%',
-        position: 'absolute',
-        right: '0',
+        position: 'relative',
+        //right: '0',
+
+    },
+    deleteButton: {
+        margin: theme.spacing(1),
+        width: '8%',
+        position: 'relative',
+        //right: '0',
 
     },
     editButton: {
         margin: theme.spacing(1),
         width: '8%',
-        position: 'absolute',
-        right: '0',
-        marginTop: '100px',
+        position: 'relative',
+        //right: '0',
+        //marginTop: '100px',
 
     },
 }));
@@ -93,11 +108,9 @@ export default function NavBar(props) {
 
     function checkUserIsCreator() {
         if (props.creator === user.id) {
-            //console.log(user.id)
             setIsCreator(true)
         }
         else {
-            //console.log(user.id)
             setIsCreator(false)
         }
     }
@@ -105,6 +118,7 @@ export default function NavBar(props) {
     useEffect(() => {
         checkUserIsCreator()
     }, [user])
+
 
     const handleFavoriteCourse = () => {
         //send request to favorite the course.
@@ -126,25 +140,22 @@ export default function NavBar(props) {
         setOpen(false);
     };
 
-    const handleDeleteCourseAndRoute2PrevPage = () => {
+    const handleDeleteCourse = () => {
         //send a request to delete the course.
         fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${CourseID}`, {
             method: 'DELETE',
             credentials: "include"
-            })
-        .then(
-            console.log('Success: ', '200 OK')
-        )
-        .then(
-            route2PreviousPage
-        )
-        .catch(error => console.error('Error:', error))
-    
+        })
+            .then(
+                console.log('Success', '200 OK')
+            )
+            .catch(error => console.error('Error:', error))
     }
 
     return (
         <div>
             <AppBar position="static" className={classes.appbar} elevation={3}>
+                <div className={classes.left}>
                 <Typography variant="h4" className={classes.title}>
                     {props.context}
                 </Typography>
@@ -154,6 +165,8 @@ export default function NavBar(props) {
                 <Typography className={classes.creator}>
                     {`創建者：${props.creator}`}
                 </Typography>
+                </div>
+                <div className={classes.button}>
                 <Button
                     variant="contained"
                     color="secondary"
@@ -162,7 +175,7 @@ export default function NavBar(props) {
                     style={isLogin ? { display: '' } : { display: 'none' }}
                     onClick={handleFavoriteCourse}
                 >
-                    收藏課程
+                    收藏
                 </Button>
                 <Button
                     variant="contained"
@@ -177,13 +190,14 @@ export default function NavBar(props) {
                 <Button
                     variant="contained"
                     color="secondary"
-                    className={classes.button}
+                    className={classes.deleteButton}
                     startIcon={<DeleteIcon />}
                     style={isCreator ? { display: '' } : { display: 'none' }}
                     onClick={handleDeleteCourseButton}
                 >
-                    刪除課程
+                    刪除
                 </Button>
+                </div>
                 <Dialog
                     open={open}
                     onClose={handleClose}
@@ -195,7 +209,11 @@ export default function NavBar(props) {
                         <Button onClick={handleClose} color="primary">
                             取消
                         </Button>
-                        <Button onClick={handleDeleteCourseAndRoute2PrevPage} color="secondary">
+                        <Button onClick={() => {
+                            handleDeleteCourse()
+                            route2PreviousPage()
+                        }
+                        } color="secondary">
                             刪除
                         </Button>
                     </DialogActions>

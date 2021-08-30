@@ -66,7 +66,7 @@ const TitleBLock = (props) => {
             .then(res => res.json())
             .then(res => {
                 //res = blockid
-                blocksID.splice(0, 0, { title: courseBlockTitle, id: res })
+                blocksID.splice(0, 0, { type: "course", title: courseBlockTitle, id: res })
                 fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/blockOrder`, {
                     method: "PUT",
                     credentials: "include",
