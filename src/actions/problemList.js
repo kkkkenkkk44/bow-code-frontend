@@ -7,6 +7,8 @@ export const TAGS_FILTER_CHANGE = 'PROBLEM_TAGS_FILTER_CHANGE';
 export const CLICK_ALL_TAG = 'PROBLEM_CLICK_ALL_TAG'
 export const KEYWORD_CHANGE = 'PROBLEM_KEYWORD_CHANGE';
 export const SHOW_PROBLEM_INFO = 'PROBLEM_SHOW_PROBLEM_INFO'
+export const PICK_PROBLEM = 'PICK_PROBLEM'
+export const RESET_PICKED_PROBLEM = 'RESET_PICKED_PROBLEM'
 
 export const fetchProblemListRequest = () => ({
     type: FETCH_LIST_START
@@ -107,4 +109,20 @@ export function fetchProblemListAsync(checked = {}, refreshTag = true) {
                 console.log(e)
             })
     };
+}
+
+export function problemPicker(problem) {
+    return {
+        type: PICK_PROBLEM,
+        payload: {
+            id: problem.id,
+            name: problem.name
+        }
+    }
+}
+
+export function resetPickedProblem(){
+    return {
+        type: RESET_PICKED_PROBLEM
+    }
 }

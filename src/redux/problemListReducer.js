@@ -6,7 +6,9 @@ import {
     TAGS_FILTER_CHANGE,
     KEYWORD_CHANGE,
     SHOW_PROBLEM_INFO,
-    FETCH_TAGS_FINISH
+    FETCH_TAGS_FINISH,
+    PICK_PROBLEM,
+    RESET_PICKED_PROBLEM
 } from '../actions/problemList'
 
 const initialProblemListState = {
@@ -17,7 +19,9 @@ const initialProblemListState = {
     category: "all",
     checked: {},
     keyword: "",
-    showingInfoProblem: null
+    showingInfoProblem: null,
+    pickedProblems: [],
+    pickedProblemIds: []
 }
 
 const problemListReducer = (state = initialProblemListState, action) => {
@@ -65,6 +69,30 @@ const problemListReducer = (state = initialProblemListState, action) => {
             return {
                 ...state,
                 showingInfoProblem: action.payload.problem
+            }
+        case PICK_PROBLEM:
+            var newPicked = state.pickedProblems.map(item=>item)
+            var newPickedIds = state.pickedProblemIds.map(item => item)
+            var idx = newPickedIds.indexOf(action.payload.id)
+            if (idx >= 0) {
+                newPicked.splice(idx, 1)
+                newPickedIds.splice(idx, 1)
+            } else {
+                newPicked.push({
+                    id: action.payload.id,
+                    name: action.payload.name
+                })
+                newPickedIds.push(action.payload.id)
+            }
+            return {
+                ...state,
+                pickedProblems: newPicked,
+                pickedProblemIds: newPickedIds
+            }
+        case RESET_PICKED_PROBLEM:
+            return {
+                ...state,
+                pickedProblems: []
             }
         default:
             return state;

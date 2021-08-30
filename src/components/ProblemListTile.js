@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { Paper } from "@material-ui/core";
 import { CardActionArea } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
@@ -6,14 +7,18 @@ import { Typography } from "@material-ui/core";
 import { Chip } from "@material-ui/core";
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import StarIcon from '@material-ui/icons/Star';
+import { useSelector } from "react-redux";
 
 export default function ProblemListTile(props) {
     const problem = props.problem
+    const isPicker = props.isPicker
+    const picked = useSelector(state => state.problemListReducer.pickedProblemIds)
     const useStyles = makeStyles((theme) => ({
         root: {
             display: 'flex',
             height: theme.spacing(7),
-            alignItems: "center"
+            alignItems: "center",
+            backgroundColor: `${(isPicker && picked.includes(problem.id))? '#aeddc1' : '#ffffff'}`
         },
         name: {
             flex: 6,
@@ -62,7 +67,7 @@ export default function ProblemListTile(props) {
 
     }
     return <Paper elevation={1} square >
-        <CardActionArea className={classes.root} onClick={() => { }}>
+        <CardActionArea className={classes.root}>
             {difficulty}
             <div className={classes.name}>
                 <Typography className={classes.statusText} variant="h6" component="h5">
