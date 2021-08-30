@@ -41,77 +41,17 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-function getSteps() {
-return ['教案基本資訊', '選擇教案中的課程'];
-}
-
-function getStepContent(step) {
-switch (step) {
-    case 0:
-    return <CreateCoursePlanForm />
-    case 1:
-    return <SelectCourse />;
-    default:
-    return null;
-}
-}
-
-export default function CreateProblemPage() {
+export default function CreateCoursePlanPage() {
     const classes = useStyles();
-    const [activeStep, setActiveStep] = React.useState(0);
-    const steps = getSteps();
-  
-  
-    const handleNext = () => {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
-  
-    const handleBack = () => {
-      setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-  
-    console.log(activeStep, steps.length)
-    return (
-      <div className={classes.root}>
-        <NavBar context="Bow-Code" />
-        <div className={classes.paper}>
-          <Typography component="h1" variant="h6">
-              建立教案
-          </Typography>
+    return(
+        <div>
+            <NavBar context="Bow-Code" />
+            <div className={classes.paper}>
+                <Typography component="h1" variant="h6">
+                    建立教案
+                </Typography>
+                <CreateCoursePlanForm />
+            </div>
         </div>
-        <Stepper className={classes.stepper} activeStep={activeStep}>
-          {steps.map((label, index) => {
-            const stepProps = {};
-            const labelProps = {};
-            return (
-              <Step key={label} {...stepProps}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-        <div className={classes.stepContent}>
-          <div className={classes.stepContentBody}>
-            {getStepContent(activeStep)}
-          </div>
-          <div>
-            {
-              activeStep !== 0 && <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
-                上一步
-              </Button>
-            }
-            {
-              activeStep !== steps.length - 1 && <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNext}
-                className={classes.button}
-              >
-                下一步
-              </Button>
-            }
-          </div>
-        </div>
-      </div>
-    );
+    )
   }

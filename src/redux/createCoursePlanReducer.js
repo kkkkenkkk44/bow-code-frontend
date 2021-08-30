@@ -3,6 +3,7 @@ import { CHANGE_NAME, CHANGE_VISIBILITY } from "../actions/createCoursePlan";
 const initState = {
     name: "",
     visibility: 0,
+    courseList: [],
 }
 
 const createCoursePlanReducer = (state = initState, action) => {

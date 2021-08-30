@@ -12,6 +12,7 @@ import ProblemListPage from "./pages/ProblemListPage"
 import ClassroomPage from "./pages/ClassroomPage"
 import CourseEditorPage from "./pages/CourseEditorPage";
 import ClassroomPage from "./pages/ClassroomPage"
+import CoursePlanEditorPage from "./pages/CoursePlanEditorPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -50,6 +51,7 @@ function App() {
       <Route path='/classroom/:ClassroomID' component={ClassroomPage} />
       <Route path='/createCoursePlan' component={CreateCoursePlanPage} />
       <Route path='/problem/:ProblemID' component={ProblemPage} />
+      <Route path='/coursePlanEditor/:CoursePlanID' component={CoursePlanEditorPage} />
       <Route path='/createProblem' component={CreateProblemPage} />
       <Route path='/classroom/:ClassroomID' component={ClassroomPage}/>
       <Redirect from='/' to='/home' />
