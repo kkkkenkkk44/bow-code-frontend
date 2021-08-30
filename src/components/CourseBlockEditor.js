@@ -3,6 +3,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 // import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import { Grid, Popper, Paper, MenuList, MenuItem, ClickAwayListener, makeStyles, IconButton, Typography } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete';
+import SearchIcon from '@material-ui/icons/Search';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
@@ -18,6 +19,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import Tooltip from '@material-ui/core/Tooltip';
 // import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder';
 // import Context from '@ckeditor/ckeditor5-core/src/context';
 
@@ -192,33 +194,44 @@ export default function CourseBlockEditor(props) {
                 {focus ?
                     <Grid item xs={1} className={classes.button_container}>
                         <Grid container direction="column" justify="center" alignItems="center">
-                            <IconButton
-                                id={`addBlockButton_${props.index}`}
-                                onClick={(e) => {
-                                    setCreateBlockOptionConfig({
-                                        open: !createBlockOptionConfig.open,
-                                        anchor: document.getElementById(`addBlockButton_${props.index}`),
-                                        placement: 'right-start'
-                                    })
-                                }
-                                }>
-                                <AddIcon />
-                            </IconButton>
-                            <IconButton
-                                onClick={() => {
-
-                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block/${props.blockID}`, {
-                                        method: "DELETE",
-                                        credentials: "include"
-                                    })
-                                        .then(res => {
-                                            dispatch({ type: "DELETE_BLOCK", payload: { index: props.index } })
+                            <Tooltip title="新增">
+                                <IconButton
+                                    id={`addBlockButton_${props.index}`}
+                                    onClick={(e) => {
+                                        setCreateBlockOptionConfig({
+                                            open: !createBlockOptionConfig.open,
+                                            anchor: document.getElementById(`addBlockButton_${props.index}`),
+                                            placement: 'right-start'
                                         })
-                                        .catch(e => console.log(e))
-                                }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
+                                    }
+                                    }>
+                                    <AddIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="搜尋題目">
+                                <IconButton
+                                    //
+                                    >
+                                    <SearchIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="刪除方塊">
+                                <IconButton
+                                    onClick={() => {
+
+                                        fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block/${props.blockID}`, {
+                                            method: "DELETE",
+                                            credentials: "include"
+                                        })
+                                            .then(res => {
+                                                dispatch({ type: "DELETE_BLOCK", payload: { index: props.index } })
+                                            })
+                                            .catch(e => console.log(e))
+                                    }}
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Tooltip>
                         </Grid>
                         <Popper
                             open={createBlockOptionConfig.open}
