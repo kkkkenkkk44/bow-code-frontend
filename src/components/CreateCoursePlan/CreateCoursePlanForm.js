@@ -13,11 +13,11 @@ import { changeName, changeVisibility } from '../../actions/createCoursePlan';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(1),
+      marginTop: theme.spacing(8),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      width: '100%',
+      width: '93%',
     },
 
     avatar: {
@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
-
     visibilityText: {
       margin: '20px',
     },
@@ -42,41 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
   }));
 
-const BootstrapInput = withStyles((theme) => ({
-  root: {
-    'label + &': {
-      marginTop: theme.spacing(3),
-    },
-  },
-  input: {
-    
-    borderRadius: 4,
-    position: 'relative',
-    backgroundColor: theme.palette.background.paper,
-    border: '1px solid #ced4da',
-    fontSize: 16,
-    padding: '10px 26px 10px 12px',
-    transition: theme.transitions.create(['border-color', 'box-shadow']),
-    // Use the system font instead of the default Roboto font.
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    '&:focus': {
-      borderRadius: 4,
-      borderColor: '#80bdff',
-      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-    },
-  },
-}))(InputBase);
+
 
 export default function CreateCoursePlanForm() {
 
@@ -94,7 +59,35 @@ export default function CreateCoursePlanForm() {
       dispatch(changeVisibility(event.target.value));
     };
 
+    const [isSuccessful, setIsSuccessful] = useState(false)
+    const [coursePlanID, setCoursePlanID] = useState("")
+
+    const handleSubmit = (event) => {
+      var coursePlan_info = {
+          name: name,
+          courseList: [],
+          visibility: parseInt(visibility),
+      }
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan`, {
+          method: 'POST',
+          body: JSON.stringify(coursePlan_info),
+          credentials: "include"
+          })
+      .then(res => res.json())
+      .then(data => {
+        setCoursePlanID(data.CoursePlanID)
+        setIsSuccessful(true);
+      })
+      .catch(error => console.error('Error:', error))
+      //console.log(courseIDs)
+
+  }
+
+
     return (
+      isSuccessful ? 
+      <Redirect to={'/coursePlanEditor/' + coursePlanID} />
+      :
         <div className={classes.paper}>
             <form className={classes.form} noValidate>
             <TextField
@@ -125,6 +118,16 @@ export default function CreateCoursePlanForm() {
                 </Select>
               </FormControl>
               </div>
+              <Button
+                //type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleSubmit}
+              >
+                建立教案
+              </Button>
             </form>
         </div>
     )
