@@ -65,7 +65,7 @@ export default function CreateCoursePlanForm() {
     const handleSubmit = (event) => {
       var coursePlan_info = {
           name: name,
-          courseList: [],
+          componentList: [],
           visibility: parseInt(visibility),
       }
       fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan`, {
