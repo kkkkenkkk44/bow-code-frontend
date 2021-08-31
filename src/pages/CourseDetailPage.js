@@ -64,7 +64,7 @@ export default function CourseDetailPage() {
                 setCreator(data.creator)
                 setDisplayBlockList(() => data.blockList)
                 setIsFetched(true)
-                console.log(data)
+                //console.log(data)
             })
             .catch(error => console.error('Error:', error))
     }

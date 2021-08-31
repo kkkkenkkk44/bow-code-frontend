@@ -4,6 +4,7 @@ import { Grid, Button, makeStyles } from "@material-ui/core"
 import { Redirect } from "react-router"
 import { useState } from "react"
 import { useSelector } from "react-redux"
+import AddComponentButton from '../components/CreateCoursePlan/AddComponentButton';
 
 const useStyles = makeStyles((theme) => ({
     finishButton: {
@@ -17,7 +18,7 @@ export default function CoursePlanEditorPage(props){
     return (
         <div>
             <NavBar context="Bow-Code" />
-            
+            <AddComponentButton />
         </div>
     )
 

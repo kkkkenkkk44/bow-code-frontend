@@ -8,6 +8,10 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom'
 import SubmissionListTile from "../components/SubmissionListTile";
+import Tooltip from '@material-ui/core/Tooltip';
+import Zoom from '@material-ui/core/Zoom';
+import { Button } from '@material-ui/core';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 export default function ProblemPage() {
     const useStyles = makeStyles((theme) => ({
@@ -54,7 +58,7 @@ export default function ProblemPage() {
         difficulty: {
             display: "flex",
             justifyContent: "center"
-        }
+        },
     }))
     const classes = useStyles()
 
@@ -63,6 +67,7 @@ export default function ProblemPage() {
     const [language, setLanguage] = useState("cpp")
     const [openSubmissions, setOpenSubmissions] = useState(false)
     const { ProblemID } = useParams()
+    const isLogin = useSelector(state => state.loginReducer.isLogin)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -137,30 +142,32 @@ export default function ProblemPage() {
                 <NavBar context="Bow-Code" />
                 <Grid container justify="center">
                     <Grid item xs={5}>
-                        <div className={classes.rootHeight}><div className={classes.root}>
-                            <Grid container alignItems="center">
-                                <Typography variant="h5" component="h2" className={classes.name}>
-                                    {name}
-                                </Typography>
-                                <TagList />
-                                <div id="difficulty">
-                                    <div className={classes.difficulty}>
-                                        {difficulty === 0 ? "簡單" : difficulty === 1 ? "挑戰" : "專精"}
-                                    </div>
-                                    {difficultyStars().map((icon, index) => {
-                                        if (icon === "sb") return <StarBorderIcon key={index} />
-                                        if (icon === "s") return <StarIcon key={index} />
-                                    })}
-                                </div>
-                            </Grid>
-                            <Divider />
-                            <List>
-                                <ListItem>
-                                    <Typography dangerouslySetInnerHTML={{ __html: description }}>
+                        <div className={classes.rootHeight}>
+                            <div className={classes.root}>
+                                <Grid container alignItems="center">
+                                    <Typography variant="h5" component="h2" className={classes.name}>
+                                        {name}
                                     </Typography>
-                                </ListItem>
-                            </List>
-                        </div></div>
+                                    <TagList />
+                                    <div id="difficulty">
+                                        <div className={classes.difficulty}>
+                                            {difficulty === 0 ? "簡單" : difficulty === 1 ? "挑戰" : "專精"}
+                                        </div>
+                                        {difficultyStars().map((icon, index) => {
+                                            if (icon === "sb") return <StarBorderIcon key={index} />
+                                            if (icon === "s") return <StarIcon key={index} />
+                                        })}
+                                    </div>
+                                </Grid>
+                                <Divider />
+                                <List>
+                                    <ListItem>
+                                        <Typography dangerouslySetInnerHTML={{ __html: description }}>
+                                        </Typography>
+                                    </ListItem>
+                                </List>
+                            </div>
+                        </div>
                     </Grid>
                     <Grid item xs={7}>
                         <div className={classes.container}>

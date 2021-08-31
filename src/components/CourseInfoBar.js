@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Typography } from '@material-ui/core';
@@ -7,12 +7,21 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
 import { useParams } from 'react-router-dom';
 import loginReducer from '../redux/loginReducer.js';
 import { useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import CreateIcon from '@material-ui/icons/Create';
-
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import Tooltip from '@material-ui/core/Tooltip';
+import Zoom from '@material-ui/core/Zoom';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Radio from '@material-ui/core/Radio';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -56,38 +65,18 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         margin: theme.spacing(1),
-        width: '100%',
-        //position: 'relative',
+        width: '90%',
         paddingLeft: '265px',
         flex: '1',
-        //right: '0',
-        //marginTop: '50px',
     },
-    favoriteButton: {
+    functionButton: {
         margin: theme.spacing(1),
         width: '8%',
         position: 'relative',
-        //right: '0',
-
-    },
-    deleteButton: {
-        margin: theme.spacing(1),
-        width: '8%',
-        position: 'relative',
-        //right: '0',
-
-    },
-    editButton: {
-        margin: theme.spacing(1),
-        width: '8%',
-        position: 'relative',
-        //right: '0',
-        //marginTop: '100px',
-
     },
 }));
 
-export default function NavBar(props) {
+export default function CourseInfoBar(props) {
     const classes = useStyles()
 
     const { CourseID } = useParams()
@@ -114,6 +103,63 @@ export default function NavBar(props) {
             setIsCreator(false)
         }
     }
+
+
+    function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+      }
+    
+    const [openCoursePlanDialog, setOpenCoursePlanDialog] = useState(false)
+
+    const [coursePlanNameList, setCoursePlanNameList] = useState([])
+    const [coursePlanList, setCoursePlanList] = useState([
+    ])
+
+    const [coursePlanIDList, setCoursePlanIDList] = useState([])
+
+    const handleOpenCoursePlanDialog = () => {
+        setOpenCoursePlanDialog(true)
+        fetchCoursePlanIDList()
+        //fetchCoursePlanNameList()
+    }
+
+    const handleCloseCoursePlanDialog = () => {
+        //console.log(coursePlanIDList)
+        setOpenCoursePlanDialog(false)
+    }
+
+    function fetchCoursePlanIDList () {
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/user/${user.id}`, {
+            method: 'GET',
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(data => {
+                //console.log(data.ownCoursePlanList)
+            })
+            
+
+    }
+    function fetchCoursePlanNameList () {
+
+        coursePlanIDList.forEach(coursePlanID => 
+
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${coursePlanID}`, {
+                method: 'GET',
+                credentials: "include"
+            })
+                .then(res => res.json())
+                .then(data => 
+                    coursePlanNameList.push(data.name)
+                )
+            )
+
+            
+
+    }
+
+    const radioGroupRef = useRef(null);
 
     useEffect(() => {
         checkUserIsCreator()
@@ -152,6 +198,23 @@ export default function NavBar(props) {
             .catch(error => console.error('Error:', error))
     }
 
+    const options = [
+        'None',
+        'Atria',
+        'Callisto',
+        'Dione',
+        'Ganymede',
+        'Hangouts Call',
+        'Luna',
+        'Oberon',
+        'Phobos',
+        'Pyxis',
+        'Sedna',
+        'Titania',
+        'Triton',
+        'Umbriel',
+      ];
+
     return (
         <div>
             <AppBar position="static" className={classes.appbar} elevation={3}>
@@ -167,36 +230,84 @@ export default function NavBar(props) {
                 </Typography>
                 </div>
                 <div className={classes.button}>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    className={classes.favoriteButton}
-                    startIcon={<FavoriteIcon />}
-                    style={isLogin ? { display: '' } : { display: 'none' }}
-                    onClick={handleFavoriteCourse}
-                >
-                    收藏
-                </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    className={classes.editButton}
-                    startIcon={<CreateIcon />}
-                    style={isCreator ? { display: '' } : { display: 'none' }}
-                    onClick={()=>history.push(`/courseEditor/${CourseID}`)}
-                >
-                    編輯
-                </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    className={classes.deleteButton}
-                    startIcon={<DeleteIcon />}
-                    style={isCreator ? { display: '' } : { display: 'none' }}
-                    onClick={handleDeleteCourseButton}
-                >
-                    刪除
-                </Button>
+                    <Tooltip title="收藏課程" TransitionComponent={Zoom}>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            className={classes.functionButton}
+                            startIcon={<FavoriteIcon />}
+                            style={isLogin ? { display: '' } : { display: 'none' }}
+                            onClick={handleFavoriteCourse}
+                        >
+                            收藏
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="加入教案" TransitionComponent={Zoom}>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            className={classes.functionButton}
+                            startIcon={<PlaylistAddIcon />}
+                            style={isLogin ? { display: '' } : { display: 'none' }}
+                            onClick={handleOpenCoursePlanDialog}
+                        >
+                            加入
+                        </Button>
+                    </Tooltip>
+                    <Dialog
+                        maxWidth='xs'
+                        fullWidth={true}
+                        aria-labelledby="confirmation-dialog-title"
+                        open={openCoursePlanDialog}
+                        onClose={handleCloseCoursePlanDialog}
+                        >
+                        <DialogTitle id="confirmation-dialog-title">選擇教案</DialogTitle>
+                        <DialogContent dividers>
+                        <RadioGroup
+                            ref={radioGroupRef}
+                            aria-label="ringtone"
+                            name="coursePlanList"
+                            //value={value}
+                            //onChange={handleChange}
+                            >
+                            {options.map((option) => (
+                                <FormControlLabel value={option} key={option} control={<Radio />} label={option} />
+                            ))}
+                            </RadioGroup>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button autoFocus onClick={handleCloseCoursePlanDialog} color="primary">
+                            取消
+                            </Button>
+                            <Button onClick={handleCloseCoursePlanDialog} color="primary">
+                            確定
+                            </Button>
+                        </DialogActions>
+                        </Dialog>
+                    <Tooltip title="編輯課程" TransitionComponent={Zoom}>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            className={classes.functionButton}
+                            startIcon={<CreateIcon />}
+                            style={isCreator ? { display: '' } : { display: 'none' }}
+                            onClick={()=>history.push(`/courseEditor/${CourseID}`)}
+                        >
+                            編輯
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="刪除課程" TransitionComponent={Zoom}>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            className={classes.functionButton}
+                            startIcon={<DeleteIcon />}
+                            style={isCreator ? { display: '' } : { display: 'none' }}
+                            onClick={handleDeleteCourseButton}
+                        >
+                            刪除
+                        </Button>
+                    </Tooltip>
                 </div>
                 <Dialog
                     open={open}
