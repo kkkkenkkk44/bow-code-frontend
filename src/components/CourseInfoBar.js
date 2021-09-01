@@ -10,7 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import { useParams } from 'react-router-dom';
 import loginReducer from '../redux/loginReducer.js';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import CreateIcon from '@material-ui/icons/Create';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
@@ -90,6 +90,7 @@ export default function CourseInfoBar(props) {
     const isLogin = useSelector(state => state.loginReducer.isLogin)
 
     const history = useHistory();
+    const dispatch = useDispatch()
 
     const route2PreviousPage = () => {
         history.goBack()
@@ -112,6 +113,11 @@ export default function CourseInfoBar(props) {
     const [openCoursePlanDialog, setOpenCoursePlanDialog] = useState(false)
 
     const [coursePlanList, setCoursePlanList] = useState([])
+    const [selectedCoursePlanID, setSelectedCoursePlanID] = useState("");
+
+    const handleChange = (event) => {
+        setSelectedCoursePlanID(event.target.value);
+      };
 
     const handleOpenCoursePlanDialog = () => {
         setOpenCoursePlanDialog(true)
@@ -119,9 +125,12 @@ export default function CourseInfoBar(props) {
     }
 
     const handleCloseCoursePlanDialog = () => {
-        console.log(coursePlanList)
         setCoursePlanList([])
         setOpenCoursePlanDialog(false)
+    }
+
+    const handleSubmit = () => {
+        console.log(selectedCoursePlanID)
     }
 
 
@@ -146,6 +155,7 @@ export default function CourseInfoBar(props) {
                         setCoursePlanList((prev) => [...prev, {'id': ownCoursePlanID, 'name': res.name}])
                 
                     })
+
                     //.then(setUniqueCoursePlanList(coursePlanList.filter(onlyUnique)))
                     
                 }))
@@ -161,6 +171,7 @@ export default function CourseInfoBar(props) {
 
     useEffect(() => {
         checkUserIsCreator()
+
     }, [user])
 
 
@@ -195,23 +206,6 @@ export default function CourseInfoBar(props) {
             )
             .catch(error => console.error('Error:', error))
     }
-
-    const options = [
-        'None',
-        'Atria',
-        'Callisto',
-        'Dione',
-        'Ganymede',
-        'Hangouts Call',
-        'Luna',
-        'Oberon',
-        'Phobos',
-        'Pyxis',
-        'Sedna',
-        'Titania',
-        'Triton',
-        'Umbriel',
-      ];
 
     return (
         <div>
@@ -265,8 +259,8 @@ export default function CourseInfoBar(props) {
                             ref={radioGroupRef}
                             aria-label="ringtone"
                             name="coursePlanList"
-                            //value={value}
-                            //onChange={handleChange}
+                            value={selectedCoursePlanID}
+                            onChange={handleChange}
                             >
                             {coursePlanList.map((coursePlan) => (
                                 <FormControlLabel value={coursePlan.id} key={coursePlan.id} control={<Radio />} label={coursePlan.name} />
@@ -277,7 +271,7 @@ export default function CourseInfoBar(props) {
                             <Button autoFocus onClick={handleCloseCoursePlanDialog} color="primary">
                             取消
                             </Button>
-                            <Button onClick={handleCloseCoursePlanDialog} color="primary">
+                            <Button onClick={handleSubmit} color="primary">
                             確定
                             </Button>
                         </DialogActions>
