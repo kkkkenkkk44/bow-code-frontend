@@ -42,14 +42,5 @@ export default function Quiz() {
     }
     const classes = useStyles()
     return <div className={classes.root}>
-        <div className={classes.tile}>
-            <QuizTile quiz={mockQuiz} isRecord></QuizTile>
-        </div>
-        <div className={classes.tile}>
-            <QuizTile quiz={mockQuiz} isRecord></QuizTile>
-        </div>
-        <div className={classes.tile}>
-            <QuizTile quiz={mockQuiz} isRecord></QuizTile>
-        </div>
     </div>
 }

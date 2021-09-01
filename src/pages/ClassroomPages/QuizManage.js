@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import QuizTile from '../../components/ClassroomTabs/QuizTile'
 import { useDispatch } from 'react-redux';
@@ -18,6 +18,7 @@ import { ListItemSecondaryAction } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 import { Button } from '@material-ui/core';
+import { Tabs, Tab } from '@material-ui/core';
 import { InputAdornment } from '@material-ui/core';
 import {
     MuiPickersUtilsProvider,
@@ -28,6 +29,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { useSelector } from 'react-redux';
 import { ProblemListContent } from '../ProblemListPage'
 import { problemPicker } from '../../actions/problemList';
+import { createQuizAsync } from '../../actions/classroomPage';
 
 
 function PickedProblemTile(props) {
@@ -176,30 +178,46 @@ export default function QuizManage() {
             }
         ]
     }
+    const dispatch = useDispatch()
     const quizes = useSelector(state => state.classroomPageReducer.quizList)
     const homeworks = useSelector(state => state.classroomPageReducer.homeworkList)
     const pickedProblems = useSelector(state => state.problemListReducer.pickedProblems)
-    const [expanded, setExpanded] = useState(false)
+    const isCreatingQuiz = useSelector(state => state.classroomPageReducer.isCreatingQuiz)
+    const classroomID = useSelector(state => state.classroomPageReducer.classroomID)
+    const [createQuizExpanded, setCreateQuizExpanded] = useState(false)
+    const [scoreDetailExpanded, setScoreDetailExpanded] = useState(false)
     const [showProblemPicker, setShowProblemPicker] = useState(false)
     var defaultDeadline = new Date(Date.now())
     defaultDeadline.setHours(23)
     defaultDeadline.setMinutes(59)
     defaultDeadline.setSeconds(59)
     const [selectedDate, setSelectedDate] = React.useState(defaultDeadline);
+    const [problemType, setProblemType] = React.useState('homework');
+    const [title, setTitle] = React.useState("")
+    const [tab, setTab] = React.useState(0)
     const handleDateChange = (date) => {
         setSelectedDate(date);
     };
+    const handleProblemTypeChange = (event) => {
+        setProblemType(event.target.value);
+    };
+    const handleTitleChange = (event) => {
+        setTitle(event.target.value);
+    };
     const classes = useStyles()
-    const homeworkTiles = homeworks.map(hw => <div className={classes.tile}>
-        <QuizTile quiz={mockQuiz2} />
+    const homeworkTiles = homeworks.map((hw, i) => <div className={classes.tile}>
+        <QuizTile quiz={hw} index={i} type="homework" />
+    </div>)
+    const quizTiles = quizes.map((quiz, i) => <div className={classes.tile}>
+        <QuizTile quiz={quiz} index={i} type="quiz" />
     </div>)
     const pickedProblemTiles = pickedProblems.map((problem, i) => <PickedProblemTile problem={problem} index={i}></PickedProblemTile>)
     return <div className={classes.root}>
-        <Fab color="primary" className={classes.fab} onClick={() => { setExpanded(true) }}>
+        <Fab color="primary" className={classes.fab} onClick={() => { setCreateQuizExpanded(true) }}>
             <AddIcon />
         </Fab>
-        {expanded && <div className={classes.layer} onClick={() => setExpanded(false)}></div>}
-        <Zoom in={expanded}>
+        {(createQuizExpanded || scoreDetailExpanded) && <div className={classes.layer} onClick={() => setCreateQuizExpanded(false) && setScoreDetailExpanded(false)}></div>}
+        <Zoom in={createQuizExpanded}>
             <Card className={classes.expandedCard}>
                 <div className={classes.expandedTitle}>
                     <Typography variant='h5'>建立考試與作業</Typography>
@@ -207,22 +225,23 @@ export default function QuizManage() {
                 <div className={classes.form}>
                     <div>
                         <FormLabel component="legend">類型</FormLabel>
-                        <RadioGroup row aria-label="position" name="position" defaultValue="top">
-                            <FormControlLabel
-                                value="quiz"
-                                control={<Radio color="primary" />}
-                                label="考試"
-                            />
+                        <RadioGroup row aria-label="position" name="position" value={problemType} onChange={handleProblemTypeChange}>
                             <FormControlLabel
                                 value="homework"
                                 control={<Radio color="primary" />}
                                 label="作業"
+                            />
+                            <FormControlLabel
+                                value="quiz"
+                                control={<Radio color="primary" />}
+                                label="考試"
                             />
                         </RadioGroup>
                     </div>
                     <TextField
                         fullWidth
                         label={"標題"}
+                        onChange={handleTitleChange}
                     ></TextField>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
@@ -271,14 +290,27 @@ export default function QuizManage() {
                     </Zoom>
                 </div>
                 <div className={classes.postButton}>
-                    <Button variant="contained" color="primary" size="large">
+                    <Button variant="contained" color="primary" size="large" onClick={() => {dispatch(createQuizAsync(problemType, title, selectedDate, pickedProblems, classroomID)) ; setCreateQuizExpanded(false)}}>
                         發布
                     </Button>
                 </div>
             </Card>
         </Zoom>
-        <div className={classes.quizList}>
+        <Tabs
+            value={tab}
+            onChange={(e, value) => setTab(value)}
+            indicatorColor="primary"
+            textColor="primary"
+            centered
+        >
+            <Tab label="作業" />
+            <Tab label="考試" />
+        </Tabs>
+        {tab == 0 ? <div className={classes.quizList}>
             {homeworkTiles}
-        </div>
+        </div>: <div className={classes.quizList}>
+            {quizTiles}
+        </div>}
+        
     </div>
 }

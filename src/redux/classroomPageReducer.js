@@ -8,7 +8,10 @@ import {
     FETCH_BULLETIN,
     REACT_TO_BULLETIN,
     REACT_TO_REPLY,
-    NEW_BULLETIN_ONCHANGE
+    NEW_BULLETIN_ONCHANGE,
+    CREATE_QUIZ,
+    CREATE_QUIZ_FAILED,
+    CREATE_QUIZ_START
 } from '../actions/classroomPage'
 import { FETCH_LIST_START } from '../actions/courseList';
 
@@ -31,7 +34,8 @@ const initialState = {
     newBulletinTitle: "",
     newBulletinContent: "",
     homeworkList: [],
-    quizList: []
+    quizList: [],
+    creatingQuiz: "none"
 }
 
 const classroomPageReducer = (state = initialState, action) => {
@@ -80,18 +84,18 @@ const classroomPageReducer = (state = initialState, action) => {
                 })
             }
         case NEW_BULLETIN_ONCHANGE:
-            if (action.payload.field == "title"){
+            if (action.payload.field == "title") {
                 return {
                     ...state,
                     newBulletinTitle: action.payload.value,
                 }
-            } else if (action.payload.field == " content"){
+            } else if (action.payload.field == " content") {
                 return {
                     ...state,
-                    newBulletinContent: action. payload.value
+                    newBulletinContent: action.payload.value
                 }
             }
-            
+
         case FETCH_CLASSROOM_START:
             return {
                 ...state,
@@ -126,6 +130,21 @@ const classroomPageReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 courseList: action.payload.courseList
+            }
+        case CREATE_QUIZ:
+            return {
+                ...state,
+                isCreatingQuiz: 'none'
+            }
+        case CREATE_QUIZ_START:
+            return {
+                ...state,
+                isCreatingQuiz: 'pending'
+            }
+        case CREATE_QUIZ_FAILED:
+            return {
+                ...state,
+                isCreatingQuiz: 'failed'
             }
         default:
             return state;
