@@ -91,7 +91,7 @@ export default function AddComponentButton(props) {
                                     從課程列表瀏覽
                                 </MenuItem>
                                 <MenuItem>
-                                    ...
+                                    加入我建立或我收藏的課程
                                 </MenuItem>
                             </MenuList>
                         </ClickAwayListener>

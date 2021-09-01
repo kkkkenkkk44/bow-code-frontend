@@ -111,24 +111,22 @@ export default function CourseInfoBar(props) {
     
     const [openCoursePlanDialog, setOpenCoursePlanDialog] = useState(false)
 
-    const [coursePlanNameList, setCoursePlanNameList] = useState([])
-    const [coursePlanList, setCoursePlanList] = useState([
-    ])
-
-    const [coursePlanIDList, setCoursePlanIDList] = useState([])
+    const [coursePlanList, setCoursePlanList] = useState([])
 
     const handleOpenCoursePlanDialog = () => {
         setOpenCoursePlanDialog(true)
         fetchCoursePlanIDList()
-        //fetchCoursePlanNameList()
     }
 
     const handleCloseCoursePlanDialog = () => {
-        //console.log(coursePlanIDList)
+        console.log(coursePlanList)
+        setCoursePlanList([])
         setOpenCoursePlanDialog(false)
     }
 
+
     function fetchCoursePlanIDList () {
+
 
         fetch(`${process.env.REACT_APP_BACKEND_URL}/user/${user.id}`, {
             method: 'GET',
@@ -137,27 +135,27 @@ export default function CourseInfoBar(props) {
             .then(res => res.json())
             .then(data => {
                 //console.log(data.ownCoursePlanList)
+                Promise.all(data.ownCoursePlanList.map(ownCoursePlanID => {
+                    fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${ownCoursePlanID}`, {
+                        method: 'GET',
+                        credentials: "include"
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        //console.log(res.name)
+                        setCoursePlanList((prev) => [...prev, {'id': ownCoursePlanID, 'name': res.name}])
+                
+                    })
+                    //.then(setUniqueCoursePlanList(coursePlanList.filter(onlyUnique)))
+                    
+                }))
+                
+                
             })
             
 
     }
-    function fetchCoursePlanNameList () {
 
-        coursePlanIDList.forEach(coursePlanID => 
-
-            fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${coursePlanID}`, {
-                method: 'GET',
-                credentials: "include"
-            })
-                .then(res => res.json())
-                .then(data => 
-                    coursePlanNameList.push(data.name)
-                )
-            )
-
-            
-
-    }
 
     const radioGroupRef = useRef(null);
 
@@ -270,8 +268,8 @@ export default function CourseInfoBar(props) {
                             //value={value}
                             //onChange={handleChange}
                             >
-                            {options.map((option) => (
-                                <FormControlLabel value={option} key={option} control={<Radio />} label={option} />
+                            {coursePlanList.map((coursePlan) => (
+                                <FormControlLabel value={coursePlan.id} key={coursePlan.id} control={<Radio />} label={coursePlan.name} />
                             ))}
                             </RadioGroup>
                         </DialogContent>
