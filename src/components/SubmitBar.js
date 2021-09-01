@@ -13,6 +13,10 @@ import MenuList from '@material-ui/core/MenuList';
 import { Avatar } from '@material-ui/core';
 import zIndex from '@material-ui/core/styles/zIndex';
 import { getLanguageID } from "../constants";
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import Zoom from '@material-ui/core/Zoom';
 
 const useStyles = makeStyles((theme) => ({
     appbar: {
@@ -31,11 +35,18 @@ const useStyles = makeStyles((theme) => ({
     submissionButton: {
         // flexGrow: 2,
         color: "#ffffff",
-    }
+    },
+    functionButton: {
+        margin: theme.spacing(1),
+        width: '8%',
+        position: 'relative',
+    },
 }));
 
 export default function SubmitBar(props) {
     const classes = useStyles()
+    const isLogin = useSelector(state => state.loginReducer.isLogin)
+
 
     const handleSubmit = () => {
         var submission = {
@@ -60,6 +71,18 @@ export default function SubmitBar(props) {
                 <Button className={classes.submissionButton} onClick={props.handleCheckSubmission}>
                     作答紀錄
                 </Button>
+                <Tooltip title="加入教案" TransitionComponent={Zoom}>
+                        <Button
+                            variant="contained"
+                            //color="secondary"
+                            className={classes.functionButton}
+                            startIcon={<PlaylistAddIcon />}
+                            style={isLogin ? { display: '' } : { display: 'none' }}
+                            //onClick={handleOpenCoursePlanDialog}
+                        >
+                            加入
+                        </Button>
+                    </Tooltip>
                 <div className={classes.context}></div>
                 <Button className={classes.submitButton} onClick={handleSubmit}>
                     提交

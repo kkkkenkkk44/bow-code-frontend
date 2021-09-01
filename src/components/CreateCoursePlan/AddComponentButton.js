@@ -1,4 +1,3 @@
-import { DialogTitle } from '@material-ui/core'
 import React from 'react';
 import { useHistory } from "react-router-dom";
 // import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
@@ -13,6 +12,14 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import Zoom from '@material-ui/core/Zoom';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { fetchOwnCourseAsync, fetchFavCourseAsync } from '../../actions/userPage'
+import { CircularProgress } from '@material-ui/core'
+import OwnAndFavCourseCard from './OwnAndFavCourseCard'
 
 const useStyles = makeStyles((theme) => ({
     button_container: {
@@ -57,6 +64,45 @@ export default function AddComponentButton(props) {
         })
     }
 
+    const [openOwnAndFavCourseDialog, setOpenOwnAndFavCourseDialog] = useState(false)
+
+    var ownCourse = useSelector(state => state.userPageReducer.ownCourse)
+    var favCourse = useSelector(state => state.userPageReducer.favCourse)
+    const favFetching = useSelector(state => state.userPageReducer.favCourseFetching);
+    const ownFetching = useSelector(state => state.userPageReducer.ownCourseFetching);
+    const user = useSelector(state => state.loginReducer.user);
+    var ownCardList = []
+    var favCardList = []
+
+    if (!ownFetching && ownCourse != null) {
+        ownCardList = ownCourse.map((course) =>
+            <div key={course.id} className={classes.courseCard}>
+                <OwnAndFavCourseCard brief course={course} />
+            </div>
+        )
+    }
+    if (!favFetching && favCourse != null) {
+        favCardList = favCourse.map((course) =>
+            <div key={course.id} className={classes.courseCard}>
+                <OwnAndFavCourseCard brief course={course} />
+            </div>
+        )
+    }
+    
+
+    const handleOwnAndFavCourseDialog = () => {
+        setOpenOwnAndFavCourseDialog(true)
+        if (typeof user.id !== 'undefined') {
+            dispatch(fetchOwnCourseAsync(user.ownCourseList))
+            dispatch(fetchFavCourseAsync(user.favoriteCourseList))
+        }
+    }
+    const handleCloseOwnAndFavCourseDialog = () => {
+        setOpenOwnAndFavCourseDialog(false);
+      };
+
+    
+
     return (
         <div>
             <Grid container direction="column" alignItems="center">
@@ -90,9 +136,40 @@ export default function AddComponentButton(props) {
                                 <MenuItem onClick={() => history.push(`/courseList`)}>
                                     從課程列表瀏覽
                                 </MenuItem>
-                                <MenuItem>
-                                    加入我建立或我收藏的課程
+                                <MenuItem onClick={handleOwnAndFavCourseDialog}>
+                                    加入我建立或收藏的課程
                                 </MenuItem>
+                                <Dialog 
+                                onClose={handleCloseOwnAndFavCourseDialog}
+                                aria-labelledby="customized-dialog-title"
+                                open={openOwnAndFavCourseDialog}
+                                maxWidth="xs"
+                                fullWidth="true"
+                                >
+                                    <DialogTitle id="customized-dialog-title" onClose={handleCloseOwnAndFavCourseDialog}>
+                                    我建立或收藏的課程
+                                    </DialogTitle>
+                                    <DialogContent dividers>
+                                    {
+                                        ownFetching ?
+                                            <CircularProgress /> :
+                                            ownCardList
+                                    }
+                                    {
+                                        favFetching ?
+                                            <CircularProgress /> :
+                                            favCardList
+                                    }
+                                    </DialogContent>
+                                    <DialogActions>
+                                    <Button onClick={handleCloseOwnAndFavCourseDialog} color="primary">
+                                        取消
+                                    </Button>
+                                    <Button autoFocus onClick={handleCloseOwnAndFavCourseDialog} color="primary">
+                                        確認加入
+                                    </Button>
+                                    </DialogActions>
+                                </Dialog>
                             </MenuList>
                         </ClickAwayListener>
                     </Paper>

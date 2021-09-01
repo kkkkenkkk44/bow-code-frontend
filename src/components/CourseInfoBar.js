@@ -89,6 +89,8 @@ export default function CourseInfoBar(props) {
 
     const isLogin = useSelector(state => state.loginReducer.isLogin)
 
+    const coursePlanListFromReducer = useSelector(state => state.coursePlanEditorReducer.coursePlanList)
+
     const history = useHistory();
     const dispatch = useDispatch()
 
@@ -112,7 +114,6 @@ export default function CourseInfoBar(props) {
     
     const [openCoursePlanDialog, setOpenCoursePlanDialog] = useState(false)
 
-    const [coursePlanList, setCoursePlanList] = useState([])
     const [selectedCoursePlanID, setSelectedCoursePlanID] = useState("");
 
     const handleChange = (event) => {
@@ -121,16 +122,32 @@ export default function CourseInfoBar(props) {
 
     const handleOpenCoursePlanDialog = () => {
         setOpenCoursePlanDialog(true)
-        fetchCoursePlanIDList()
+        //console.log(coursePlanListFromReducer)
     }
 
     const handleCloseCoursePlanDialog = () => {
-        setCoursePlanList([])
+        //console.log(coursePlanList)
+        //setCoursePlanList([])
         setOpenCoursePlanDialog(false)
     }
 
     const handleSubmit = () => {
-        console.log(selectedCoursePlanID)
+        
+        //console.log(selectedCoursePlanID)
+        var selectedCoursePlanIndex = coursePlanListFromReducer.findIndex(e => e.id === selectedCoursePlanID);
+        //console.log(selectedCoursePlanIndex)
+        var coursePlan_info_update = {
+            
+        }
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${selectedCoursePlanID}`, {
+            method: 'POST',
+            body: JSON.stringify(coursePlan_info_update),
+            credentials: "include"
+            })
+        .then(res => res.json())
+        .catch(error => console.error('Error:', error))
+        
+        
     }
 
 
@@ -144,6 +161,7 @@ export default function CourseInfoBar(props) {
             .then(res => res.json())
             .then(data => {
                 //console.log(data.ownCoursePlanList)
+                var tempCoursePlanList = []
                 Promise.all(data.ownCoursePlanList.map(ownCoursePlanID => {
                     fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${ownCoursePlanID}`, {
                         method: 'GET',
@@ -151,14 +169,18 @@ export default function CourseInfoBar(props) {
                     })
                     .then(res => res.json())
                     .then(res => {
-                        //console.log(res.name)
-                        setCoursePlanList((prev) => [...prev, {'id': ownCoursePlanID, 'name': res.name}])
+                        //console.log(res)
+                        tempCoursePlanList.push({'id': ownCoursePlanID, 'name': res.name, 'visibility': res.visibility})
                 
                     })
-
-                    //.then(setUniqueCoursePlanList(coursePlanList.filter(onlyUnique)))
                     
                 }))
+                .then(
+                    dispatch({ type : "STORE_COURSEPLANLIST", payload: tempCoursePlanList})
+                )
+                .then(
+                    console.log(coursePlanListFromReducer)
+                )
                 
                 
             })
@@ -171,8 +193,12 @@ export default function CourseInfoBar(props) {
 
     useEffect(() => {
         checkUserIsCreator()
+        if (isLogin) {
+            fetchCoursePlanIDList()
+        }
+    }, [isLogin])
 
-    }, [user])
+
 
 
     const handleFavoriteCourse = () => {
@@ -262,7 +288,7 @@ export default function CourseInfoBar(props) {
                             value={selectedCoursePlanID}
                             onChange={handleChange}
                             >
-                            {coursePlanList.map((coursePlan) => (
+                            {coursePlanListFromReducer.map((coursePlan) => (
                                 <FormControlLabel value={coursePlan.id} key={coursePlan.id} control={<Radio />} label={coursePlan.name} />
                             ))}
                             </RadioGroup>
