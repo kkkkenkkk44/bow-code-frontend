@@ -27,7 +27,7 @@ import { ListItemText } from '@material-ui/core';
 import { ListItemSecondaryAction } from '@material-ui/core';
 import { InputAdornment } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
-//import { PickedProblemTile } from '../../pages/ClassroomPages/QuizManage.js'
+import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     button_container: {
@@ -50,40 +50,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function PickedProblemTile(props) {
-    const index = props.index
-    const problem = props.problem
-    const dispatch = useDispatch()
-
-    return (
-        <div>
-            <ListItem style={{
-                flex: 1,
-                backgroundColor: '#f0f0f0',
-                marginBottom: '5px'
-            }}>
-                <ListItemText primary={problem.name} />
-                <TextField
-                    style={{ maxWidth: '60px' }}
-                    value={100}
-                    InputProps={{
-                        endAdornment: <InputAdornment position="end">分</InputAdornment>,
-                    }}></TextField>
-                <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete" onClick={() => { dispatch(problemPicker(problem)) }}>
-                        <ClearIcon />
-                    </IconButton>
-                </ListItemSecondaryAction>
-            </ListItem>
-        </div>
-    );
-}
 
 export default function AddComponentButton(props) {
 
     const classes = useStyles();
     const dispatch = useDispatch()
     const history = useHistory();
+    const { CoursePlanID } = useParams()
 
     const [courseOptionConfig, setCourseOptionConfig] = useState({
         open: false,
@@ -163,6 +136,29 @@ export default function AddComponentButton(props) {
 
     const handleSubmitProblem = () => {
         console.log(pickedProblems)
+    }
+
+    function updateCoursePlan(prevCoursePlanDetail) {
+        //console.log(prevCoursePlanDetail)
+        pickedProblems.foreach(element => {
+            prevCoursePlanDetail.componentList.push({
+                name: element.name,
+                type: 1,
+                setList: [{ id: element.id }],
+            })
+        })
+        var update_coursePlan_info = {
+            name: prevCoursePlanDetail.name,
+            componentList: prevCoursePlanDetail.componentList,
+            visibility: prevCoursePlanDetail.visibility,
+        }
+        //console.log(update_coursePlan_info)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${CoursePlanID}`, {
+            method: 'POST',
+            body: JSON.stringify(update_coursePlan_info),
+            credentials: "include",
+        })
+        .catch(error => console.error('Error:', error))
     }
     
 
