@@ -80,6 +80,7 @@ export default function AddComponentButton(props) {
 
     var ownCourse = useSelector(state => state.userPageReducer.ownCourse)
     var favCourse = useSelector(state => state.userPageReducer.favCourse)
+    const { chosenCourseList } = useSelector(state => state.coursePlanEditorReducer)
     const favFetching = useSelector(state => state.userPageReducer.favCourseFetching);
     const ownFetching = useSelector(state => state.userPageReducer.ownCourseFetching);
     const user = useSelector(state => state.loginReducer.user);
@@ -100,7 +101,7 @@ export default function AddComponentButton(props) {
             </div>
         )
     }
-    
+
 
     const handleOwnAndFavCourseDialog = () => {
         setOpenOwnAndFavCourseDialog(true)
@@ -111,7 +112,12 @@ export default function AddComponentButton(props) {
     }
     const handleCloseOwnAndFavCourseDialog = () => {
         setOpenOwnAndFavCourseDialog(false);
-      };
+    };
+    const handleAddCourseToCoursePlan = () => {
+        handleCloseOwnAndFavCourseDialog()
+        console.log(chosenCourseList)
+    }
+
 
 
     const [openProblemDialog, setOpenProblemDialog] = useState(false)
@@ -162,50 +168,50 @@ export default function AddComponentButton(props) {
                                 <MenuItem onClick={handleOwnAndFavCourseDialog}>
                                     加入我建立或收藏的課程
                                 </MenuItem>
-                                <Dialog 
-                                onClose={handleCloseOwnAndFavCourseDialog}
-                                aria-labelledby="customized-dialog-title"
-                                open={openOwnAndFavCourseDialog}
-                                maxWidth="sm"
-                                fullWidth="true"
+                                <Dialog
+                                    onClose={handleCloseOwnAndFavCourseDialog}
+                                    aria-labelledby="customized-dialog-title"
+                                    open={openOwnAndFavCourseDialog}
+                                    maxWidth="sm"
+                                    fullWidth="true"
                                 >
                                     <DialogTitle id="customized-dialog-title" onClose={handleCloseOwnAndFavCourseDialog}>
-                                    我建立或收藏的課程
+                                        我建立或收藏的課程
                                     </DialogTitle>
                                     <DialogContent dividers>
-                                    
+
                                         <Grid container spacing={1}>
-                                        <Grid item xs={12} sm={6} >
-                                            <Typography className={classes.paper}>我建立的課程</Typography>
-                                            <div className={classes.card}>
-                                            {
-                                                ownFetching ?
-                                                    <CircularProgress /> :
-                                                    ownCardList
-                                            }
-                                            </div>
+                                            <Grid item xs={12} sm={6} >
+                                                <Typography className={classes.paper}>我建立的課程</Typography>
+                                                <div className={classes.card}>
+                                                    {
+                                                        ownFetching ?
+                                                            <CircularProgress /> :
+                                                            ownCardList
+                                                    }
+                                                </div>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6} >
+                                                <Typography className={classes.paper}>我收藏的課程</Typography>
+                                                <div className={classes.card}>
+                                                    {
+                                                        favFetching ?
+                                                            <CircularProgress /> :
+                                                            favCardList
+                                                    }
+                                                </div>
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={12} sm={6} >
-                                            <Typography className={classes.paper}>我收藏的課程</Typography>
-                                            <div className={classes.card}>
-                                            {
-                                                favFetching ?
-                                                    <CircularProgress /> :
-                                                    favCardList
-                                            }
-                                            </div>
-                                        </Grid>
-                                        </Grid>
-                                    
-                                    
+
+
                                     </DialogContent>
                                     <DialogActions>
-                                    <Button onClick={handleCloseOwnAndFavCourseDialog} color="primary">
-                                        取消
-                                    </Button>
-                                    <Button autoFocus onClick={handleCloseOwnAndFavCourseDialog} color="primary">
-                                        確認加入
-                                    </Button>
+                                        <Button onClick={handleCloseOwnAndFavCourseDialog} color="primary">
+                                            取消
+                                        </Button>
+                                        <Button autoFocus onClick={() => handleAddCourseToCoursePlan()} color="primary">
+                                            確認加入
+                                        </Button>
                                     </DialogActions>
                                 </Dialog>
                             </MenuList>
