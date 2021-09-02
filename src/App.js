@@ -11,7 +11,6 @@ import CourseListPage from "./pages/CourseListPage";
 import ProblemListPage from "./pages/ProblemListPage"
 import ClassroomPage from "./pages/ClassroomPage"
 import CourseEditorPage from "./pages/CourseEditorPage";
-import ClassroomPage from "./pages/ClassroomPage"
 import CoursePlanEditorPage from "./pages/CoursePlanEditorPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";

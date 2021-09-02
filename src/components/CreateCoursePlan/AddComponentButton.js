@@ -20,6 +20,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { fetchOwnCourseAsync, fetchFavCourseAsync } from '../../actions/userPage'
 import { CircularProgress } from '@material-ui/core'
 import OwnAndFavCourseCard from './OwnAndFavCourseCard'
+import { ProblemListContent } from '../../pages/ProblemListPage'
+import { problemPicker } from '../../actions/problemList';
 
 const useStyles = makeStyles((theme) => ({
     button_container: {
@@ -111,6 +113,17 @@ export default function AddComponentButton(props) {
         setOpenOwnAndFavCourseDialog(false);
       };
 
+
+    const [openProblemDialog, setOpenProblemDialog] = useState(false)
+
+    const handleOpenProblemDialog = () => {
+        setOpenProblemDialog(true)
+
+    }
+    const handleCloseProblemDialog = () => {
+        setOpenProblemDialog(false);
+      };
+
     
 
     return (
@@ -144,7 +157,7 @@ export default function AddComponentButton(props) {
                             }}>
                             <MenuList>
                                 <MenuItem onClick={() => history.push(`/courseList`)}>
-                                    從課程列表瀏覽
+                                    跳轉至課程列表瀏覽
                                 </MenuItem>
                                 <MenuItem onClick={handleOwnAndFavCourseDialog}>
                                     加入我建立或收藏的課程
@@ -227,11 +240,35 @@ export default function AddComponentButton(props) {
                             }}>
                             <MenuList>
                                 <MenuItem onClick={() => history.push(`/problemList`)}>
-                                    從題目列表瀏覽
+                                    跳轉至題目列表瀏覽
                                 </MenuItem>
-                                <MenuItem>
-                                    ...
+                                <MenuItem onClick={handleOpenProblemDialog}>
+                                    加入題目
                                 </MenuItem>
+                                <Dialog 
+                                onClose={handleCloseProblemDialog}
+                                aria-labelledby="customized-dialog-title"
+                                open={openProblemDialog}
+                                maxWidth="md"
+                                fullWidth="true"
+                                >
+                                    <DialogTitle id="customized-dialog-title" onClose={handleCloseProblemDialog}>
+                                        題目
+                                    </DialogTitle>
+                                    <DialogContent dividers>
+                                        <div className={classes.problemList}>
+                                            <ProblemListContent isPicker={true} />
+                                        </div>
+                                    </DialogContent>
+                                    <DialogActions>
+                                    <Button onClick={handleCloseProblemDialog} color="primary">
+                                        取消
+                                    </Button>
+                                    <Button autoFocus onClick={handleCloseProblemDialog} color="primary">
+                                        確認加入
+                                    </Button>
+                                    </DialogActions>
+                                </Dialog>
                             </MenuList>
                         </ClickAwayListener>
                     </Paper>
