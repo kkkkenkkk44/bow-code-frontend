@@ -22,6 +22,12 @@ import { CircularProgress } from '@material-ui/core'
 import OwnAndFavCourseCard from './OwnAndFavCourseCard'
 import { ProblemListContent } from '../../pages/ProblemListPage'
 import { problemPicker } from '../../actions/problemList';
+import { ListItem } from '@material-ui/core';
+import { ListItemText } from '@material-ui/core';
+import { ListItemSecondaryAction } from '@material-ui/core';
+import { InputAdornment } from '@material-ui/core';
+import ClearIcon from '@material-ui/icons/Clear';
+//import { PickedProblemTile } from '../../pages/ClassroomPages/QuizManage.js'
 
 const useStyles = makeStyles((theme) => ({
     button_container: {
@@ -43,6 +49,35 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(2)
     },
 }));
+
+function PickedProblemTile(props) {
+    const index = props.index
+    const problem = props.problem
+    const dispatch = useDispatch()
+
+    return (
+        <div>
+            <ListItem style={{
+                flex: 1,
+                backgroundColor: '#f0f0f0',
+                marginBottom: '5px'
+            }}>
+                <ListItemText primary={problem.name} />
+                <TextField
+                    style={{ maxWidth: '60px' }}
+                    value={100}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">分</InputAdornment>,
+                    }}></TextField>
+                <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="delete" onClick={() => { dispatch(problemPicker(problem)) }}>
+                        <ClearIcon />
+                    </IconButton>
+                </ListItemSecondaryAction>
+            </ListItem>
+        </div>
+    );
+}
 
 export default function AddComponentButton(props) {
 
@@ -100,6 +135,7 @@ export default function AddComponentButton(props) {
             </div>
         )
     }
+
     
 
     const handleOwnAndFavCourseDialog = () => {
@@ -122,8 +158,12 @@ export default function AddComponentButton(props) {
     }
     const handleCloseProblemDialog = () => {
         setOpenProblemDialog(false);
-      };
+    };
+    const pickedProblems = useSelector(state => state.problemListReducer.pickedProblems)
 
+    const handleSubmitProblem = () => {
+        console.log(pickedProblems)
+    }
     
 
     return (
@@ -264,7 +304,7 @@ export default function AddComponentButton(props) {
                                     <Button onClick={handleCloseProblemDialog} color="primary">
                                         取消
                                     </Button>
-                                    <Button autoFocus onClick={handleCloseProblemDialog} color="primary">
+                                    <Button autoFocus onClick={handleSubmitProblem} color="primary">
                                         確認加入
                                     </Button>
                                     </DialogActions>
