@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from "react-router-dom";
 // import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
-import { Grid, Popper, Paper, MenuList, MenuItem, ClickAwayListener, makeStyles, IconButton, Typography } from '@material-ui/core'
+import { Grid, Popper, Paper, MenuList, MenuItem, ClickAwayListener, makeStyles, IconButton, Typography, Divider } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -29,7 +29,17 @@ const useStyles = makeStyles((theme) => ({
     block_typography: {
         padding: "1px 20px 1px 20px",
         minHeight: "30px"
-    }
+    },
+    root: {
+        flexGrew: 1,
+    },
+    paper: {
+        //padding: theme.spacing(2),
+        textAlign: 'center',
+    },
+    courseCard: {
+        margin: theme.spacing(2)
+    },
 }));
 
 export default function AddComponentButton(props) {
@@ -143,23 +153,38 @@ export default function AddComponentButton(props) {
                                 onClose={handleCloseOwnAndFavCourseDialog}
                                 aria-labelledby="customized-dialog-title"
                                 open={openOwnAndFavCourseDialog}
-                                maxWidth="xs"
+                                maxWidth="sm"
                                 fullWidth="true"
                                 >
                                     <DialogTitle id="customized-dialog-title" onClose={handleCloseOwnAndFavCourseDialog}>
                                     我建立或收藏的課程
                                     </DialogTitle>
                                     <DialogContent dividers>
-                                    {
-                                        ownFetching ?
-                                            <CircularProgress /> :
-                                            ownCardList
-                                    }
-                                    {
-                                        favFetching ?
-                                            <CircularProgress /> :
-                                            favCardList
-                                    }
+                                    
+                                        <Grid container spacing={1}>
+                                        <Grid item xs={12} sm={6} >
+                                            <Typography className={classes.paper}>我建立的課程</Typography>
+                                            <div className={classes.card}>
+                                            {
+                                                ownFetching ?
+                                                    <CircularProgress /> :
+                                                    ownCardList
+                                            }
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6} >
+                                            <Typography className={classes.paper}>我收藏的課程</Typography>
+                                            <div className={classes.card}>
+                                            {
+                                                favFetching ?
+                                                    <CircularProgress /> :
+                                                    favCardList
+                                            }
+                                            </div>
+                                        </Grid>
+                                        </Grid>
+                                    
+                                    
                                     </DialogContent>
                                     <DialogActions>
                                     <Button onClick={handleCloseOwnAndFavCourseDialog} color="primary">

@@ -63,6 +63,9 @@ export default function OwnAndFavCourseCard(props) {
         cover: {
             height: '100%'
         },
+        card: {
+            margin: theme.spacing(2),
+        }
     }));
     const classes = useStyles();
     const history = useHistory();
@@ -118,7 +121,7 @@ export default function OwnAndFavCourseCard(props) {
                     </CardContent>
                 </CardActionArea>
             </Card> :
-            <Card>
+            <Card className={classes.card}>
                 <CardActionArea  className={classes.root}>
                     <CardMedia
                         className={classes.cover}

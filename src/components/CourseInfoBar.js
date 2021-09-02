@@ -178,9 +178,7 @@ export default function CourseInfoBar(props) {
                 .then(
                     dispatch({ type : "STORE_COURSEPLANLIST", payload: tempCoursePlanList})
                 )
-                .then(
-                    console.log(coursePlanListFromReducer)
-                )
+                
                 
                 
             })
