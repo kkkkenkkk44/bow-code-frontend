@@ -110,15 +110,17 @@ export default function CourseInfoBar(props) {
 
     function onlyUnique(value, index, self) {
         return self.indexOf(value) === index;
-      }
-    
+    }
+
     const [openCoursePlanDialog, setOpenCoursePlanDialog] = useState(false)
 
     const [selectedCoursePlanID, setSelectedCoursePlanID] = useState("");
 
+    const [prevCoursePlanDetail, setPrevCoursePlanDetail] = useState({})
+
     const handleChange = (event) => {
         setSelectedCoursePlanID(event.target.value);
-      };
+    };
 
     const handleOpenCoursePlanDialog = () => {
         setOpenCoursePlanDialog(true)
@@ -132,27 +134,53 @@ export default function CourseInfoBar(props) {
     }
 
     const handleSubmit = () => {
-        
+
         //console.log(selectedCoursePlanID)
-        var selectedCoursePlanIndex = coursePlanListFromReducer.findIndex(e => e.id === selectedCoursePlanID);
-        //console.log(selectedCoursePlanIndex)
-        var coursePlan_info_update = {
-            
+        //var selectedCoursePlanIndex = coursePlanListFromReducer.findIndex(e => e.id === selectedCoursePlanID);
+        fetchSelectedCoursePlanDetail()
+        setOpenCoursePlanDialog(false)
+    }
+
+    function fetchSelectedCoursePlanDetail() {
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${selectedCoursePlanID}`, {
+            method: 'GET',
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(data => {
+                //console.log(data)
+                //setPrevCoursePlanDetail(data)
+                //console.log(prevCoursePlanDetail)
+                updateCoursePlan(data)
+            }
+            )
+            //.then(console.log(prevCoursePlanDetail))
+    }
+
+    function updateCoursePlan(data) {
+        //console.log(prevCoursePlanDetail)
+        data.componentList.push({
+            name: props.context,
+            type: 0,
+            setList: [{ id: CourseID }],
+        })
+        var update_coursePlan_info = {
+            name: data.name,
+            componentList: data.componentList,
+            visibility: data.visibility,
         }
+        //console.log(update_coursePlan_info)
         fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${selectedCoursePlanID}`, {
             method: 'POST',
-            body: JSON.stringify(coursePlan_info_update),
-            credentials: "include"
-            })
-        .then(res => res.json())
+            body: JSON.stringify(update_coursePlan_info),
+            credentials: "include",
+        })
         .catch(error => console.error('Error:', error))
-        
-        
     }
 
 
-    function fetchCoursePlanIDList () {
-
+    function fetchCoursePlanIDList() {
 
         fetch(`${process.env.REACT_APP_BACKEND_URL}/user/${user.id}`, {
             method: 'GET',
@@ -167,22 +195,22 @@ export default function CourseInfoBar(props) {
                         method: 'GET',
                         credentials: "include"
                     })
-                    .then(res => res.json())
-                    .then(res => {
-                        //console.log(res)
-                        tempCoursePlanList.push({'id': ownCoursePlanID, 'name': res.name, 'visibility': res.visibility})
-                
-                    })
-                    
+                        .then(res => res.json())
+                        .then(res => {
+                            //console.log(res)
+                            tempCoursePlanList.push({ 'id': ownCoursePlanID, 'name': res.name, 'visibility': res.visibility })
+
+                        })
+
                 }))
-                .then(
-                    dispatch({ type : "STORE_COURSEPLANLIST", payload: tempCoursePlanList})
-                )
-                
-                
-                
+                    .then(
+                        dispatch({ type: "STORE_COURSEPLANLIST", payload: tempCoursePlanList })
+                    )
+
+
+
             })
-            
+
 
     }
 
@@ -235,15 +263,15 @@ export default function CourseInfoBar(props) {
         <div>
             <AppBar position="static" className={classes.appbar} elevation={3}>
                 <div className={classes.left}>
-                <Typography variant="h4" className={classes.title}>
-                    {props.context}
-                </Typography>
-                <Typography variant="h6" className={classes.abstract}>
-                    {props.abstract}
-                </Typography>
-                <Typography className={classes.creator}>
-                    {`創建者：${props.creator}`}
-                </Typography>
+                    <Typography variant="h4" className={classes.title}>
+                        {props.context}
+                    </Typography>
+                    <Typography variant="h6" className={classes.abstract}>
+                        {props.abstract}
+                    </Typography>
+                    <Typography className={classes.creator}>
+                        {`創建者：${props.creator}`}
+                    </Typography>
                 </div>
                 <div className={classes.button}>
                     <Tooltip title="收藏課程" TransitionComponent={Zoom}>
@@ -276,30 +304,30 @@ export default function CourseInfoBar(props) {
                         aria-labelledby="confirmation-dialog-title"
                         open={openCoursePlanDialog}
                         onClose={handleCloseCoursePlanDialog}
-                        >
+                    >
                         <DialogTitle id="confirmation-dialog-title">選擇教案</DialogTitle>
                         <DialogContent dividers>
-                        <RadioGroup
-                            ref={radioGroupRef}
-                            aria-label="ringtone"
-                            name="coursePlanList"
-                            value={selectedCoursePlanID}
-                            onChange={handleChange}
+                            <RadioGroup
+                                ref={radioGroupRef}
+                                aria-label="ringtone"
+                                name="coursePlanList"
+                                value={selectedCoursePlanID}
+                                onChange={handleChange}
                             >
-                            {coursePlanListFromReducer.map((coursePlan) => (
-                                <FormControlLabel value={coursePlan.id} key={coursePlan.id} control={<Radio />} label={coursePlan.name} />
-                            ))}
+                                {coursePlanListFromReducer.map((coursePlan) => (
+                                    <FormControlLabel value={coursePlan.id} key={coursePlan.id} control={<Radio />} label={coursePlan.name} />
+                                ))}
                             </RadioGroup>
                         </DialogContent>
                         <DialogActions>
                             <Button autoFocus onClick={handleCloseCoursePlanDialog} color="primary">
-                            取消
+                                取消
                             </Button>
                             <Button onClick={handleSubmit} color="primary">
-                            確定
+                                確定
                             </Button>
                         </DialogActions>
-                        </Dialog>
+                    </Dialog>
                     <Tooltip title="編輯課程" TransitionComponent={Zoom}>
                         <Button
                             variant="contained"
@@ -307,7 +335,7 @@ export default function CourseInfoBar(props) {
                             className={classes.functionButton}
                             startIcon={<CreateIcon />}
                             style={isCreator ? { display: '' } : { display: 'none' }}
-                            onClick={()=>history.push(`/courseEditor/${CourseID}`)}
+                            onClick={() => history.push(`/courseEditor/${CourseID}`)}
                         >
                             編輯
                         </Button>
