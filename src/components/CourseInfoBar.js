@@ -194,19 +194,13 @@ export default function CourseInfoBar(props) {
                         .then(res => {
                             //console.log(res)
                             tempCoursePlanList.push({ 'id': ownCoursePlanID, 'name': res.name, 'visibility': res.visibility })
-
                         })
 
                 }))
                     .then(
                         dispatch({ type: "STORE_COURSEPLANLIST", payload: tempCoursePlanList })
                     )
-
-
-
             })
-
-
     }
 
 

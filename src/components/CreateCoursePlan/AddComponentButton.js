@@ -97,6 +97,7 @@ export default function AddComponentButton(props) {
     const favFetching = useSelector(state => state.userPageReducer.favCourseFetching);
     const ownFetching = useSelector(state => state.userPageReducer.ownCourseFetching);
     const user = useSelector(state => state.loginReducer.user);
+    //const prevCoursePlanDetail = useSelector(state => state.coursePlanEditorReducer.coursePlanDetail)
     var ownCardList = []
     var favCardList = []
 
