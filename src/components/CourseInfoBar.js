@@ -128,15 +128,10 @@ export default function CourseInfoBar(props) {
     }
 
     const handleCloseCoursePlanDialog = () => {
-        //console.log(coursePlanList)
-        //setCoursePlanList([])
         setOpenCoursePlanDialog(false)
     }
 
     const handleSubmit = () => {
-
-        //console.log(selectedCoursePlanID)
-        //var selectedCoursePlanIndex = coursePlanListFromReducer.findIndex(e => e.id === selectedCoursePlanID);
         fetchSelectedCoursePlanDetail()
         setOpenCoursePlanDialog(false)
     }

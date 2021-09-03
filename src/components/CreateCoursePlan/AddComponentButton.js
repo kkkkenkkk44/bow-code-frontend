@@ -48,6 +48,12 @@ const useStyles = makeStyles((theme) => ({
     courseCard: {
         margin: theme.spacing(2)
     },
+    menuBookIcon: {
+        margin: theme.spacing(2),
+    },
+    editIcon: {
+        margin: theme.spacing(2),
+    },
 }));
 
 
@@ -136,17 +142,23 @@ export default function AddComponentButton(props) {
 
     const handleSubmitProblem = () => {
         console.log(pickedProblems)
+        //updateCoursePlan(prevCoursePlanDetail)
     }
 
     function updateCoursePlan(prevCoursePlanDetail) {
         //console.log(prevCoursePlanDetail)
-        pickedProblems.foreach(element => {
-            prevCoursePlanDetail.componentList.push({
-                name: element.name,
-                type: 1,
-                setList: [{ id: element.id }],
-            })
+        var newSetList = []
+        Promise.all(pickedProblems.map(pickedProblem => 
+            newSetList.push({id: pickedProblem.id})
+        ))
+        //console.log(newSetList)
+        
+        prevCoursePlanDetail.componentList.push({
+            name: "quiz 或 homework",
+            type: 1,
+            setList: newSetList,
         })
+
         var update_coursePlan_info = {
             name: prevCoursePlanDetail.name,
             componentList: prevCoursePlanDetail.componentList,
@@ -176,6 +188,7 @@ export default function AddComponentButton(props) {
                             })
                         }
                         }
+                        className={classes.menuBookIcon}
                     >
                         <MenuBookIcon />
                     </IconButton>
@@ -259,6 +272,7 @@ export default function AddComponentButton(props) {
                             })
                         }
                         }
+                        className={classes.editIcon}
                     >
                         <EditIcon />
                     </IconButton>
@@ -279,7 +293,7 @@ export default function AddComponentButton(props) {
                                     跳轉至題目列表瀏覽
                                 </MenuItem>
                                 <MenuItem onClick={handleOpenProblemDialog}>
-                                    加入題目
+                                    加入題目至一個考試或作業
                                 </MenuItem>
                                 <Dialog 
                                 onClose={handleCloseProblemDialog}
