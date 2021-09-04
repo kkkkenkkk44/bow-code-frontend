@@ -309,9 +309,12 @@ export default function SubmitBar(props) {
                                             value={selectedComponent}
                                             onChange={handleChangeComponent}
                                             >
-                                            {selectedCoursePlanComponentListFromReducer.map((option) => (
-                                                <FormControlLabel value={option.id} key={option.id} control={<Radio />} label={option.name} />
-                                            ))}
+                                            {selectedCoursePlanComponentListFromReducer.map((option) => {
+                                                return option.type !== 0 ?
+                                                    <FormControlLabel value={option.id} key={option.id} control={<Radio />} label={option.name} />
+                                                    :
+                                                    null
+                                            })}
                                         </RadioGroup>
                                         <Divider />
                                         <ListItem button onClick={displayCreateComponentForm}>
