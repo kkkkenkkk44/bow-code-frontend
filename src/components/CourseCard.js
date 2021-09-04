@@ -83,7 +83,7 @@ export default function CourseCard(props) {
     switch (props.course.difficulty) {
         case 0:
             difficulty = <div className={classes.difficulty}>
-                <Typography variant="p" component="p" style={{ marginRight: '5px' }}>
+                <Typography variant="subtitle2" component="p" style={{ marginRight: '5px' }}>
                     簡單
                 </Typography>
                 <StarIcon></StarIcon>
@@ -93,7 +93,7 @@ export default function CourseCard(props) {
             break
         case 1:
             difficulty = <div className={classes.difficulty}>
-                <Typography variant="p" component="h3">
+                <Typography variant="subtitle2" component="h3">
                     挑戰
                 </Typography>
                 <StarIcon></StarIcon>
@@ -103,7 +103,7 @@ export default function CourseCard(props) {
             break
         case 2:
             difficulty = <div className={classes.difficulty}>
-                <Typography variant="p" component="h3">
+                <Typography variant="subtitle2" component="h3">
                     專精
                 </Typography>
                 <StarIcon></StarIcon>
