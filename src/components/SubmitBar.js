@@ -27,6 +27,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Form } from 'reactstrap';
 import { set } from 'date-fns';
 import { useParams } from 'react-router-dom';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
 
 const useStyles = makeStyles((theme) => ({
     appbar: {
@@ -166,6 +173,7 @@ export default function SubmitBar(props) {
     }
 
     const handleCloseCoursePlanDialog = () => {
+        setIsClickedAddButton(false)
         setOpenCoursePlanDialog(false)
         console.log(selectedCoursePlanDetailFromReducer)
         console.log(selectedCoursePlanComponentListFromReducer)
@@ -173,8 +181,12 @@ export default function SubmitBar(props) {
         
     }
     const handleAddProblem = () => {
-        updateCoursePlan(selectedCoursePlanDetailFromReducer)
-        setOpenCoursePlanDialog(false)
+        {isClickedAddButton ?
+            createNewComponentAndAddProblem(selectedCoursePlanDetailFromReducer)
+        :
+            updateCoursePlan(selectedCoursePlanDetailFromReducer)
+            setOpenCoursePlanDialog(false)
+        }
     }
 
     const handleChangeComponent = (event) => {
@@ -196,6 +208,44 @@ export default function SubmitBar(props) {
             credentials: "include",
         })
         .catch(error => console.error('Error:', error))
+    }
+
+    const [isClickedAddButton, setIsClickedAddButton] = useState(false)
+
+    const displayCreateComponentForm = () => {
+        setIsClickedAddButton(true)
+    }
+
+    const [examOrHomeworkName, setExamOrHomeworkName] = useState("")
+
+    const handleName = (event) => {
+        setExamOrHomeworkName(event.target.value)
+    }
+
+    const [problemType, setProblemType] = useState("1")
+
+    const handleProblemType = (event) => {
+        setProblemType(event.target.value)
+    }
+
+    function createNewComponentAndAddProblem(prevCoursePlanDetail) {
+        prevCoursePlanDetail.componentList.push({
+            name: examOrHomeworkName,
+            type: parseInt(problemType),
+            setList: [{ id: ProblemID}]
+        })
+        var update_coursePlan_info = {
+            name: prevCoursePlanDetail.name,
+            componentList: prevCoursePlanDetail.componentList,
+            visibility: prevCoursePlanDetail.visibility,
+        }
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${selectedCoursePlanID}`, {
+            method: 'POST',
+            body: JSON.stringify(update_coursePlan_info),
+            credentials: "include",
+        })
+        .catch(error => console.error('Error:', error))
+
     }
 
 
@@ -263,6 +313,45 @@ export default function SubmitBar(props) {
                                                 <FormControlLabel value={option.id} key={option.id} control={<Radio />} label={option.name} />
                                             ))}
                                         </RadioGroup>
+                                        <Divider />
+                                        <ListItem button onClick={displayCreateComponentForm}>
+                                            <AddIcon />
+                                            <ListItemText primary="建立新考試或作業並加入" style={{'paddingLeft': '10px'}}/>
+                                        </ListItem>
+                                        <ListItem >
+                                        {isClickedAddButton ? 
+                                            <TextField
+                                                id="name"
+                                                label="考試或作業名稱"
+                                                onChange={handleName}
+                                            />   
+                                        :
+                                            null
+                                        }
+                                        </ListItem>
+                                        <ListItem style={{'marginTop': '20px'}}>
+                                        {isClickedAddButton ? 
+                                            <FormControl className={classes.formControl}>
+                                            <InputLabel id="demo-simple-select-label">類型</InputLabel>
+                                                <Select
+                                                    native
+                                                    value={problemType}
+                                                    onChange={handleProblemType}
+                                                    label="類型"
+                                                    inputProps={{
+                                                    name: 'type',
+                                                    }}
+                                                    //className={classes.visibilityValue}
+                                                >
+                                                    <option value={1}>作業</option>
+                                                    <option value={2}>考試</option>
+                                                </Select>
+                                            </FormControl> 
+                                        :
+                                            null
+                                        }
+                                        </ListItem>
+                                        
                                     </Grid>
                                     :
                                     null
@@ -274,7 +363,11 @@ export default function SubmitBar(props) {
                                 取消
                             </Button>
                             <Button onClick={handleAddProblem} color="primary">
-                                確定
+                                {isClickedAddButton ?
+                                <div>確定建立並加入</div>
+                                :
+                                <div>確定加入</div>
+                                }
                             </Button>
                         </DialogActions>
                     </Dialog>
