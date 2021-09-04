@@ -159,7 +159,20 @@ export function changeDeadlineOfQuiz(quizType, quiz, newDeadline, classroomID, i
     quiz.end = newDeadline.getTime()
     const url = quizType == 'quiz' ? `${process.env.REACT_APP_BACKEND_URL}/classroom/exam/${classroomID}/${index}` : `${process.env.REACT_APP_BACKEND_URL}/classroom/homework/${classroomID}/${index}`
     return (dispatch) => {
-        fetch(url, {method: "PUT", credentials: "include", body: JSON.stringify(quiz)})
-        .then(()=> dispatch(fetchClassroomAsync(classroomID)))
+        fetch(url, { method: "PUT", credentials: "include", body: JSON.stringify(quiz) })
+            .then(() => dispatch(fetchClassroomAsync(classroomID)))
+    }
+}
+
+export function addProblemsToQuiz(quizType, quiz, problems, classroomID, index) {
+    var newProblems = problems.map(problem => ({
+        name: problem.name,
+        id: problem.id
+    }))
+    quiz.component.setList = quiz.component.setList.concat(newProblems)
+    const url = quizType == 'quiz' ? `${process.env.REACT_APP_BACKEND_URL}/classroom/exam/${classroomID}/${index}` : `${process.env.REACT_APP_BACKEND_URL}/classroom/homework/${classroomID}/${index}`
+    return (dispatch) => {
+        fetch(url, { method: "PUT", credentials: "include", body: JSON.stringify(quiz) })
+            .then(() => dispatch(fetchClassroomAsync(classroomID)))
     }
 }

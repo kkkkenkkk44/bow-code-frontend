@@ -1,8 +1,9 @@
 import React from 'react'
-import { Accordion, IconButton } from '@material-ui/core'
+import { Accordion, DialogContent, IconButton } from '@material-ui/core'
 import { AccordionSummary, AccordionDetails } from '@material-ui/core'
 import { Typography } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles';
 import { List } from '@material-ui/core'
 import { ListItem } from '@material-ui/core'
@@ -15,6 +16,9 @@ import { TimePicker } from "@material-ui/pickers";
 import { Dialog } from '@material-ui/core'
 import { DialogTitle } from '@material-ui/core'
 import { DialogActions } from '@material-ui/core'
+import { Zoom } from '@material-ui/core'
+import { Card } from '@material-ui/core'
+import { ProblemListContent } from '../../pages/ProblemListPage'
 import { useDispatch, useSelector } from 'react-redux'
 import {
     MuiPickersUtilsProvider,
@@ -22,7 +26,8 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { changeDeadlineOfQuiz, publishQuiz } from '../../actions/classroomPage'
+import { addProblemsToQuiz, changeDeadlineOfQuiz, publishQuiz } from '../../actions/classroomPage'
+import { resetPickedProblem } from '../../actions/problemList'
 
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
@@ -31,7 +36,7 @@ function ListItemLink(props) {
 function DeadlineSetter(props) {
     const { open, defaultDeadline, handleClose, handleConfirmChange } = props
     const [date, changeDate] = React.useState(defaultDeadline);
-    return <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth={'80%'}>
+    return <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth="lg">
         <DialogTitle id="simple-dialog-title">變更截止日期</DialogTitle>
         <div style={{ display: 'flex' }}>
             <MuiPickersUtilsProvider utils={DateFnsUtils} >
@@ -64,7 +69,7 @@ function DeadlineSetter(props) {
                 alignItems: 'center',
                 justifyContent: 'flex-end',
             }}>
-                <Button variant="contained" color="primary" onClick={() => {handleConfirmChange(date); handleClose()}}>變更</Button>
+                <Button variant="contained" color="primary" onClick={() => { handleConfirmChange(date); handleClose() }}>變更</Button>
             </div>
         </DialogActions>
     </Dialog>
@@ -131,15 +136,51 @@ export default function QuizTile(props) {
             height: '100%',
             width: `${isRecord ? quiz.score / quiz.totalScore * 100 : 0}%`,
             zIndex: 9
-        }
+        },
+        problemPicker: {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            height: '85vh',
+            width: '80vw',
+            marginLeft: "calc(50vw - 40vw)",
+            marginTop: '7.5vh',
+            zIndex: 100,
+            display: 'flex',
+            flexDirection: 'column'
+        },
+        problemList: {
+            maxHeight: '90%'
+        },
+        postButton: {
+            marginTop: 'auto',
+            marginRight: '20px',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+        },
+        layer: {
+            backgroundColor: "#000000",
+            opacity: 0.5,
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            height: '100vh',
+            width: '100vw',
+            zIndex: 99
+        },
     }));
     const classes = useStyles()
     const dispatch = useDispatch()
     const [open, setOpen] = React.useState(false);
     const [expandPublishDialog, setExpandPublishDialog] = React.useState(false)
+    const [showProblemPicker, setShowProblemPicker] = React.useState(false)
+    const [showAddProblemDialog, setShowAddProblemDialog] = React.useState(false)
     const classroomID = useSelector(state => state.classroomPageReducer.classroomID)
+    const pickedProblems = useSelector(state => state.problemListReducer.pickedProblems)
     const onConfirmChange = (date) => { dispatch(changeDeadlineOfQuiz(quizType, quiz, date, classroomID, index)) }
-    const problemList = quiz.component.setList.map(problem => <ListItemLink className={classes.content} target="_blank" rel="noopener noreferrer" href={`/problem/${problem.id}`}>
+    const problemList = quiz.component.setList.map((problem, i) => <ListItemLink className={classes.content} key={i} target="_blank" rel="noopener noreferrer" href={`/problem/${problem.id}`}>
         <ListItemText primary={problem.name} />
     </ListItemLink>)
     const remain = (quiz.end - Date.now()) / 1000
@@ -180,7 +221,44 @@ export default function QuizTile(props) {
                 </AccordionDetails> : <AccordionDetails className={classes.detail}>
                     <List className={classes.problemList}>
                         {problemList}
+                        <ListItemLink className={classes.content} onClick={() => setShowProblemPicker(true)}>
+                            <AddIcon style={{ fontSize: '14pt', color: '#989898' }} />
+                            <ListItemText primary={"追加題目"} />
+                        </ListItemLink>
                     </List>
+                    {showProblemPicker && <div className={classes.layer} onClick={() => setShowProblemPicker(false)}></div>}
+                    <Zoom in={showProblemPicker}>
+                        <Card className={classes.problemPicker}>
+                            <div className={classes.problemList}>
+                                <ProblemListContent isPicker={true} />
+                            </div>
+                            <div className={classes.postButton}>
+                                <Button variant="contained" color="primary" size="large" onClick={() => { setShowAddProblemDialog(true) }}>
+                                    追加
+                                </Button>
+                                <Dialog
+                                    open={showAddProblemDialog}
+                                    onClose={() => setShowAddProblemDialog(false)}
+                                    aria-labelledby="alert-dialog-title"
+                                    aria-describedby="alert-dialog-description"
+                                >
+                                    <DialogTitle id="alert-dialog-title">{`確定要將追加以下題目嗎?`}</DialogTitle>
+                                    <DialogContent>
+                                        {pickedProblems.map(problem => <Typography variant="subtitle2">{problem.name}</Typography>)}
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button onClick={() => { setShowAddProblemDialog(false) }} color="primary">
+                                            取消
+                                        </Button>
+                                        <Button onClick={() => { dispatch(addProblemsToQuiz(quizType, quiz, pickedProblems, classroomID, index)); dispatch(resetPickedProblem()); setShowProblemPicker(false); setShowAddProblemDialog(false) }} variant="contained" color="primary" autoFocus>
+                                            確定
+                                        </Button>
+                                    </DialogActions>
+                                </Dialog>
+                            </div>
+
+                        </Card>
+                    </Zoom>
                     <div className={classes.actions}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Switch
