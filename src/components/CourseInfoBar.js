@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add'
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -22,6 +23,12 @@ import ListItemText from '@material-ui/core/ListItemText';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { TramRounded } from '@material-ui/icons';
+import TextField from '@material-ui/core/TextField';
+import { changeName, changeVisibility } from '../actions/createCoursePlan';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -74,6 +81,10 @@ const useStyles = makeStyles((theme) => ({
         width: '8%',
         position: 'relative',
     },
+    addNewCoursePlan: {
+        alignItems: 'right',
+        maxWidth: '100%',
+    }
 }));
 
 export default function CourseInfoBar(props) {
@@ -90,6 +101,17 @@ export default function CourseInfoBar(props) {
     const isLogin = useSelector(state => state.loginReducer.isLogin)
 
     const coursePlanListFromReducer = useSelector(state => state.coursePlanEditorReducer.coursePlanList)
+
+    const name = useSelector(state => state.createCoursePlanReducer.name)
+    const visibility = useSelector(state => state.createCoursePlanReducer.visibility)
+
+    const handleName= (event) => {
+      dispatch(changeName(event.target.value));
+    };
+
+    const handleVisibility = (event) => {
+      dispatch(changeVisibility(event.target.value));
+    };
 
     const history = useHistory();
     const dispatch = useDispatch()
@@ -128,12 +150,18 @@ export default function CourseInfoBar(props) {
     }
 
     const handleCloseCoursePlanDialog = () => {
+        setIsClickedAddButton(false)
         setOpenCoursePlanDialog(false)
+        //setIsClickedAddButton(false)
     }
 
     const handleSubmit = () => {
-        fetchSelectedCoursePlanDetail()
-        setOpenCoursePlanDialog(false)
+        {isClickedAddButton?
+            createNewCoursePlanAndAddCourse()
+            :
+            fetchSelectedCoursePlanDetail()
+            setOpenCoursePlanDialog(false)
+        }
     }
 
     function fetchSelectedCoursePlanDetail() {
@@ -248,6 +276,30 @@ export default function CourseInfoBar(props) {
             .catch(error => console.error('Error:', error))
     }
 
+    const [isClickedAddButton, setIsClickedAddButton] = useState(false)
+
+    const displayCreateCoursePlanForm = () => {
+        setIsClickedAddButton(true)
+    }
+
+    function createNewCoursePlanAndAddCourse() {
+        var coursePlan_info = {
+            name: name,
+            componentList: [{
+                name: props.context,
+                type: 0,
+                setList: [{ id: CourseID}]
+            }],
+            visibility: parseInt(visibility),
+        }
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan`, {
+            method: 'POST',
+            body: JSON.stringify(coursePlan_info),
+            credentials: "include"
+            })
+        .catch(error => console.error('Error:', error))
+    }
+
     return (
         <div>
             <AppBar position="static" className={classes.appbar} elevation={3}>
@@ -308,12 +360,56 @@ export default function CourseInfoBar(props) {
                                 ))}
                             </RadioGroup>
                         </DialogContent>
+                        <DialogContent dividers >
+                            <ListItem button onClick={displayCreateCoursePlanForm}>
+                                <AddIcon />
+                                <ListItemText primary="建立新教案並加入此教案" style={{'paddingLeft': '10px'}}/>
+                                
+                            </ListItem>
+                            <ListItem >
+                            {isClickedAddButton ? 
+                                <TextField
+                                    id="name"
+                                    label="教案名稱"
+                                    onChange={handleName}
+                                />   
+                            :
+                                null
+                            }
+                            </ListItem>
+                            <ListItem style={{'marginTop': '20px'}}>
+                            {isClickedAddButton ? 
+                                <FormControl className={classes.formControl}>
+                                   <InputLabel id="demo-simple-select-label">教案權限</InputLabel>
+                                    <Select
+                                        native
+                                        value={visibility}
+                                        onChange={handleVisibility}
+                                        label="教案權限"
+                                        inputProps={{
+                                        name: 'visibility',
+                                        }}
+                                        className={classes.visibilityValue}
+                                    >
+                                        <option value={0}>不公開</option>
+                                        <option value={1}>公開</option>
+                                    </Select>
+                                </FormControl> 
+                            :
+                                null
+                            }
+                            </ListItem>
+                        </DialogContent>
                         <DialogActions>
                             <Button autoFocus onClick={handleCloseCoursePlanDialog} color="primary">
                                 取消
                             </Button>
                             <Button onClick={handleSubmit} color="primary">
-                                確定
+                                {isClickedAddButton ?
+                                <div>確定建立並加入</div>
+                                :
+                                <div>確定加入</div>
+                                }
                             </Button>
                         </DialogActions>
                     </Dialog>
