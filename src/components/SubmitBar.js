@@ -167,13 +167,14 @@ export default function SubmitBar(props) {
 
     const handleCloseCoursePlanDialog = () => {
         setOpenCoursePlanDialog(false)
-        //console.log(selectedCoursePlanDetailFromReducer)
-        //console.log(selectedCoursePlanComponentListFromReducer)
+        console.log(selectedCoursePlanDetailFromReducer)
+        console.log(selectedCoursePlanComponentListFromReducer)
         console.log(selectedComponent)
         
     }
     const handleAddProblem = () => {
         updateCoursePlan(selectedCoursePlanDetailFromReducer)
+        setOpenCoursePlanDialog(false)
     }
 
     const handleChangeComponent = (event) => {
