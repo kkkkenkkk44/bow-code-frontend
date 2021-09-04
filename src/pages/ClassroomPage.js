@@ -6,9 +6,11 @@ import { Typography } from '@material-ui/core';
 import { Avatar } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { auth } from "../actions/login"
+import { withStyles } from '@material-ui/core';
 
 import Overview from './UserPages/Overview'
 import BulletinBoard from './ClassroomPages/BulletinBoard';
+import Student from './ClassroomPages/Student'
 import Quiz from './ClassroomPages/Quiz'
 import QuizManage from './ClassroomPages/QuizManage'
 import { fetchClassroomAsync, switchTo } from '../actions/classroomPage';
@@ -28,6 +30,7 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import SchoolIcon from '@material-ui/icons/School';
 import SettingsIcon from '@material-ui/icons/Settings';
 import HistoryIcon from '@material-ui/icons/History';
+import Badge from '@material-ui/core/Badge';
 import { useParams } from 'react-router-dom';
 
 function MainWindow(props) {
@@ -39,6 +42,9 @@ function MainWindow(props) {
             </div>
             <div hidden={currentTab !== "bulletinBoard"}>
                 <BulletinBoard />
+            </div>
+            <div hidden={currentTab !== "student"}>
+                <Student />
             </div>
             <div hidden={currentTab !== "quiz"}>
                 <Quiz />
@@ -55,6 +61,16 @@ function MainWindow(props) {
         </div>
     )
 }
+
+const StyledBadge = withStyles((theme) => ({
+    badge: {
+        verticalAlign: 'center',
+        left: '50px',
+        top: '13px',
+        border: `2px solid ${theme.palette.background.paper}`,
+        padding: '0 4px',
+    },
+}))(Badge);
 
 export default function ClassroomManagerPage(props) {
     const useStyles = makeStyles((theme) => ({
@@ -96,6 +112,7 @@ export default function ClassroomManagerPage(props) {
     const dispatch = useDispatch();
     const user = useSelector(state => state.loginReducer.user)
     const authFinish = useSelector(state => state.loginReducer.authFinish)
+    const applicants = useSelector(state => state.classroomPageReducer.applicants)
     const classroom = useSelector(state => state.classroomPageReducer)
     const { ClassroomID } = useParams()
 
@@ -128,11 +145,11 @@ export default function ClassroomManagerPage(props) {
                             </ListItemIcon>
                             <ListItemText primary="課程內容" />
                         </ListItem>
-                        <ListItem className={classes.listItem} button>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("student"))}>
                             <ListItemIcon>
                                 <HistoryIcon />
                             </ListItemIcon>
-                            <ListItemText primary="學生" />
+                            <ListItemText primary={<StyledBadge badgeContent={applicants.length} color="secondary">學生</StyledBadge>} />
                         </ListItem>
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("quiz"))}>
                             <ListItemIcon>

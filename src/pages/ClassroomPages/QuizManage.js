@@ -28,7 +28,7 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import { useSelector } from 'react-redux';
 import { ProblemListContent } from '../ProblemListPage'
-import { problemPicker } from '../../actions/problemList';
+import { problemPicker, resetPickedProblem } from '../../actions/problemList';
 import { createQuizAsync } from '../../actions/classroomPage';
 
 
@@ -136,53 +136,10 @@ export default function QuizManage() {
             marginRight: '15%'
         },
     }));
-    const mockQuiz = {
-        title: "Sample quiz",
-        score: 30,
-        total: 100,
-        public: false,
-        deadline: "2021-08-25T23:59:59",
-        problems: [
-            {
-                name: "考題",
-                score: 40,
-                total: 40,
-                problemId: "60fc25e0dc40d09a9a0b0a40",
-            },
-            {
-                name: "考題二",
-                score: 20,
-                total: 60,
-                problemId: "6103623ffc77e001dde59406",
-            }
-        ]
-    }
-    const mockQuiz2 = {
-        title: "Sample quiz 2",
-        score: 60,
-        total: 100,
-        public: true,
-        deadline: "2021-08-23T23:59:59",
-        problems: [
-            {
-                name: "考題",
-                score: 40,
-                total: 40,
-                problemId: "60fc25e0dc40d09a9a0b0a40",
-            },
-            {
-                name: "考題二",
-                score: 20,
-                total: 60,
-                problemId: "6103623ffc77e001dde59406",
-            }
-        ]
-    }
     const dispatch = useDispatch()
     const quizes = useSelector(state => state.classroomPageReducer.quizList)
     const homeworks = useSelector(state => state.classroomPageReducer.homeworkList)
     const pickedProblems = useSelector(state => state.problemListReducer.pickedProblems)
-    const isCreatingQuiz = useSelector(state => state.classroomPageReducer.isCreatingQuiz)
     const classroomID = useSelector(state => state.classroomPageReducer.classroomID)
     const [createQuizExpanded, setCreateQuizExpanded] = useState(false)
     const [scoreDetailExpanded, setScoreDetailExpanded] = useState(false)
@@ -205,10 +162,10 @@ export default function QuizManage() {
         setTitle(event.target.value);
     };
     const classes = useStyles()
-    const homeworkTiles = homeworks.map((hw, i) => <div className={classes.tile}>
+    const homeworkTiles = homeworks.map((hw, i) => <div key={i} className={classes.tile}>
         <QuizTile quiz={hw} index={i} type="homework" />
     </div>)
-    const quizTiles = quizes.map((quiz, i) => <div className={classes.tile}>
+    const quizTiles = quizes.map((quiz, i) => <div key={i} className={classes.tile}>
         <QuizTile quiz={quiz} index={i} type="quiz" />
     </div>)
     const pickedProblemTiles = pickedProblems.map((problem, i) => <PickedProblemTile problem={problem} index={i}></PickedProblemTile>)
@@ -281,7 +238,7 @@ export default function QuizManage() {
                                 <ProblemListContent isPicker={true} />
                             </div>
                             <div className={classes.postButton}>
-                                <Button variant="contained" color="primary" size="large" onClick={() => { setShowProblemPicker(false) }}>
+                                <Button variant="contained" color="primary" size="large" onClick={() => { setShowProblemPicker(false); dispatch(resetPickedProblem()) }}>
                                     完成
                                 </Button>
                             </div>

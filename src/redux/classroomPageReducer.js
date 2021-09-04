@@ -4,14 +4,15 @@ import {
     FETCH_COURSEPLAN_FINISH,
     FETCH_CLASSROOM_START,
     FETCH_CLASSROOM_FINISH,
-    FETCH_BULLETIN_START,
-    FETCH_BULLETIN,
+    FETCH_SINGLE_STUDENT_INFO,
     REACT_TO_BULLETIN,
     REACT_TO_REPLY,
     NEW_BULLETIN_ONCHANGE,
     CREATE_QUIZ,
     CREATE_QUIZ_FAILED,
-    CREATE_QUIZ_START
+    CREATE_QUIZ_START,
+    FETCH_SINGLE_APPLICANT_INFO,
+    ACCEPT_APPLICATION
 } from '../actions/classroomPage'
 import { FETCH_LIST_START } from '../actions/courseList';
 
@@ -28,6 +29,8 @@ const initialState = {
     name: "",
     review: true,
     students: [],
+    studentInfos: {},
+    applicantInfos: {},
     visibility: 0,
     courseList: [],
     bulletinList: [],
@@ -120,6 +123,27 @@ const classroomPageReducer = (state = initialState, action) => {
                 homeworkList: action.payload.homeworkList,
                 quizList: action.payload.examList
             }
+        case FETCH_SINGLE_STUDENT_INFO:
+            return {
+                ...state,
+                studentInfos: {
+                    ...state.studentInfos,
+                    [action.payload.id]: {
+                        userInfo: action.payload.userInfo.userInfo,
+                        scores: action.payload.scores
+                    }
+                }
+            }
+        case FETCH_SINGLE_APPLICANT_INFO:
+            return {
+                ...state,
+                applicantInfos: {
+                    ...state.applicantInfos,
+                    [action.payload.id]: {
+                        userInfo: action.payload.userInfo.userInfo
+                    }
+                }
+            }
         case FETCH_COURSEPLAN_START:
             return {
                 ...state,
@@ -130,6 +154,24 @@ const classroomPageReducer = (state = initialState, action) => {
                 ...state,
                 isFetching: false,
                 courseList: action.payload.courseList
+            }
+        case ACCEPT_APPLICATION:
+            return {
+                ...state,
+                students: state.students.concat([action.payload.id]),
+                studentInfos: {
+                    ...state.studentInfos,
+                    [action.payload.id]: {
+                        ...state.applicantInfos[action.payload.id]
+                    }
+                },
+                applicants: state.applicants.filter(id => id != action.payload.id),
+                applicantInfos: Object.keys(state.applicantInfos)
+                    .filter(key => key != action.payload.id)
+                    .reduce((obj, key) => {
+                        obj[key] = state.applicantInfos[key];
+                        return obj;
+                    }, {})
             }
         case CREATE_QUIZ:
             return {
