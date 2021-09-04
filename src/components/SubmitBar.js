@@ -1,6 +1,6 @@
 import AppBar from '@material-ui/core/AppBar'
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Toolbar, Typography, Link } from '@material-ui/core';
+import { Button, Toolbar, Typography, Link, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { React, useState, useRef, useEffect } from "react";
@@ -25,6 +25,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Form } from 'reactstrap';
+import { set } from 'date-fns';
+import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     appbar: {
@@ -49,12 +51,15 @@ const useStyles = makeStyles((theme) => ({
         width: '8%',
         position: 'relative',
     },
+
 }));
 
 export default function SubmitBar(props) {
     const classes = useStyles()
+    const { ProblemID } = useParams()
     const isLogin = useSelector(state => state.loginReducer.isLogin)
     const radioGroupRef = useRef(null);
+    const componentRadioGroupRef = useRef(null);
     const coursePlanListFromReducer = useSelector(state => state.coursePlanEditorReducer.coursePlanList)
     const user = useSelector(state => state.loginReducer.user)
     const dispatch = useDispatch()
@@ -90,6 +95,16 @@ export default function SubmitBar(props) {
     const [openCoursePlanDialog, setOpenCoursePlanDialog] = useState(false)
 
     const [selectedCoursePlanID, setSelectedCoursePlanID] = useState("");
+
+    const [selectedComponent, setSelectedComponent] = useState("");
+
+    const [isSelectedCoursePlan, setIsSelectedCoursePlan] = useState(false)
+
+    //const [selectedCoursePlanComponent, setSelectedCoursePlanComponent] = useState([])
+
+    const selectedCoursePlanComponentListFromReducer = useSelector(state => state.coursePlanEditorReducer.selectedCoursePlanComponentList)
+    const selectedCoursePlanDetailFromReducer = useSelector(state => state.coursePlanEditorReducer.selectedCoursePlanDetail)
+
 
     function fetchCoursePlanIDList() {
 
@@ -127,30 +142,59 @@ export default function SubmitBar(props) {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data.componentList)
-                //setPrevCoursePlanDetail(data)
-                //console.log(prevCoursePlanDetail)
-                //updateCoursePlan(data)
+                //console.log(data)
+                var tempSelectedCoursePlanComponentList = []
+                dispatch({ type: "STORE_SELECTEDCOURSEPLANDETAIL", payload: data })
+                Promise.all(data.componentList.map(element  => {
+                    tempSelectedCoursePlanComponentList.push({ 'id': data.componentList.indexOf(element).toString(), 'name': element.name, 'type': element.type, 'setList': element.setList})
+                }))
+                dispatch({ type: "STORE_SELECTEDCOURSEPLANCOMPONENTLIST", payload: tempSelectedCoursePlanComponentList })
+            
+            
             }
             )
-            //.then(console.log(prevCoursePlanDetail))
     }
 
     const handleChangeCoursePlan = (event) => {
         setSelectedCoursePlanID(event.target.value);
+        setIsSelectedCoursePlan(true)
         fetchSelectedCoursePlanDetail(event.target.value)
     };
 
     const handleOpenCoursePlanDialog = () => {
         setOpenCoursePlanDialog(true)
-        //console.log(coursePlanListFromReducer)
     }
 
     const handleCloseCoursePlanDialog = () => {
         setOpenCoursePlanDialog(false)
+        //console.log(selectedCoursePlanDetailFromReducer)
+        //console.log(selectedCoursePlanComponentListFromReducer)
+        console.log(selectedComponent)
+        
     }
     const handleAddProblem = () => {
-        console.log("aaa")
+        updateCoursePlan(selectedCoursePlanDetailFromReducer)
+    }
+
+    const handleChangeComponent = (event) => {
+        setSelectedComponent(event.target.value)
+
+    }
+
+    function updateCoursePlan(prevCoursePlanDetail) {
+        prevCoursePlanDetail.componentList[parseInt(selectedComponent)].setList.push({ id: ProblemID })
+        var update_coursePlan_info = {
+            name: prevCoursePlanDetail.name,
+            componentList: prevCoursePlanDetail.componentList,
+            visibility: prevCoursePlanDetail.visibility,
+        }
+        //console.log(update_coursePlan_info)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${selectedCoursePlanID}`, {
+            method: 'POST',
+            body: JSON.stringify(update_coursePlan_info),
+            credentials: "include",
+        })
+        .catch(error => console.error('Error:', error))
     }
 
 
@@ -160,6 +204,8 @@ export default function SubmitBar(props) {
             fetchCoursePlanIDList()
         }
     }, [isLogin])
+
+    
 
     return (
         <AppBar position="fixed" color="primary" className={classes.appbar} elevation={3}>
@@ -181,7 +227,7 @@ export default function SubmitBar(props) {
                         </Button>
                     </Tooltip>
                     <Dialog
-                        maxWidth='xs'
+                        maxWidth='sm'
                         fullWidth={true}
                         aria-labelledby="confirmation-dialog-title"
                         open={openCoursePlanDialog}
@@ -189,17 +235,38 @@ export default function SubmitBar(props) {
                     >
                         <DialogTitle id="confirmation-dialog-title">選擇教案</DialogTitle>
                         <DialogContent dividers>
-                            <RadioGroup
-                                ref={radioGroupRef}
-                                aria-label="ringtone"
-                                name="coursePlanList"
-                                value={selectedCoursePlanID}
-                                onChange={handleChangeCoursePlan}
-                            >
-                                {coursePlanListFromReducer.map((coursePlan) => (
-                                    <FormControlLabel value={coursePlan.id} key={coursePlan.id} control={<Radio />} label={coursePlan.name} />
-                                ))}
-                            </RadioGroup>
+                            <Grid container spacing={1}>
+                                <Grid item xs={12} sm={6}>
+                                    <RadioGroup
+                                        ref={radioGroupRef}
+                                        aria-label="ringtone"
+                                        name="coursePlanList"
+                                        value={selectedCoursePlanID}
+                                        onChange={handleChangeCoursePlan}
+                                    >
+                                        {coursePlanListFromReducer.map((coursePlan) => (
+                                            <FormControlLabel value={coursePlan.id} key={coursePlan.id} control={<Radio />} label={coursePlan.name} />
+                                        ))}
+                                    </RadioGroup>
+                                </Grid>
+                                { isSelectedCoursePlan ?
+                                    <Grid item xs={12} sm={6} >
+                                        <RadioGroup
+                                            ref={componentRadioGroupRef}
+                                            aria-label="ringtone"
+                                            name="componentList"
+                                            value={selectedComponent}
+                                            onChange={handleChangeComponent}
+                                            >
+                                            {selectedCoursePlanComponentListFromReducer.map((option) => (
+                                                <FormControlLabel value={option.id} key={option.id} control={<Radio />} label={option.name} />
+                                            ))}
+                                        </RadioGroup>
+                                    </Grid>
+                                    :
+                                    null
+                                }
+                            </Grid>
                         </DialogContent>
                         <DialogActions>
                             <Button autoFocus onClick={handleCloseCoursePlanDialog} color="primary">
