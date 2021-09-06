@@ -4,7 +4,7 @@ const initialCoursePlanEditorState = {
     chosenCourseList: [],
     componentList: [
         {
-            name: "1",
+            name: "course1",
             type: 0,
             setList: [
                 {
@@ -114,17 +114,19 @@ const coursePlanEditorReducer = (state = initialCoursePlanEditorState, action) =
 
     var newChosenCourseList
     switch (action.type) {
-        
+
         case "FETCHING_COURSEPLAN":
             return {
                 ...state,
                 isFetching: true
             }
+
         case "STORE_COURSEPLANLIST":
             return {
                 ...state,
                 coursePlanList: action.payload
             }
+
         case "CHOOSE_COURSE":
             newChosenCourseList = Array.from(state.chosenCourseList)
             newChosenCourseList.push(action.payload.course)
@@ -132,6 +134,7 @@ const coursePlanEditorReducer = (state = initialCoursePlanEditorState, action) =
                 ...state,
                 chosenCourseList: newChosenCourseList
             }
+
         case "UNCHOOSE_COURSE":
             newChosenCourseList = Array.from(state.chosenCourseList)
             var index = newChosenCourseList.findIndex(course => course.id === action.payload.course.id)
@@ -140,6 +143,7 @@ const coursePlanEditorReducer = (state = initialCoursePlanEditorState, action) =
                 ...state,
                 chosenCourseList: newChosenCourseList
             }
+
         case "SAVE_COURSEPLAN_INFO":
             return {
                 ...state,
@@ -147,7 +151,13 @@ const coursePlanEditorReducer = (state = initialCoursePlanEditorState, action) =
                 creator:action.payload.creator,
                 componentList: action.payload.componentList,
                 visibility: action.payload.visibility,
-                isFetching: false
+            }
+
+        case "SAVE_COMPONENT_DETAIL_LIST":
+            return{
+                ...state,
+                componentDetailList: action.payload.componentDetailList,
+                isFetching: false,
             }
         default:
             return state;

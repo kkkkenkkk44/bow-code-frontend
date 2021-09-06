@@ -34,28 +34,40 @@ export default function CoursePlanEditorPage(props) {
         })
             .then(res => res.json())
             .then(res => {
-                dispatch({ type: "SAVE_COURSEPLAN_INFO", payload: res })
+                var newComponentList = res.componentList
                 console.log(res)
-                // Promise.all(res.componentList.map(component => {
-                //     switch (component.type) {
-                //         case 0:
-                //             return fetch(`${process.env.REACT_APP_BACKEND_URL}/course/details?courses=${component.setList[0]}`, {
-                //                 method: 'GET',
-                //                 credentials: 'include',
-                //             })
-                //     }
-                // }))
-                //     .then(res => {
-                //         Promise.all(res.map(r => r.text()))
-                //             .then(res => console.log(res))
-                //     })
+                dispatch({ type: "SAVE_COURSEPLAN_INFO", payload: res })
+                Promise.all(res.componentList.map(component => {
+                    switch (component.type) {
+                        case 0:
+                            return fetch(`${process.env.REACT_APP_BACKEND_URL}/course/details?courses=${component.setList[0].id}`, {
+                                method: 'GET',
+                                credentials: 'include',
+                            })
+                                .then(res => res.json())
+                                .then(res => res.courseList)
+                        default:
+                            return Promise.all(component.setList.map(problem => {
+                                return fetch(`${process.env.REACT_APP_BACKEND_URL}/problem/${problem.id}`, {
+                                    method: 'GET',
+                                    credentials: 'include',
+                                })
+                                    .then(res => res.json())
+                            }))
+                    }
+                }))
+                    .then(res => res.map((r, index) => {
+                        return {
+                            name: newComponentList[index].name,
+                            type: newComponentList[index].type,
+                            setList: r
+                        }
+                    }))
+                    .then(res => {
+                        console.log(res)
+                        dispatch({ type: "SAVE_COMPONENT_DETAIL_LIST", payload: { componentDetailList: res } })
+                    })
             })
-        // fetch(`${process.env.REACT_APP_BACKEND_URL}/course/details?courses=612c9f38255e0aa1fa29b220`, {
-        //     method: 'GET',
-        //     credentials: 'include',
-        // })
-        //     .then(res => res.json())
-        //     .then(res => console.log(res))
     }, [])
 
     var componentCardList = []
