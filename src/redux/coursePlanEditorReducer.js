@@ -159,6 +159,13 @@ const coursePlanEditorReducer = (state = initialCoursePlanEditorState, action) =
                 componentDetailList: action.payload.componentDetailList,
                 isFetching: false,
             }
+
+        case "CLEAR_CHOSEN_COURSE":
+            return{
+                ...state,
+                chosenCourseList: []
+            }
+
         default:
             return state;
     }

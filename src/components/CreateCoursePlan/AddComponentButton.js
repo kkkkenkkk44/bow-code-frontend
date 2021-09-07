@@ -22,6 +22,10 @@ import { CircularProgress } from '@material-ui/core'
 import OwnAndFavCourseCard from './OwnAndFavCourseCard'
 import { ProblemListContent } from '../../pages/ProblemListPage'
 import { problemPicker } from '../../actions/problemList';
+import CourseCard from '../CourseCard';
+import ComponentCard from '../ComponentCard';
+import ModifyComponentOrderList from './ModifyComponentOrderList'
+import { useParams } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     button_container: {
@@ -49,6 +53,7 @@ export default function AddComponentButton(props) {
     const classes = useStyles();
     const dispatch = useDispatch()
     const history = useHistory();
+    const { CoursePlanID } = useParams()
 
     const [courseOptionConfig, setCourseOptionConfig] = useState({
         open: false,
@@ -76,11 +81,13 @@ export default function AddComponentButton(props) {
         })
     }
 
+    const [orderOptionConfig, setOrderOptionConfig] = useState(false)
+
     const [openOwnAndFavCourseDialog, setOpenOwnAndFavCourseDialog] = useState(false)
 
     var ownCourse = useSelector(state => state.userPageReducer.ownCourse)
     var favCourse = useSelector(state => state.userPageReducer.favCourse)
-    const { chosenCourseList } = useSelector(state => state.coursePlanEditorReducer)
+    const { chosenCourseList, componentList, name, visibility } = useSelector(state => state.coursePlanEditorReducer)
     const favFetching = useSelector(state => state.userPageReducer.favCourseFetching);
     const ownFetching = useSelector(state => state.userPageReducer.ownCourseFetching);
     const user = useSelector(state => state.loginReducer.user);
@@ -111,11 +118,81 @@ export default function AddComponentButton(props) {
         }
     }
     const handleCloseOwnAndFavCourseDialog = () => {
+        handleCloseCourseOption()
         setOpenOwnAndFavCourseDialog(false);
     };
     const handleAddCourseToCoursePlan = () => {
         handleCloseOwnAndFavCourseDialog()
-        console.log(chosenCourseList)
+        var appendComponentList = Array.from(componentList)
+        chosenCourseList.map(course => {
+            appendComponentList.push({
+                name: course.name,
+                type: 0,
+                setList: [
+                    {
+                        id: course.id
+                    }
+                ]
+            })
+        })
+        var requestBody = {
+            name: name,
+            visibility: visibility,
+            componentList: appendComponentList
+        }
+        console.log(requestBody)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${CoursePlanID}`, {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(requestBody)
+        })
+            .then(res => {
+                dispatch({ type: "FETCHING_COURSEPLAN" })
+                fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${CoursePlanID}`, {
+                    method: 'GET',
+                    credentials: "include"
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        var newComponentList = res.componentList
+                        console.log(res)
+                        dispatch({ type: "SAVE_COURSEPLAN_INFO", payload: res })
+                        Promise.all(res.componentList.map(component => {
+                            switch (component.type) {
+                                case 0:
+                                    return fetch(`${process.env.REACT_APP_BACKEND_URL}/course/details?courses=${component.setList[0].id}`, {
+                                        method: 'GET',
+                                        credentials: 'include',
+                                    })
+                                        .then(res => res.json())
+                                        .then(res => res.courseList)
+                                default:
+                                    return Promise.all(component.setList.map(problem => {
+                                        return fetch(`${process.env.REACT_APP_BACKEND_URL}/problem/${problem.id}`, {
+                                            method: 'GET',
+                                            credentials: 'include',
+                                        })
+                                            .then(res => res.json())
+                                    }))
+                            }
+                        }))
+                            .then(res => res.map((r, index) => {
+                                return {
+                                    name: newComponentList[index].name,
+                                    type: newComponentList[index].type,
+                                    setList: r
+                                }
+                            }))
+                            .then(res => {
+                                console.log(res)
+                                dispatch({ type: "SAVE_COMPONENT_DETAIL_LIST", payload: { componentDetailList: res } })
+                            })
+                        dispatch({ type: "CLEAR_CHOSEN_COURSE" })
+                    })
+            })
+    }
+    const handlehandleModifyOrder = () => {
+        console.log("modified")
     }
 
 
@@ -128,9 +205,9 @@ export default function AddComponentButton(props) {
     }
     const handleCloseProblemDialog = () => {
         setOpenProblemDialog(false);
-      };
+    };
 
-    
+
 
     return (
         <div>
@@ -251,12 +328,12 @@ export default function AddComponentButton(props) {
                                 <MenuItem onClick={handleOpenProblemDialog}>
                                     加入題目
                                 </MenuItem>
-                                <Dialog 
-                                onClose={handleCloseProblemDialog}
-                                aria-labelledby="customized-dialog-title"
-                                open={openProblemDialog}
-                                maxWidth="md"
-                                fullWidth="true"
+                                <Dialog
+                                    onClose={handleCloseProblemDialog}
+                                    aria-labelledby="customized-dialog-title"
+                                    open={openProblemDialog}
+                                    maxWidth="md"
+                                    fullWidth="true"
                                 >
                                     <DialogTitle id="customized-dialog-title" onClose={handleCloseProblemDialog}>
                                         題目
@@ -267,18 +344,52 @@ export default function AddComponentButton(props) {
                                         </div>
                                     </DialogContent>
                                     <DialogActions>
-                                    <Button onClick={handleCloseProblemDialog} color="primary">
-                                        取消
-                                    </Button>
-                                    <Button autoFocus onClick={handleCloseProblemDialog} color="primary">
-                                        確認加入
-                                    </Button>
+                                        <Button onClick={handleCloseProblemDialog} color="primary">
+                                            取消
+                                        </Button>
+                                        <Button autoFocus onClick={handleCloseProblemDialog} color="primary">
+                                            確認加入
+                                        </Button>
                                     </DialogActions>
                                 </Dialog>
                             </MenuList>
                         </ClickAwayListener>
                     </Paper>
                 </Popper>
+                <Tooltip title="調整順序" TransitionComponent={Zoom}>
+                    <IconButton
+                        id={`orderButton_${props.index}`}
+                        onClick={(e) => {
+                            setOrderOptionConfig(true)
+                        }}
+                    >
+                        <MenuBookIcon />
+                    </IconButton>
+                </Tooltip>
+                <Dialog
+                    onClose={() => setOrderOptionConfig(false)}
+                    aria-labelledby="customized-dialog-title"
+                    open={orderOptionConfig}
+                    maxWidth="sm"
+                    fullWidth="true"
+                >
+                    <DialogTitle id="customized-dialog-title" onClose={() => setOrderOptionConfig(false)}>
+                        已加入的課程、作業及考試
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        <div>
+                            <ModifyComponentOrderList />
+                        </div>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOrderOptionConfig(false)} color="primary">
+                            取消
+                        </Button>
+                        <Button autoFocus onClick={() => handlehandleModifyOrder()} color="primary">
+                            確認加入
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Grid>
         </div>
     )
