@@ -1,6 +1,9 @@
-import { SWITCH_TO, FETCH_OWN_COURSE, FETCH_OWN_COURSE_START, FETCH_FAV_COURSE, FETCH_FAV_COURSE_START, 
-    FETCH_SUBMISSION_START, 
-    FETCH_SUBMISSION } from '../actions/userPage'
+import {
+    SWITCH_TO, FETCH_OWN_COURSE, FETCH_OWN_COURSE_START, FETCH_FAV_COURSE, FETCH_FAV_COURSE_START,
+    FETCH_SUBMISSION_START,
+    FETCH_SUBMISSION,
+    FETCH_CLASSROOM
+} from '../actions/userPage'
 
 const initialCourseListState = {
     currentTab: "overview",
@@ -9,7 +12,9 @@ const initialCourseListState = {
     submissionFetching: false,
     ownCourse: [],
     favCourse: [],
-    submissions: []
+    submissions: [],
+    joinedClassrooms: [],
+    ownClassrooms: []
 }
 
 const userPageReducer = (state = initialCourseListState, action) => {
@@ -51,6 +56,20 @@ const userPageReducer = (state = initialCourseListState, action) => {
                 ...state,
                 submissions: action.payload.submissions,
                 submissionFetching: false
+            }
+        case FETCH_CLASSROOM:
+            if (action.payload.type == "joined"){
+                return {
+                    ...state,
+                    joinedClassrooms: action.payload.classrooms
+                }
+            } else if (action.payload.type == "own"){
+                return {
+                    ...state,
+                    ownClassrooms: action.payload.classrooms
+                }
+            } else {
+                return state
             }
         default:
             return state;

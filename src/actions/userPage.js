@@ -5,6 +5,7 @@ export const FETCH_FAV_COURSE_START = 'FETCH_FAV_COURSE_START';
 export const FETCH_FAV_COURSE = 'FETCH_FAV_COURSE';
 export const FETCH_SUBMISSION_START = 'FETCH_SUBMISSION_START';
 export const FETCH_SUBMISSION = 'FETCH_SUBMISSION';
+export const FETCH_CLASSROOM = 'FETCH_CLASSROOM'
 
 export const switchTo = (tab) => ({
     type: SWITCH_TO,
@@ -93,6 +94,26 @@ export function fetchSubmissionAsync() {
         .catch(e => {
             // error handling
             console.log(e)
+        })
+    }
+}
+
+export function fetchClassroomsAsync(ids, type) {
+    return (dispatch) => {
+        var reqs = ids.map(id => {
+            var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/classroom/${id}`)
+            return fetch(url, {method: "GET", credentials: 'include'})
+        })
+        Promise.all(reqs)
+        .then(values => Promise.all(values.map(res => res.json())))
+        .then(datas => {
+            dispatch({
+                type: FETCH_CLASSROOM,
+                payload: {
+                    classrooms: datas,
+                    type: type
+                }
+            })
         })
     }
 }

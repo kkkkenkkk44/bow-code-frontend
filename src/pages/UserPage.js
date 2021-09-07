@@ -11,6 +11,8 @@ import { auth } from "../actions/login"
 import Overview from './UserPages/Overview'
 import MyCourse from './UserPages/MyCourse'
 import ProblemSubmission from './UserPages/ProblemSubmission';
+import MyJoinedClassroom from './UserPages/MyJoinedClassroom';
+import MyOwnClassroom from './UserPages/MyOwnClassroom';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -36,6 +38,12 @@ function MainWindow(props) {
             </div>
             <div hidden={currentTab !== "problemSubmission"}>
                 <ProblemSubmission />
+            </div>
+            <div hidden={currentTab !== "myOwnClassroom"}>
+                <MyOwnClassroom />
+            </div>
+            <div hidden={currentTab !== "myJoinedClassroom"}>
+                <MyJoinedClassroom />
             </div>
         </div>
     )
@@ -120,11 +128,17 @@ export default function UserPage(props) {
                             </ListItemIcon>
                             <ListItemText primary="教學計畫" />
                         </ListItem>
-                        <ListItem className={classes.listItem} button>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myOwnClassroom"))}>
                             <ListItemIcon>
                                 <SchoolIcon />
                             </ListItemIcon>
-                            <ListItemText primary="班級" />
+                            <ListItemText primary="我管理的班級" />
+                        </ListItem>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myJoinedClassroom"))}>
+                            <ListItemIcon>
+                                <SchoolIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="我加入的班級" />
                         </ListItem>
                         <ListItem className={classes.listItem} button>
                             <ListItemIcon>
