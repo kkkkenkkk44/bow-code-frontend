@@ -10,7 +10,7 @@ import Bulletin from '../../components/Bulletin'
 import { Zoom } from '@material-ui/core';
 import { Avatar } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
-import { newBulletinOnchange } from '../../actions/classroomPage';
+import { newBulletinOnchange, postBulletin } from '../../actions/classroomPage';
 import CreateIcon from '@material-ui/icons/Create';
 
 export default function BulletinBoard() {
@@ -111,7 +111,10 @@ export default function BulletinBoard() {
     const dispatch = useDispatch()
     const user = useSelector(state => state.loginReducer.user);
     const [expanded, setExpanded] = useState(false)
-    var bulletins = useSelector(state => state.classroomPageReducer.bulletinList)
+    const [newBulletinTitle, setNewBulletinTitle] = useState("")
+    const [newBulletinContent, setNewBulletinContent] = useState("")
+    const classroomID = useSelector(state => state.classroomPageReducer.classroomID)
+    var bulletins = useSelector(state => state.classroomPageReducer.bulletins)
     var bulletinList = bulletins.map((bulletin) =>
         <div key={bulletin.timeStamp} className={classes.bulletinPostit}>
             <Bulletin bulletin={bulletin} />
@@ -140,7 +143,8 @@ export default function BulletinBoard() {
                             <TextField
                                 placeholder="標題"
                                 fullWidth
-                                onChange={(e) => dispatch(newBulletinOnchange("title", e.target.value))}
+                                value={newBulletinTitle}
+                                onChange={(e) => setNewBulletinTitle(e.target.value)}
                                 InputProps={{
                                     classes: {
                                         input: classes.titleFont,
@@ -154,7 +158,8 @@ export default function BulletinBoard() {
                                 multiline
                                 fullWidth
                                 rows={4}
-                                onChange={(e) => dispatch(newBulletinOnchange("content", e.target.value))}
+                                value={newBulletinContent}
+                                onChange={(e) => setNewBulletinContent(e.target.value)}
                                 InputProps={{
                                     classes: {
                                         input: classes.contentFont,
@@ -173,7 +178,7 @@ export default function BulletinBoard() {
 
                         </div>
                         <div className={classes.postButton}>
-                            <Button variant="contained" color="primary" size="large">
+                            <Button variant="contained" color="primary" size="large" onClick={()=>{dispatch(postBulletin(newBulletinTitle, newBulletinContent, classroomID)); setExpanded(false)}}>
                                 發布
                             </Button>
                         </div>

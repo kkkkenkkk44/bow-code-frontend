@@ -7,7 +7,7 @@ import {
     FETCH_SINGLE_STUDENT_INFO,
     REACT_TO_BULLETIN,
     REACT_TO_REPLY,
-    NEW_BULLETIN_ONCHANGE,
+    FETCH_BULLETIN,
     CREATE_QUIZ,
     CREATE_QUIZ_FAILED,
     CREATE_QUIZ_START,
@@ -33,7 +33,7 @@ const initialState = {
     applicantInfos: {},
     visibility: 0,
     courseList: [],
-    bulletinList: [],
+    bulletins: [],
     newBulletinTitle: "",
     newBulletinContent: "",
     homeworkList: [],
@@ -86,19 +86,11 @@ const classroomPageReducer = (state = initialState, action) => {
                     }
                 })
             }
-        case NEW_BULLETIN_ONCHANGE:
-            if (action.payload.field == "title") {
-                return {
-                    ...state,
-                    newBulletinTitle: action.payload.value,
-                }
-            } else if (action.payload.field == " content") {
-                return {
-                    ...state,
-                    newBulletinContent: action.payload.value
-                }
+        case FETCH_BULLETIN:
+            return {
+                ...state,
+                bulletins: action.payload.bulletins
             }
-
         case FETCH_CLASSROOM_START:
             return {
                 ...state,

@@ -66,10 +66,12 @@ export function fetchClassroomAsync(classroomID) {
     var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/classroom/${classroomID}`)
     return (dispatch) => {
         dispatch(fetchClassroomRequest())
-        fetch(url, { method: "GET" })
+        fetch(url, { method: "GET", credentials: "include" })
             .then(res => res.json())
-            .then(data => {
+            .then(obj => {
+                const data = obj.classroom
                 dispatch(fetchClassroom(data))
+                dispatch(fetchBulletins(classroomID))
                 dispatch(fetchStudentInfoAsync(data.students, classroomID))
                 dispatch(fetchApplicantInfoAsync(data.applicants))
             })
@@ -242,5 +244,30 @@ export function addProblemsToQuiz(quizType, quiz, problems, classroomID, index) 
     return (dispatch) => {
         fetch(url, { method: "PUT", credentials: "include", body: JSON.stringify(quiz) })
             .then(() => dispatch(fetchClassroomAsync(classroomID)))
+    }
+}
+
+export function fetchBulletins(classroomID) {
+    return (dispatch) => {
+        var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/classroom/bulletin/${classroomID}`)
+        fetch(url, { method: "GET", credentials: "include" }).then(res => res.json())
+        .then(data => {
+            dispatch({
+                type: FETCH_BULLETIN,
+                payload: {
+                    bulletins: data
+                }
+            })
+        })
+    }
+}
+
+export function postBulletin(title, content, classroomID) {
+    return (dispatch) => {
+        const url = `${process.env.REACT_APP_BACKEND_URL}/bulletin/${classroomID}`
+        fetch(url, {method: "POST", credentials: "include", body: JSON.stringify({content: content, title: title})})
+        .then(_ => {
+            dispatch(fetchClassroomAsync(classroomID))
+        })
     }
 }
