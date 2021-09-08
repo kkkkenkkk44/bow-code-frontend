@@ -175,6 +175,8 @@ export default function SubmitBar(props) {
     const handleCloseCoursePlanDialog = () => {
         setIsClickedAddButton(false)
         setOpenCoursePlanDialog(false)
+        setSelectedCoursePlanID("")
+        setSelectedComponent("")
         console.log(selectedCoursePlanDetailFromReducer)
         console.log(selectedCoursePlanComponentListFromReducer)
         console.log(selectedComponent)

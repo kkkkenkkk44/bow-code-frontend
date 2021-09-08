@@ -152,6 +152,7 @@ export default function CourseInfoBar(props) {
     const handleCloseCoursePlanDialog = () => {
         setIsClickedAddButton(false)
         setOpenCoursePlanDialog(false)
+        setSelectedCoursePlanID("")
         //setIsClickedAddButton(false)
     }
 
