@@ -1,10 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import { makeStyles } from '@material-ui/core/styles';
 import TextEllipsis from 'react-text-ellipsis'
 import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux"
 import { CardMedia } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 import CreateIcon from '@material-ui/icons/Create';
@@ -69,13 +70,24 @@ export default function OwnAndFavCourseCard(props) {
     }));
     const classes = useStyles();
     const history = useHistory();
+    const dispatch = useDispatch()
 
     const abstract = props.course.abstract
     const creator = props.course.creator
     const courseName = props.course.name
     const tags = props.course.tags
-    var difficulty
-    //console.log(props.course.difficulty)
+    const { chosenCourseList } = useSelector(state => state.coursePlanEditorReducer)
+
+    var chosen
+    if (chosenCourseList.findIndex(course => course.id === props.course.id) === -1){
+        chosen = false
+    }
+    else{
+        chosen = true
+    }
+
+        var difficulty
+        
     switch (props.course.difficulty) {
         case 0:
             difficulty = <div className={classes.difficulty}>
@@ -112,17 +124,26 @@ export default function OwnAndFavCourseCard(props) {
 
     const tagChips = tags.map(tag => <Chip className={classes.tagChip} key={tag} label={tag} variant="outlined" />)
 
+    const handleChooseCourse = () => {
+        if (!chosen) {
+            dispatch({ type: "CHOOSE_COURSE", payload: { course: props.course } })
+        }
+        else{
+            dispatch({ type: "UNCHOOSE_COURSE", payload: { course: props.course } })
+        }
+    }
+
     return (
         props.brief ?
-            <Card>
+            <Card onClick={() => (handleChooseCourse())}>
                 <CardActionArea >
-                    <CardContent className={classes.title}>
+                    <CardContent className={classes.title} style={{ backgroundColor: chosen ? "#ccc" : "" }}>
                         <h3>{props.course.name}</h3>
                     </CardContent>
                 </CardActionArea>
             </Card> :
             <Card className={classes.card}>
-                <CardActionArea  className={classes.root}>
+                <CardActionArea className={classes.root}>
                     <CardMedia
                         className={classes.cover}
                         children={<img

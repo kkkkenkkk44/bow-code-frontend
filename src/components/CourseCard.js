@@ -119,14 +119,14 @@ export default function CourseCard(props) {
     return (
         props.brief ?
             <Card>
-                <CardActionArea onClick={() => history.push(`/course/${props.course.id}`)}>
+                <CardActionArea onClick={props.unclickable?()=>{}:() => history.push(`/course/${props.course.id}`)}>
                     <CardContent className={classes.title}>
                         <h3>{props.course.name}</h3>
                     </CardContent>
                 </CardActionArea>
             </Card> :
             <Card>
-                <CardActionArea onClick={() => history.push(`/course/${props.course.id}`)} className={classes.root}>
+                <CardActionArea onClick={props.unclickable?()=>{}:() => history.push(`/course/${props.course.id}`)} className={classes.root}>
                     <CardMedia
                         className={classes.cover}
                         children={<img
