@@ -365,7 +365,7 @@ export default function SubmitBar(props) {
                             <Button autoFocus onClick={handleCloseCoursePlanDialog} color="primary">
                                 取消
                             </Button>
-                            <Button onClick={handleAddProblem} color="primary">
+                            <Button onClick={handleAddProblem} color="primary" disabled={(selectedComponent === "") && (isClickedAddButton === false)}>
                                 {isClickedAddButton ?
                                 <div>確定建立並加入</div>
                                 :

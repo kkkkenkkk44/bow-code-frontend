@@ -404,7 +404,7 @@ export default function CourseInfoBar(props) {
                             <Button autoFocus onClick={handleCloseCoursePlanDialog} color="primary">
                                 取消
                             </Button>
-                            <Button onClick={handleSubmit} color="primary">
+                            <Button onClick={handleSubmit} color="primary" disabled={selectedCoursePlanID === ""}>
                                 {isClickedAddButton ?
                                 <div>確定建立並加入</div>
                                 :
