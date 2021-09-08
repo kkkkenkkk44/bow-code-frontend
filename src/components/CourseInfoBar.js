@@ -394,7 +394,10 @@ export default function CourseInfoBar(props) {
                                         <option value={0}>不公開</option>
                                         <option value={1}>公開</option>
                                     </Select>
-                                </FormControl> 
+                                    <Button variant="outlined" color="secondary" style={{marginTop: '20px'}} onClick={() => setIsClickedAddButton(false)}>
+                                        取消建立
+                                    </Button>
+                                </FormControl>
                             :
                                 null
                             }

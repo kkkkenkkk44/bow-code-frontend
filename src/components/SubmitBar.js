@@ -349,12 +349,14 @@ export default function SubmitBar(props) {
                                                     <option value={1}>作業</option>
                                                     <option value={2}>考試</option>
                                                 </Select>
+                                                <Button variant="outlined" color="secondary" style={{marginTop: '20px'}} onClick={() => setIsClickedAddButton(false)}>
+                                                    取消建立
+                                                </Button>
                                             </FormControl> 
                                         :
                                             null
                                         }
                                         </ListItem>
-                                        
                                     </Grid>
                                     :
                                     null
