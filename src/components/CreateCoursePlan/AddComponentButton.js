@@ -103,7 +103,7 @@ export default function AddComponentButton(props) {
     const favFetching = useSelector(state => state.userPageReducer.favCourseFetching);
     const ownFetching = useSelector(state => state.userPageReducer.ownCourseFetching);
     const user = useSelector(state => state.loginReducer.user);
-    //const prevCoursePlanDetail = useSelector(state => state.coursePlanEditorReducer.coursePlanDetail)
+    const prevCoursePlanDetail = useSelector(state => state.coursePlanEditorReducer)
     var ownCardList = []
     var favCardList = []
 
@@ -122,7 +122,7 @@ export default function AddComponentButton(props) {
         )
     }
 
-    
+
 
     const handleOwnAndFavCourseDialog = () => {
         setOpenOwnAndFavCourseDialog(true)
@@ -218,23 +218,26 @@ export default function AddComponentButton(props) {
 
     }
     const handleCloseProblemDialog = () => {
+        handleCloseProblemOption()
         setOpenProblemDialog(false);
     };
     const pickedProblems = useSelector(state => state.problemListReducer.pickedProblems)
 
     const handleSubmitProblem = () => {
         console.log(pickedProblems)
-        //updateCoursePlan(prevCoursePlanDetail)
+        updateCoursePlan(prevCoursePlanDetail)
+        
+        setOpenProblemDialog(false)
     }
 
     function updateCoursePlan(prevCoursePlanDetail) {
         //console.log(prevCoursePlanDetail)
         var newSetList = []
-        Promise.all(pickedProblems.map(pickedProblem => 
-            newSetList.push({id: pickedProblem.id})
+        Promise.all(pickedProblems.map(pickedProblem =>
+            newSetList.push({ id: pickedProblem.id })
         ))
         //console.log(newSetList)
-        
+
         prevCoursePlanDetail.componentList.push({
             name: "quiz 或 homework",
             type: 1,
@@ -252,9 +255,52 @@ export default function AddComponentButton(props) {
             body: JSON.stringify(update_coursePlan_info),
             credentials: "include",
         })
-        .catch(error => console.error('Error:', error))
+            .then(() => {
+                dispatch({ type: "FETCHING_COURSEPLAN" })
+                fetch(`${process.env.REACT_APP_BACKEND_URL}/course_plan/${CoursePlanID}`, {
+                    method: 'GET',
+                    credentials: "include"
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        var newComponentList = res.componentList
+                        console.log(res)
+                        dispatch({ type: "SAVE_COURSEPLAN_INFO", payload: res })
+                        Promise.all(res.componentList.map(component => {
+                            switch (component.type) {
+                                case 0:
+                                    return fetch(`${process.env.REACT_APP_BACKEND_URL}/course/details?courses=${component.setList[0].id}`, {
+                                        method: 'GET',
+                                        credentials: 'include',
+                                    })
+                                        .then(res => res.json())
+                                        .then(res => res.courseList)
+                                default:
+                                    return Promise.all(component.setList.map(problem => {
+                                        return fetch(`${process.env.REACT_APP_BACKEND_URL}/problem/${problem.id}`, {
+                                            method: 'GET',
+                                            credentials: 'include',
+                                        })
+                                            .then(res => res.json())
+                                    }))
+                            }
+                        }))
+                            .then(res => res.map((r, index) => {
+                                return {
+                                    name: newComponentList[index].name,
+                                    type: newComponentList[index].type,
+                                    setList: r
+                                }
+                            }))
+                            .then(res => {
+                                console.log(res)
+                                dispatch({ type: "SAVE_COMPONENT_DETAIL_LIST", payload: { componentDetailList: res } })
+                            })
+                    })
+            })
+            .catch(error => console.error('Error:', error))
     }
-    
+
 
     return (
         <div>
@@ -393,11 +439,11 @@ export default function AddComponentButton(props) {
                                         </div>
                                     </DialogContent>
                                     <DialogActions>
-                                    <Button onClick={handleCloseProblemDialog} color="primary">
-                                        取消
+                                        <Button onClick={handleCloseProblemDialog} color="primary">
+                                            取消
                                     </Button>
-                                    <Button autoFocus onClick={handleSubmitProblem} color="primary">
-                                        確認加入
+                                        <Button autoFocus onClick={handleSubmitProblem} color="primary">
+                                            確認加入
                                     </Button>
                                     </DialogActions>
                                 </Dialog>
