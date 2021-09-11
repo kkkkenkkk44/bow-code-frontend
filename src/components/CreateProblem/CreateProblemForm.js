@@ -142,7 +142,7 @@ export default function CreatProblemForm() {
           var problem_info = {
             name,
             tags: tags.split(' '),
-            difficulty,
+            difficulty: parseInt(difficulty),
             creator: user.id,
             category,
             testcase: {
@@ -151,7 +151,7 @@ export default function CreatProblemForm() {
               expectedOutput: testcase_output
             },
             description: desc,
-            visibility,
+            visibility: parseInt(visibility),
             content: content,
         }
         fetch(`${process.env.REACT_APP_BACKEND_URL}/problem`, {
@@ -208,9 +208,9 @@ export default function CreatProblemForm() {
                   name: 'difficulty',
                 }}
               >
-                <option value={"easy"}>簡單</option>
-                <option value={"medium"}>中等</option>
-                <option value={"hard"}>困難</option>
+                <option value={0}>簡單</option>
+                <option value={1}>挑戰</option>
+                <option value={2}>專精</option>
               </Select>
             </FormControl>
             <span className={classes.categoryText}>題目類別</span>
@@ -240,9 +240,9 @@ export default function CreatProblemForm() {
                   name: 'visibility',
                 }}
               >
-                <option value={""}>限定自己瀏覽</option>
-                <option value={""}>題庫存取者可瀏覽</option>
-                <option value={""}>所有人皆可瀏覽</option>
+                <option value={0}>限定自己瀏覽</option>
+                <option value={1}>題庫存取者可瀏覽</option>
+                <option value={2}>所有人皆可瀏覽</option>
               </Select>
             </FormControl>
             <Button

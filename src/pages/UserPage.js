@@ -11,6 +11,7 @@ import { auth } from "../actions/login"
 import Overview from './UserPages/Overview'
 import MyCourse from './UserPages/MyCourse'
 import ProblemSubmission from './UserPages/ProblemSubmission';
+import MyCoursePlan from './UserPages/MyCoursePlan'
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -36,6 +37,9 @@ function MainWindow(props) {
             </div>
             <div hidden={currentTab !== "problemSubmission"}>
                 <ProblemSubmission />
+            </div>
+            <div hidden={currentTab !== "myCoursePlan"}>
+                <MyCoursePlan />
             </div>
         </div>
     )
@@ -114,7 +118,7 @@ export default function UserPage(props) {
                             </ListItemIcon>
                             <ListItemText primary="作答紀錄" />
                         </ListItem>
-                        <ListItem className={classes.listItem} button>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myCoursePlan"))}>
                             <ListItemIcon>
                                 <NearMeIcon />
                             </ListItemIcon>
