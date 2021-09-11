@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
     appbar: {
         height: "60px",
-        background: "rgba(104, 144, 79, 0.9)",
+        background: theme.palette.primary ,
         zIndex: "100",
         position: "relative"
 
@@ -74,9 +74,7 @@ export default function NavBar(props) {
             <AppBar position="static" className={classes.appbar} elevation={3}>
                 <Toolbar className={classes.toolbar}>
                     <Typography variant="h6" className={classes.title}>
-                        <Link component={RouterLink} to={"/home"} >
-                            {props.context}
-                        </Link>
+                        {props.context}
                     </Typography>
                     <Button className={classes.toolbarButton} href="/courseList">
                         課程列表
@@ -101,7 +99,7 @@ export default function NavBar(props) {
                                 >
                                     我的教學
                                 </Button>
-                                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal style={{zIndex: '1'}}>
+                                <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal style={{ zIndex: '1' }}>
                                     {({ TransitionProps, placement }) => (
                                         <Grow
                                             {...TransitionProps}
@@ -123,7 +121,7 @@ export default function NavBar(props) {
                                         </Grow>
                                     )}
                                 </Popper>
-                                <Button 
+                                <Button
                                     ref={userAnchorRef}
                                     aria-controls={userOpen ? 'menu-list-grow' : undefined}
                                     aria-haspopup="true"
@@ -131,7 +129,7 @@ export default function NavBar(props) {
                                     {user.userInfo.name}
                                     <Avatar alt={user.userInfo.name} src={user.userInfo.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
                                 </Button>
-                                <Popper open={userOpen} anchorEl={userAnchorRef.current} role={undefined} transition disablePortal style={{zIndex: '1'}}>
+                                <Popper open={userOpen} anchorEl={userAnchorRef.current} role={undefined} transition disablePortal style={{ zIndex: '1' }}>
                                     {({ TransitionProps, placement }) => (
                                         <Grow
                                             {...TransitionProps}
