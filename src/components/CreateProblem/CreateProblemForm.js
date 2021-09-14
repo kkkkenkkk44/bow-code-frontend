@@ -126,7 +126,10 @@ export default function CreatProblemForm() {
     const testdatas = useSelector(state => state.createProblemReducer.testdatas)
 
     const dispatch = useDispatch()
-
+    var score = [];
+    for (var i = 0; i < testdatas.length; i++) {
+      score.push(1);
+    }
     const handleSubmit = (event) => {
         if (name === ""){
           alert("請輸入題目名稱")
@@ -148,7 +151,8 @@ export default function CreatProblemForm() {
             testcase: {
               testcaseCnt: testcase_input.length,
               input: testcase_input,
-              expectedOutput: testcase_output
+              expectedOutput: testcase_output,
+              score: score
             },
             description: desc,
             visibility,
