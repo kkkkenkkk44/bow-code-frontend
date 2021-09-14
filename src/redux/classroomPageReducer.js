@@ -12,7 +12,10 @@ import {
     CREATE_QUIZ_FAILED,
     CREATE_QUIZ_START,
     FETCH_SINGLE_APPLICANT_INFO,
-    ACCEPT_APPLICATION
+    ACCEPT_APPLICATION,
+    REPLY_BULLETIN,
+    FETCH_SINGLE_BULLETIN,
+    RESET_STUDENT_INFO
 } from '../actions/classroomPage'
 import { FETCH_LIST_START } from '../actions/courseList';
 
@@ -51,7 +54,7 @@ const classroomPageReducer = (state = initialState, action) => {
         case REACT_TO_BULLETIN:
             return {
                 ...state,
-                bulletinList: state.bulletinList.map(bulletin => {
+                bulletins: state.bulletins.map(bulletin => {
                     if (bulletin.id != action.payload.bulletinId) {
                         return bulletin
                     } else {
@@ -70,7 +73,7 @@ const classroomPageReducer = (state = initialState, action) => {
         case REACT_TO_REPLY:
             return {
                 ...state,
-                bulletinList: state.bulletinList.map((bulletin) => {
+                bulletins: state.bulletins.map((bulletin) => {
                     if (bulletin.id != action.payload.bulletinId) {
                         return bulletin
                     } else {
@@ -86,10 +89,19 @@ const classroomPageReducer = (state = initialState, action) => {
                     }
                 })
             }
+        case REPLY_BULLETIN:
+            return {
+                ...state
+            }
         case FETCH_BULLETIN:
             return {
                 ...state,
                 bulletins: action.payload.bulletins
+            }
+        case FETCH_SINGLE_BULLETIN:
+            return {
+                ...state,
+                bulletins: state.bulletins.map(bulletin => bulletin.id == action.payload.bulletinID ? action.payload.bulletin : bulletin)
             }
         case FETCH_CLASSROOM_START:
             return {

@@ -116,7 +116,7 @@ export default function BulletinBoard() {
     const classroomID = useSelector(state => state.classroomPageReducer.classroomID)
     var bulletins = useSelector(state => state.classroomPageReducer.bulletins)
     var bulletinList = bulletins.map((bulletin) =>
-        <div key={bulletin.timeStamp} className={classes.bulletinPostit}>
+        <div key={bulletin.id} className={classes.bulletinPostit}>
             <Bulletin bulletin={bulletin} />
         </div>
     )

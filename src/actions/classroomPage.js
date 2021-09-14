@@ -1,8 +1,10 @@
 export const FETCH_BULLETIN = 'FETCH_BULLETIN'
+export const FETCH_SINGLE_BULLETIN = 'FETCH_SINGLE_BULLETIN'
 export const FETCH_BULLETIN_START = 'FETCH_BULLETIN_START'
 export const CLASSROOM_SWITCH_TO = 'CLASSROOM_SWITCH_TO';
 export const REACT_TO_REPLY = 'REACT_TO_REPLY'
 export const REACT_TO_BULLETIN = 'REACT_TO_BULLETIN'
+export const REPLY_BULLETIN = 'REPLY_BULLETIN'
 export const FETCH_COURSEPLAN_START = 'FETCH_COURSEPLAN_START'
 export const FETCH_COURSEPLAN_FINISH = 'FETCH_COURSEPLAN_FINISH'
 export const FETCH_CLASSROOM_START = 'FETCH_CLASSROOM_START'
@@ -31,22 +33,34 @@ export const newBulletinOnchange = (field, value) => ({
 })
 
 
-export const reactToReply = (bulletinId, replyId, userId) => ({
-    type: REACT_TO_REPLY,
-    payload: {
-        bulletinId: bulletinId,
-        replyId: replyId,
-        userId: userId
+export const reactToReply = (bulletinId, replyId, userId) => {
+    return (dispatch) => {
+        const url = `${process.env.REACT_APP_BACKEND_URL}/bulletin/reply/like/${bulletinId}/${replyId}`
+        fetch(url, { method: "POST", credentials: "include" })
+            .then(() => dispatch({
+                type: REACT_TO_REPLY,
+                payload: {
+                    bulletinId: bulletinId,
+                    replyId: replyId,
+                    userId: userId
+                }
+            }))
     }
-})
+}
 
-export const reactToBulletin = (bulletinId, userId) => ({
-    type: REACT_TO_BULLETIN,
-    payload: {
-        bulletinId: bulletinId,
-        userId: userId
+export const reactToBulletin = (bulletinId, userId) => {
+    return (dispatch) => {
+        const url = `${process.env.REACT_APP_BACKEND_URL}/bulletin/like/${bulletinId}`
+        fetch(url, { method: "POST", credentials: "include" })
+            .then(() => dispatch({
+                type: REACT_TO_BULLETIN,
+                payload: {
+                    bulletinId: bulletinId,
+                    userId: userId
+                }
+            }))
     }
-})
+}
 
 export const fetchClassroomRequest = () => ({
     type: FETCH_CLASSROOM_START
@@ -251,23 +265,49 @@ export function fetchBulletins(classroomID) {
     return (dispatch) => {
         var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/classroom/bulletin/${classroomID}`)
         fetch(url, { method: "GET", credentials: "include" }).then(res => res.json())
-        .then(data => {
-            dispatch({
-                type: FETCH_BULLETIN,
-                payload: {
-                    bulletins: data
-                }
+            .then(data => {
+                dispatch({
+                    type: FETCH_BULLETIN,
+                    payload: {
+                        bulletins: data
+                    }
+                })
             })
-        })
+    }
+}
+
+export function fetchSingleBulletin(bulletinID, classroomID) {
+    return (dispatch) => {
+        var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/classroom/bulletin/${classroomID}`)
+        fetch(url, { method: "GET", credentials: "include" }).then(res => res.json())
+            .then(data => {
+                dispatch({
+                    type: FETCH_SINGLE_BULLETIN,
+                    payload: {
+                        bulletin: data.find(bulletin => bulletin.id == bulletinID),
+                        bulletinID: bulletinID
+                    }
+                })
+            })
     }
 }
 
 export function postBulletin(title, content, classroomID) {
     return (dispatch) => {
         const url = `${process.env.REACT_APP_BACKEND_URL}/bulletin/${classroomID}`
-        fetch(url, {method: "POST", credentials: "include", body: JSON.stringify({content: content, title: title})})
-        .then(_ => {
-            dispatch(fetchClassroomAsync(classroomID))
-        })
+        fetch(url, { method: "POST", credentials: "include", body: JSON.stringify({ content: content, title: title }) })
+            .then(_ => {
+                dispatch(fetchClassroomAsync(classroomID))
+            })
+    }
+}
+
+export function replyToBulletin(content, bulletinId, classroomID) {
+    return (dispatch) => {
+        const url = `${process.env.REACT_APP_BACKEND_URL}/bulletin/reply/${bulletinId}`
+        fetch(url, { method: "POST", credentials: "include", body: JSON.stringify({ content: content }) })
+            .then(_ => {
+                dispatch(fetchSingleBulletin(bulletinId, classroomID))
+            })
     }
 }

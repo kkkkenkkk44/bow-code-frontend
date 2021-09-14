@@ -10,7 +10,7 @@ import { TextField } from "@material-ui/core";
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbUpOutlinedIcon from '@material-ui/icons/ThumbUpOutlined';
 import { IconButton } from "@material-ui/core";
-import { reactToBulletin, reactToReply } from "../actions/classroomPage";
+import { reactToBulletin, reactToReply, replyToBulletin } from "../actions/classroomPage";
 import { useDispatch } from "react-redux";
 
 function ReplyCard(props) {
@@ -56,7 +56,7 @@ function ReplyCard(props) {
             <Typography variant="subtitle1" className={classes.content}>
                 {reply.content}
                 <div className={classes.thumbup}>
-                    <IconButton onClick={()=>dispatch(reactToReply(bulletinId, props.index, user.id))}>
+                    <IconButton onClick={() => dispatch(reactToReply(bulletinId, props.index, user.id))}>
                         {
                             typeof user.userInfo !== 'undefined' && (reply.reactions.includes(user.id) ? <ThumbUpIcon></ThumbUpIcon> : <ThumbUpOutlinedIcon></ThumbUpOutlinedIcon>)
                         }
@@ -163,8 +163,10 @@ export default function Bulletin(props) {
     const [expanded, setExpanded] = useState(false)
     const classes = useStyle()
     const dispatch = useDispatch()
+    const [newReply, setNewReply] = useState("")
+    const classroomID = useSelector(state => state.classroomPageReducer.classroomID)
     const replies = bulletin.replies.map((reply, i) => <div key={reply.createTime} className={classes.expandedReplyCard}>
-        <ReplyCard reply={reply} bulletinId={bulletin.id} index={i}/>
+        <ReplyCard reply={reply} bulletinId={bulletin.id} index={i} />
     </div>)
     return <div>
         <Card square elevation={5}>
@@ -189,7 +191,7 @@ export default function Bulletin(props) {
                     </Typography>
                     <div className={classes.expandedAuthor}>
                         <div className={classes.thumbup}>
-                            <IconButton onClick={()=>dispatch(reactToBulletin(bulletin.id, user.id))}>
+                            <IconButton onClick={() => dispatch(reactToBulletin(bulletin.id, user.id))}>
                                 {
                                     typeof user.userInfo !== 'undefined' && (bulletin.reactions.includes(user.id) ? <ThumbUpIcon></ThumbUpIcon> : <ThumbUpOutlinedIcon></ThumbUpOutlinedIcon>)
                                 }
@@ -210,7 +212,17 @@ export default function Bulletin(props) {
                 </div>
                 <div className={classes.expandedUserReply}>
                     <Avatar alt={typeof user.userInfo !== 'undefined' ? user.userInfo.name : null} src={typeof user.userInfo !== 'undefined' ? user.userInfo.avatar : null} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
-                    <TextField fullWidth InputProps={{ className: classes.replyInput }} placeholder="回覆" variant="outlined" size="small" />
+                    <TextField fullWidth InputProps={{ className: classes.replyInput }} placeholder="回覆" variant="outlined" size="small"
+                        onKeyPress={(ev) => {
+                            if (ev.key === 'Enter') {
+                                dispatch(replyToBulletin(newReply, bulletin.id, classroomID))
+                                setNewReply("")
+                                ev.preventDefault();
+                            }
+                        }}
+                        value={newReply}
+                        onChange={(e)=>setNewReply(e.target.value)}
+                    />
                 </div>
             </Card>
         </Zoom>
