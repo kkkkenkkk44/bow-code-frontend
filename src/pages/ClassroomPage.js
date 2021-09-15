@@ -32,6 +32,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import HistoryIcon from '@material-ui/icons/History';
 import Badge from '@material-ui/core/Badge';
 import { useParams } from 'react-router-dom';
+import ApplicationTab from './ClassroomPages/ApplicationTab';
 
 function MainWindow(props) {
     const currentTab = useSelector(state => state.classroomPageReducer.currentTab)
@@ -54,6 +55,9 @@ function MainWindow(props) {
             </div>
             <div hidden={currentTab !== "viewcourse"}>
                 <ViewCourse />
+            </div>
+            <div hidden={currentTab !== "application"}>
+                <ApplicationTab />
             </div>
             {/* <div hidden={currentTab !== "config"}>
                 <ClassroomConfig />
@@ -144,6 +148,12 @@ export default function ClassroomManagerPage(props) {
                                 <SchoolIcon />
                             </ListItemIcon>
                             <ListItemText primary="課程內容" />
+                        </ListItem>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("application"))}>
+                            <ListItemIcon>
+                                <SchoolIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="申請連結" />
                         </ListItem>
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("student"))}>
                             <ListItemIcon>

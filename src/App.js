@@ -13,6 +13,7 @@ import SignUpPage from "./pages/SignUpPage";
 import CourseDetailPage from "./pages/CourseDetailPage";
 import BlockDetailPage from "./pages/BlockDetailPage";
 import ProblemPage from "./pages/ProblemPage";
+import ApplyClassroomPage from "./pages/ApplyClassroomPage";
 import { Redirect, Route, Switch } from "react-router";
 import { auth } from "./actions/login"
 import UserPage from "./pages/UserPage";
@@ -42,6 +43,7 @@ function App() {
       <Route path='/problem/:ProblemID' component={ProblemPage} />
       <Route path='/createProblem' component={CreateProblemPage} />
       <Route path='/classroom/:ClassroomID' component={ClassroomPage}/>
+      <Route path="/apply/:ClassroomID" component={ApplyClassroomPage}/>
       <Redirect from='/' to='/home' />
     </Switch>
   );
