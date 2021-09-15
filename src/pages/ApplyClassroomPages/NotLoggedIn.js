@@ -39,7 +39,7 @@ export default function NotLoggedIn(props) {
             case 'register':
                 return <Redirect to='/register' />
             default:
-                return <div>000</div>
+                return <div></div>
         }
     }
 
