@@ -62,12 +62,12 @@ export default function NotLoggedIn(props) {
                 <Button variant="contained" color="primary" onClick={() => { handleLogin() }}>
                     登入並加入教室
                 </Button>
-                <Typography variant="body2" className={classes.spacingBetweenButton}>
-                    {/* 還沒有帳號? */}
+                {/* <Typography variant="body2" className={classes.spacingBetweenButton}>
+                    還沒有帳號?
                 </Typography>
                 <Button variant="contained" color="gray" onClick={() => { handleRegister() }}>
                     註冊
-                </Button>
+                </Button> */}
             </div>
             <div>
                 {execute()}
