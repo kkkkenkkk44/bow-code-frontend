@@ -4,11 +4,14 @@ import courseEditorReducer from "./courseEditorReducer";
 import courseListReducer from "./courseListReducer"
 import problemListReducer from "./problemListReducer";
 import loginReducer from "./loginReducer"
+import createClassroomReducer from "./createClassroomReducer"
 import thunk from 'redux-thunk';
 import userPageReducer from "./userPageReducer";
 import problemPageReducer from "./problemPageReducer"
 import createProblemReducer from "./createProblemReducer";
 import classroomPageReducer from "./classroomPageReducer";
+import createCoursePlanReducer from "./createCoursePlanReducer";
+import coursePlanEditorReducer from "./coursePlanEditorReducer";
 
 const store = createStore(combineReducers({
     reducer,
@@ -20,6 +23,9 @@ const store = createStore(combineReducers({
     problemPageReducer,
     createProblemReducer,
     classroomPageReducer,
+    createClassroomReducer,
+    createCoursePlanReducer,
+    coursePlanEditorReducer,
   }), applyMiddleware(thunk))
 
 export { store }

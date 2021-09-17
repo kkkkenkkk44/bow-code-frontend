@@ -3,6 +3,8 @@ export const FETCH_OWN_COURSE_START = 'FETCH_OWN_COURSE_START';
 export const FETCH_OWN_COURSE = 'FETCH_OWN_COURSE';
 export const FETCH_FAV_COURSE_START = 'FETCH_FAV_COURSE_START';
 export const FETCH_FAV_COURSE = 'FETCH_FAV_COURSE';
+export const FETCH_OWN_COURSEPLAN_START = 'FETCH_OWN_COURSEPLAN_START';
+export const FETCH_OWN_COURSEPLAN = 'FETCH_OWN_COURSEPLAN'
 export const FETCH_SUBMISSION_START = 'FETCH_SUBMISSION_START';
 export const FETCH_SUBMISSION = 'FETCH_SUBMISSION';
 export const FETCH_CLASSROOM = 'FETCH_CLASSROOM'
@@ -33,6 +35,17 @@ export const fetchFavCourse = (courses) => ({
     type: FETCH_FAV_COURSE,
     payload:{
         courses: courses
+    }
+})
+
+export const fetchOwnCoursePlanStart = () => ({
+    type: FETCH_OWN_COURSEPLAN_START
+})
+
+export const fetchOwnCoursePlan = (coursePlans) => ({
+    type: FETCH_OWN_COURSEPLAN,
+    payload: {
+        coursePlans: coursePlans
     }
 })
 
@@ -74,6 +87,25 @@ export function fetchFavCourseAsync(ids) {
         .then(res => res.json())
         .then(data => {
             dispatch(fetchFavCourse(data.courseList))
+        })
+        .catch(e => {
+            // error handling
+            console.log(e)
+        })
+    }
+}
+
+export function fetchOwnCoursePlanAsync(ids) {
+    var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/course_plan/multiple`)
+    ids.join(',')
+    url.searchParams.append("courseplans", ids)
+    return (dispatch) => {
+        dispatch(fetchOwnCoursePlanStart())
+        fetch(url, { method: "GET" })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            dispatch(fetchOwnCoursePlan(data.coursePlanList))
         })
         .catch(e => {
             // error handling

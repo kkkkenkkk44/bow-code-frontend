@@ -10,6 +10,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
     courseBlockEditor: {
@@ -66,7 +67,7 @@ const TitleBLock = (props) => {
             .then(res => res.json())
             .then(res => {
                 //res = blockid
-                blocksID.splice(0, 0, { title: courseBlockTitle, id: res })
+                blocksID.splice(0, 0, { type: "course", title: courseBlockTitle, id: res })
                 fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/blockOrder`, {
                     method: "PUT",
                     credentials: "include",
@@ -93,18 +94,20 @@ const TitleBLock = (props) => {
                 </Grid>
                 {focus ?
                     <Grid item xs={1} className={classes.button_container}>
-                        <IconButton
-                            id={`addBlockButton_title`}
-                            onClick={(e) => {
-                                setCreateBlockOptionConfig({
-                                    open: !createBlockOptionConfig.open,
-                                    anchor: document.getElementById(`addBlockButton_title`),
-                                    placement: 'right-start'
-                                })
-                            }
-                            }>
-                            <AddIcon />
-                        </IconButton>
+                        <Tooltip title="新增">
+                            <IconButton
+                                id={`addBlockButton_title`}
+                                onClick={(e) => {
+                                    setCreateBlockOptionConfig({
+                                        open: !createBlockOptionConfig.open,
+                                        anchor: document.getElementById(`addBlockButton_title`),
+                                        placement: 'right-start'
+                                    })
+                                }
+                                }>
+                                <AddIcon />
+                            </IconButton>
+                        </Tooltip>
                         <Popper
                             open={createBlockOptionConfig.open}
                             anchorEl={createBlockOptionConfig.anchor}

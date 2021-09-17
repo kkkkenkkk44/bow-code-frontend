@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -11,8 +11,16 @@ import CreateIcon from '@material-ui/icons/Create';
 import { Chip } from "@material-ui/core";
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import StarIcon from '@material-ui/icons/Star';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import Alert from '@material-ui/lab/Alert'
+import Snackbar from '@material-ui/core/Snackbar';
 
-export default function CourseCard(props) {
+export default function CourseCardForCoursePlan(props) {
     const useStyles = makeStyles((theme) => ({
         root: {
             display: 'flex',
@@ -38,27 +46,20 @@ export default function CourseCard(props) {
             alignItems: 'center'
         },
         abstract: {
-            display: 'flex',
             flex: 4,
             color: "#707070",
             height: theme.spacing(8.5),
             marginLeft: '10px',
             fontSize: '12pt'
         },
-        abstractText: {
-            flexGrow: 1
-        },
         tagAndDiff: {
             display: 'flex'
         },
         tags: {
             flex: 1,
-            display: 'flex',
-            justifyContent: 'flex-start'
         },
         tagChip: {
-            margin: '3px',
-
+            margin: '3px'
         },
         difficulty: {
             marginRight: 0,
@@ -69,6 +70,11 @@ export default function CourseCard(props) {
         },
         cover: {
             height: '100%'
+        },
+
+        courseID: {
+            flex: 1,
+            marginTop: '10px',
         },
     }));
     const classes = useStyles();
@@ -83,7 +89,7 @@ export default function CourseCard(props) {
     switch (props.course.difficulty) {
         case 0:
             difficulty = <div className={classes.difficulty}>
-                <Typography variant="subtitle2" component="p" style={{ marginRight: '5px' }}>
+                <Typography variant="subtitle2" component="h3" style={{ marginRight: '5px' }}>
                     簡單
                 </Typography>
                 <StarIcon></StarIcon>
@@ -114,33 +120,47 @@ export default function CourseCard(props) {
 
     }
 
+    const [selectCourseID, setSelectCourseID] = useState("")
+
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
+    const clickAction = () => {
+        console.log(props.course.id)
+        setOpenSnackbar(true)
+        setSelectCourseID(props.course.id);
+        
+        //console.log(selectCourseID)
+
+    }
+
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false)
+    }
+
+    const onCopy = () => {
+        console.log('Copied')
+    }
+
     const tagChips = tags.map(tag => <Chip className={classes.tagChip} key={tag} label={tag} variant="outlined" />)
 
     return (
         props.brief ?
-            <Card>
-                <CardActionArea onClick={props.unclickable?()=>{}:() => history.push(`/course/${props.course.id}`)}>
-                    <CardContent className={classes.title}>
-                        <h3>{props.course.name}</h3>
-                    </CardContent>
-                </CardActionArea>
+            <Card>          
+                <CardContent className={classes.title}>
+                    <h3>{props.course.name}</h3>
+                </CardContent>    
             </Card> :
             <Card>
-                <CardActionArea onClick={props.unclickable?()=>{}:() => history.push(`/course/${props.course.id}`)} className={classes.root}>
-                    <CardMedia
-                        className={classes.cover}
-                        children={<img
-                            style={{
-                                maxHeight: '100%',
-                                maxWidth: '100%',
-                                objectFit: "contain"
-                            }}
-                            src="https://2.bp.blogspot.com/-VDnQXA1LJ-Y/Wfg0wEvvGSI/AAAAAAABH0A/L56uBITK8Y82HsE8-_xlJWjG6ZMjKZcFQCLcBGAs/s600/bg_school_room_yuyake.jpg"
-                        />}
-                    />
+                <CopyToClipboard onCopy={onCopy} text={props.course.id}>
+                    <CardActionArea onClick={clickAction}>
+                    <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+                        <Alert onClose={handleCloseSnackbar} severity="success">
+                            成功複製課程 id !
+                        </Alert>
+                    </Snackbar>
                     <CardContent className={classes.info}>
                         <div className={classes.title}>
-                            <Typography variant="h4" component="h3">
+                            <Typography variant="h5" component="h3">
                                 {courseName}
                             </Typography>
                             <div className={classes.author}>
@@ -150,8 +170,22 @@ export default function CourseCard(props) {
                                 </Typography>
                             </div>
                         </div>
+                        <div className={classes.courseID}>
+                            <Typography variant="caption" component="h3">
+                                課程 id ：
+                                {props.course.id}
+                            </Typography>
+                        </div>
                         <div className={classes.abstract}>
-                            <p>{abstract}</p>
+                            <TextEllipsis
+                                lines={3}
+                                tag={'p'}
+                                ellipsisChars={'...'}
+                                tagClass={'className'}
+                                debounceTimeoutOnResize={200}
+                                useJsOnly={true}
+                            >{abstract}
+                            </TextEllipsis>
                         </div>
                         <div className={classes.tagAndDiff}>
                             <div className={classes.tags}>
@@ -162,7 +196,8 @@ export default function CourseCard(props) {
                             </div>
                         </div>
                     </CardContent>
-                </CardActionArea>
+                    </CardActionArea>
+                </CopyToClipboard>
             </Card>
     )
 }

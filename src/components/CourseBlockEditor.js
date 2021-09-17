@@ -1,8 +1,11 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import { DialogTitle } from '@material-ui/core'
 // import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import { Grid, Popper, Paper, MenuList, MenuItem, ClickAwayListener, makeStyles, IconButton, Typography } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete';
+import { CircularProgress } from '@material-ui/core'
+import SearchIcon from '@material-ui/icons/Search';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
@@ -15,6 +18,14 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import ImportProblemCard from './ImportProblemCard'
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Tooltip from '@material-ui/core/Tooltip';
+import { useHistory } from 'react-router'
+import { useParams } from 'react-router-dom'
+import { fetchProblemListAsync, showProblemInfo, handleChangeKeyword, clickAllTags, changeTagsFilter } from '../actions/problemList'
 // import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder';
 // import Context from '@ckeditor/ckeditor5-core/src/context';
 
@@ -49,6 +60,14 @@ export default function CourseBlockEditor(props) {
     const blockCount = useSelector(state => state.courseEditorReducer.blocks.length)
     const blocksID = Array.from(useSelector(state => state.courseEditorReducer.blocksID))
     const content = useSelector(state => state.courseEditorReducer.blocks[props.index].content)
+
+    const problemList = useSelector(state => state.problemListReducer.problemList);
+    const isfetching = useSelector(state => state.problemListReducer.isfetching);
+    const showingInfoProblem = useSelector(state => state.problemListReducer.showingInfoProblem);
+    const difficultyRange = useSelector(state => state.problemListReducer.difficultyRange)
+    const tagsCount = useSelector(state => state.problemListReducer.tagsCount)
+    const checked = useSelector(state => state.problemListReducer.checked)
+    const keyword = useSelector(state => state.problemListReducer.keyword)
 
     const [focus, setFocus] = useState(false)
     const [createBlockOptionConfig, setCreateBlockOptionConfig] = useState({
@@ -110,6 +129,55 @@ export default function CourseBlockEditor(props) {
             })
         handleClose()
     }
+
+    const [openProblemDialog, setOpenProblemDialog] = useState(false)
+
+    const handleOpenAndFetchProblem = () => {
+        setOpenProblemDialog(true)
+
+    }
+    const handleProblemDialogClose = () => {
+        setOpenProblemDialog(false);
+      };
+    const [importProblemID, setImportProblemID] = useState("")
+
+    const history = useHistory();
+    const { CourseID } = useParams()
+    var problemBoard = []
+    var tagList
+
+    function filter(problem) {
+        if (problem.difficulty > difficultyRange[1] || problem.difficulty < difficultyRange[0]) {
+            return false
+        }
+        if (keyword != "") {
+            var keys = keyword.split(/[\s,]+/).filter((w) => w != "")
+            for (var i = 0; i < keys.length; i++) {
+                if (problem.name.toLowerCase().includes(keys[i].toLowerCase()) || problem.description.toLowerCase().includes(keys[i].toLowerCase())) {
+                    break;
+                }
+                if (i == keys.length - 1) {
+                    console.log("Failed keyword")
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    if (!isfetching) {
+        problemBoard = problemList.map((problem) =>
+            filter(problem) ?
+            <div key={problem.id} className={classes.problemTile} >
+                <ImportProblemCard problem={problem} setImportProblemID={setImportProblemID}/>
+            </div>
+            : null
+        )
+    }
+
+    useEffect(() => {
+        dispatch(fetchProblemListAsync())
+    }, [])
 
     return (
         <ClickAwayListener
@@ -177,49 +245,50 @@ export default function CourseBlockEditor(props) {
                     <></>
                 }
                 <Grid item xs={10}>
-                    {focus ?
-                        <Paper onClick={() => setFocus(true)}>
-                            <CKEditor
-                                editor={ClassicEditor}
-                                data={props.block.content}
-                                onChange={(event, editor) => {
-                                    dispatch({ type: "MODIFY_CONTENT", payload: { index: props.index, content: editor.getData() } })
-                                }}
-                            /></Paper>
-                        :
-                        <EditorPreview data={props.block.content} onClick={() => setFocus(true)} />
-                    }
+                    <Paper onClick={() => setFocus(true)}>
+                        <CKEditor
+                            editor={ClassicEditor}
+                            data={props.block.content}
+                            onChange={(event, editor) => {
+                                dispatch({ type: "MODIFY_CONTENT", payload: { index: props.index, content: editor.getData() } })
+                            }}
+                        />                        
+                    </Paper>
                 </Grid>
                 {focus ?
                     <Grid item xs={1} className={classes.button_container}>
                         <Grid container direction="column" justify="center" alignItems="center">
-                            <IconButton
-                                id={`addBlockButton_${props.index}`}
-                                onClick={(e) => {
-                                    setCreateBlockOptionConfig({
-                                        open: !createBlockOptionConfig.open,
-                                        anchor: document.getElementById(`addBlockButton_${props.index}`),
-                                        placement: 'right-start'
-                                    })
-                                }
-                                }>
-                                <AddIcon />
-                            </IconButton>
-                            <IconButton
-                                onClick={() => {
-
-                                    fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block/${props.blockID}`, {
-                                        method: "DELETE",
-                                        credentials: "include"
-                                    })
-                                        .then(res => {
-                                            dispatch({ type: "DELETE_BLOCK", payload: { index: props.index } })
+                            <Tooltip title="新增">
+                                <IconButton
+                                    id={`addBlockButton_${props.index}`}
+                                    onClick={(e) => {
+                                        setCreateBlockOptionConfig({
+                                            open: !createBlockOptionConfig.open,
+                                            anchor: document.getElementById(`addBlockButton_${props.index}`),
+                                            placement: 'right-start'
                                         })
-                                        .catch(e => console.log(e))
-                                }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
+                                    }
+                                    }>
+                                    <AddIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="刪除方塊">
+                                <IconButton
+                                    onClick={() => {
+
+                                        fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/block/${props.blockID}`, {
+                                            method: "DELETE",
+                                            credentials: "include"
+                                        })
+                                            .then(res => {
+                                                dispatch({ type: "DELETE_BLOCK", payload: { index: props.index } })
+                                            })
+                                            .catch(e => console.log(e))
+                                    }}
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Tooltip>
                         </Grid>
                         <Popper
                             open={createBlockOptionConfig.open}

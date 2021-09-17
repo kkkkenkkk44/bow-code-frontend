@@ -41,7 +41,7 @@ function TestDataPair(props) {
     const dispatch = useDispatch()
     return <div>
         <div className={classes.root}>
-            <TextField className={classes.input} id="input" value={props.data.input} onChange={(e) => dispatch(changeTestDataIdx(props.index, e.target.value, "input"))} />
+            <TextField autoFocus className={classes.input} id="input" value={props.data.input} onChange={(e) => dispatch(changeTestDataIdx(props.index, e.target.value, "input"))} />
             <Typography className={classes.arrow} variant="subtitle1"> {">"} </Typography>
             <TextField className={classes.output} id="output" value={props.data.output} onChange={(e) => dispatch(changeTestDataIdx(props.index, e.target.value, "output"))} />
             <Typography className={classes.remove} variant="subtitle1">
