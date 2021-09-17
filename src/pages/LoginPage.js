@@ -55,7 +55,7 @@ export default function LoginPage() {
 
     return (
         isLogin ?
-            location.state.from === 'applyClassroom'?
+            location.state && (location.state.from === 'applyClassroom')?
                 <Redirect to={`/classroom/${location.state.classroomID}`} />
                 :
                 <Redirect to='/home' />
