@@ -1,6 +1,6 @@
 import { makeStyles, Paper, Typography, Button } from "@material-ui/core"
 import { useState } from "react";
-import { Redirect } from "react-router";
+import { Redirect, useParams } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -31,11 +31,22 @@ export default function NotLoggedIn(props) {
 
     const classes = useStyles();
     const [action, setAction] = useState('none')
+    const { ClassroomID } = useParams()
 
     const execute = () => {
         switch (action) {
             case 'login':
-                return <Redirect to="/login" />
+                return (
+                    <Redirect
+                        to={{
+                            pathname: "/login",
+                            state: {
+                                from: 'applyClassroom',
+                                classroomID: ClassroomID
+                            }
+                        }}
+                    />
+                )
             case 'register':
                 return <Redirect to='/register' />
             default:

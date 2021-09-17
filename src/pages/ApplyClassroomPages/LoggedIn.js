@@ -60,9 +60,15 @@ export default function LoggedIn(props) {
     const executeResult = () => {
         switch (result) {
             case "confirm":
-                return <Redirect to={`/classroom/${ClassroomID}`}/> 
+                return (
+                    <Redirect
+                        to={{
+                            pathname: `/classroom/${ClassroomID}`,
+                        }}
+                    />
+                )
             case "cancel":
-                return <Redirect to="/home"/> 
+                return <Redirect to="/home" />
             default:
                 return <div></div>
         }
