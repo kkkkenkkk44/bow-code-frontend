@@ -318,28 +318,6 @@ export default function CourseInfoBar(props) {
                     </Typography>
                 </div>
                 <div className={classes.button}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        className={classes.editButton}
-                        startIcon={<CreateIcon />}
-                        style={isCreator ? { display: '' } : { display: 'none' }}
-                        onClick={() => history.push(`/courseEditor/${CourseID}`)}
-                    >
-                        編輯
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        className={classes.deleteButton}
-                        startIcon={<DeleteIcon />}
-                        style={isCreator ? { display: '' } : { display: 'none' }}
-                        onClick={handleDeleteCourseButton}
-                    >
-                        刪除
-                    </Button>
-                </div>
-                <div className={classes.button}>
                     <Tooltip title="收藏課程" TransitionComponent={Zoom}>
                         <Button
                             variant="contained"
