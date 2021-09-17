@@ -16,6 +16,7 @@ export const CREATE_QUIZ = 'CREATE_QUIZ'
 export const CREATE_QUIZ_START = 'CREATE_QUIZ_START'
 export const CREATE_QUIZ_FAILED = "CREATE_QUIZ_FAILED"
 export const ACCEPT_APPLICATION = "ACCEPT_APPLICATION"
+export const RESET_STUDENT_INFO = "RESET_STUDENT_INFO"
 
 export const switchTo = (tab) => ({
     type: CLASSROOM_SWITCH_TO,
@@ -66,12 +67,12 @@ export const fetchClassroomRequest = () => ({
     type: FETCH_CLASSROOM_START
 })
 
-export const fetchClassroom = (detail) => {
+export const fetchClassroom = (detail, isCreator) => {
     const { applicants, apply, coursePlan, createTime, creator, id, invitees, name, review, students, visibility, bulletinList, homeworkList, examList } = detail
     return {
         type: FETCH_CLASSROOM_FINISH,
         payload: {
-            applicants, apply, coursePlan, createTime, creator, id, invitees, name, review, students, visibility, bulletinList, homeworkList, examList
+            applicants, apply, coursePlan, createTime, creator, id, invitees, name, review, students, visibility, bulletinList, homeworkList, examList, isCreator
         }
     }
 }
@@ -84,10 +85,12 @@ export function fetchClassroomAsync(classroomID) {
             .then(res => res.json())
             .then(obj => {
                 const data = obj.classroom
-                dispatch(fetchClassroom(data))
+                dispatch(fetchClassroom(data, obj.isCreator))
                 dispatch(fetchBulletins(classroomID))
-                dispatch(fetchStudentInfoAsync(data.students, classroomID))
-                dispatch(fetchApplicantInfoAsync(data.applicants))
+                if(obj.isCreator){
+                    dispatch(fetchStudentInfoAsync(data.students, classroomID))
+                    dispatch(fetchApplicantInfoAsync(data.applicants))
+                }
             })
             .catch(e => {
                 // error handling
@@ -116,7 +119,6 @@ export function fetchCoursePlanAsync(coursePlanID) {
         fetch(url, { method: "GET" })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
                 dispatch(fetchCoursePlan(data))
             })
             .catch(e => {
@@ -126,16 +128,17 @@ export function fetchCoursePlanAsync(coursePlanID) {
     };
 }
 
+export function resetStudentInfo(){
+    return {
+        type: RESET_STUDENT_INFO
+    }
+}
+
 export function fetchStudentInfoAsync(studentIds, classroomId) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        const userId = getState().loginReducer.user.id
         studentIds.map(id => {
-            var getInfoUrl = new URL(`${process.env.REACT_APP_BACKEND_URL}/user/${id}`)
-            var getScoreUrl = new URL(`${process.env.REACT_APP_BACKEND_URL}/classroom/${classroomId}/${id}`)
-            var p1 = fetch(getInfoUrl, { method: "GET" }).then(res => res.json())
-            var p2 = {} //fetch(getScoreUrl, { method: "GET", credentials: "include" })
-            Promise.all([p1, p2]).then(values => {
-                dispatch(fetchSingleStudentInfo(id, values[0], values[1]))
-            })
+            dispatch(fetchSingleStudentInfo(id, classroomId))
         })
     }
 }
@@ -153,14 +156,22 @@ export function fetchApplicantInfoAsync(ids) {
     }
 }
 
-export function fetchSingleStudentInfo(id, userInfo, scores) {
-    return {
-        type: FETCH_SINGLE_STUDENT_INFO,
-        payload: {
-            id: id,
-            userInfo: userInfo,
-            scores: scores
-        }
+export function fetchSingleStudentInfo(id, classroomId) {
+    return (dispatch) => {
+        var getInfoUrl = new URL(`${process.env.REACT_APP_BACKEND_URL}/user/${id}`)
+        var getScoreUrl = new URL(`${process.env.REACT_APP_BACKEND_URL}/classroom/score/student/${classroomId}/${id}`)
+        var p1 = fetch(getInfoUrl, { method: "GET" }).then(res => res.json())
+        var p2 = fetch(getScoreUrl, { method: "GET", credentials: "include" }).then(res => res.json())
+        Promise.all([p1, p2]).then(values => {
+            dispatch({
+                type: FETCH_SINGLE_STUDENT_INFO,
+                payload: {
+                    id: id,
+                    userInfo: values[0],
+                    scores: values[1]
+                }
+            })
+        })
     }
 }
 
@@ -177,7 +188,7 @@ export function fetchSingleApplicantInfo(id, userInfo) {
 export function acceptApplication(id, classroomID) {
     return (dispatch) => {
         const url = `${process.env.REACT_APP_BACKEND_URL}/classroom/accept/${classroomID}/${id}`
-        fetch(url, {method: "POST", credentials: 'include'}).then(
+        fetch(url, { method: "POST", credentials: 'include' }).then(
             dispatch({
                 type: ACCEPT_APPLICATION,
                 payload: {
@@ -185,7 +196,7 @@ export function acceptApplication(id, classroomID) {
                 }
             })
         )
-        
+
     }
 }
 
@@ -217,7 +228,8 @@ export function createQuizAsync(quizType, title, deadline, problemList, classroo
             type: 1,
             setList: problemList.map(problem => ({
                 name: problem.name,
-                id: problem.id
+                id: problem.id,
+                totalScore: 100
             }))
         }
     }
@@ -225,7 +237,7 @@ export function createQuizAsync(quizType, title, deadline, problemList, classroo
     return (dispatch) => {
         dispatch(createQuizStart())
         fetch(url, { method: "POST", credentials: "include", body: JSON.stringify(body) })
-            .then(() => dispatch(createQuizSuccessfully()) && dispatch(fetchClassroomAsync(classroomID)))
+            .then(() => {dispatch(createQuizSuccessfully()); dispatch(resetStudentInfo()); dispatch(fetchClassroomAsync(classroomID))})
             .catch(() => dispatch(createQuizFailed()))
     }
 }

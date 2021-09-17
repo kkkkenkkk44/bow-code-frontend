@@ -19,6 +19,7 @@ import { DialogActions } from '@material-ui/core'
 import { Zoom } from '@material-ui/core'
 import { Card } from '@material-ui/core'
 import { ProblemListContent } from '../../pages/ProblemListPage'
+import { DataGrid } from '@material-ui/data-grid'
 import { useDispatch, useSelector } from 'react-redux'
 import {
     MuiPickersUtilsProvider,
@@ -31,6 +32,46 @@ import { resetPickedProblem } from '../../actions/problemList'
 
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
+}
+
+function ScoreBoard(props) {
+    const { open, handleClose } = props
+    var columns = [
+        {
+            field: 'name',
+            headerName: '名稱',
+            width: 150,
+        }
+    ];
+    var rows = [{ id: 0, name: "test" }]
+    return <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth="xl">
+        <DialogTitle id="simple-dialog-title">作答結果</DialogTitle>
+        <div style={{
+            height: '70vh',
+            width: '70vw',
+        }}>
+            <DataGrid
+                columns={columns}
+                rows={rows}
+                style={{
+                    marginLeft: '5%',
+                    marginRight: '5%'
+                }}
+            />
+        </div>
+        <DialogActions>
+            <div style={{
+                marginTop: 'auto',
+                marginRight: '20px',
+                marginBottom: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+            }}>
+                <Button variant="contained" onClick={() => { handleClose() }}>關閉</Button>
+            </div>
+        </DialogActions>
+    </Dialog>
 }
 
 function DeadlineSetter(props) {
@@ -80,6 +121,7 @@ export default function QuizTile(props) {
     const quizType = props.type
     const index = props.index
     const isRecord = props.isRecord
+    const score = props.score
     const useStyles = makeStyles((theme) => ({
         root: {
             width: '100%',
@@ -177,10 +219,11 @@ export default function QuizTile(props) {
     const [expandPublishDialog, setExpandPublishDialog] = React.useState(false)
     const [showProblemPicker, setShowProblemPicker] = React.useState(false)
     const [showAddProblemDialog, setShowAddProblemDialog] = React.useState(false)
+    const [showScores, setShowScores] = React.useState(false)
     const classroomID = useSelector(state => state.classroomPageReducer.classroomID)
     const pickedProblems = useSelector(state => state.problemListReducer.pickedProblems)
     const onConfirmChange = (date) => { dispatch(changeDeadlineOfQuiz(quizType, quiz, date, classroomID, index)) }
-    const problemList = quiz.component.setList.map((problem, i) => <ListItemLink className={classes.content} key={i} target="_blank" rel="noopener noreferrer" href={`/problem/${problem.id}`}>
+    const problemList = quiz.component.setList.map((problem, i) => <ListItemLink className={classes.content} key={i} target="_blank" rel="noopener noreferrer" href={`/classroom/${classroomID}/problem/${problem.id}`}>
         <ListItemText primary={problem.name} />
     </ListItemLink>)
     const remain = (quiz.end - Date.now()) / 1000
@@ -195,6 +238,8 @@ export default function QuizTile(props) {
     } else {
         remainText = parseInt(remain / 60 / 60 / 24).toString() + " 天"
     }
+    var totalScore = 0
+    quiz.component.setList.map(p=>totalScore += p.totalScore)
     return <div className={classes.root}>
         <Accordion>
             <AccordionSummary
@@ -202,7 +247,7 @@ export default function QuizTile(props) {
                 className={classes.main}
             >
                 <Typography className={classes.title}>{quiz.component.name}</Typography>
-                {isRecord && <Typography className={classes.score} variant="h5">{quiz.score}/{quiz.total}</Typography>}
+                {isRecord && <Typography className={classes.score} variant="h5">{score}/{totalScore}</Typography>}
                 {isRecord && <div className={classes.gradingDisplay}></div>}
                 <div className={classes.deadline}>
                     {due ? <Typography variant="subtitle1">{`已截止`}</Typography> :
@@ -250,7 +295,7 @@ export default function QuizTile(props) {
                                         <Button onClick={() => { setShowAddProblemDialog(false) }} color="primary">
                                             取消
                                         </Button>
-                                        <Button onClick={() => { dispatch(addProblemsToQuiz(quizType, quiz, pickedProblems, classroomID, index)); dispatch(resetPickedProblem()); setShowProblemPicker(false); setShowAddProblemDialog(false) }} variant="contained" color="primary" autoFocus>
+                                        <Button onClick={() => { dispatch(addProblemsToQuiz(quizType, quiz, pickedProblems, classroomID, index)); dispatch(resetPickedProblem()); setShowProblemPicker(false); setShowAddProblemDialog(false); dispatch(resetPickedProblem()) }} variant="contained" color="primary" autoFocus>
                                             確定
                                         </Button>
                                     </DialogActions>
@@ -270,7 +315,8 @@ export default function QuizTile(props) {
                             <Typography variant='subtitle2'>公開</Typography>
                         </div>
                         <div>
-                            <Button variant="contained">作答結果</Button>
+                            <Button variant="contained" onClick={() => { setShowScores(true) }}>作答結果</Button>
+                            <ScoreBoard open={showScores} handleClose={() => setShowScores(false)} />
                         </div>
                     </div>
                     <Dialog

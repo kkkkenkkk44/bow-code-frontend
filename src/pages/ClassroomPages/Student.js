@@ -15,13 +15,6 @@ import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
 import { acceptApplication } from '../../actions/classroomPage'
 
-const columns = [
-    {
-        field: 'name',
-        headerName: '名稱',
-        width: 150,
-    }
-];
 
 const StyledBadge = withStyles((theme) => ({
     badge: {
@@ -56,13 +49,45 @@ export default function Student() {
     const useStyles = makeStyles(theme => ({
         root: {
             height: '70vh',
-            marginLeft: '20%',
-            marginRight: '20%'
+            marginLeft: '10%',
+            marginRight: '10%'
         }
     }))
     const studentInfos = useSelector(state => state.classroomPageReducer.studentInfos)
     const applicant = useSelector(state => state.classroomPageReducer.applicantInfos)
-    const rows = Object.keys(studentInfos).map(id => ({ id: id, name: studentInfos[id].userInfo.name }))
+    const homeworkList = useSelector(state => state.classroomPageReducer.homeworkList)
+    const quizList = useSelector(state => state.classroomPageReducer.quizList)
+    var columns = [
+        {
+            field: 'name',
+            headerName: '名稱',
+            width: 150,
+        }
+    ];
+    homeworkList.map(hw => {
+        columns.push({
+            field: hw.component.name,
+            headerName: hw.component.name,
+            width: 150,
+        })
+    })
+    quizList.map(quiz => {
+        columns.push({
+            field: quiz.component.name,
+            headerName: quiz.component.name,
+            width: 150,
+        })
+    })
+    
+    const rows = Object.keys(studentInfos).map(id => {
+        var row = { id: id, name: studentInfos[id].userInfo.name }
+        homeworkList.map((hw, i) => {
+            var totalScore = 0
+            studentInfos[id].scores.homeworkComponentScoreList[i].setScoreList.map(problem => totalScore += problem.score == -1 ? 0 : problem.score)
+            row[hw.component.name] = totalScore
+        })
+        return row
+    })
     const applicantTiles = Object.keys(applicant).map(id => <ApplicantTile id={id} applicant={applicant[id]} key={id}></ApplicantTile>)
     const [tab, setTab] = React.useState(0)
     const classes = useStyles()

@@ -41,7 +41,8 @@ const initialState = {
     newBulletinContent: "",
     homeworkList: [],
     quizList: [],
-    creatingQuiz: "none"
+    creatingQuiz: "none",
+    userIsCreator: false
 }
 
 const classroomPageReducer = (state = initialState, action) => {
@@ -125,7 +126,13 @@ const classroomPageReducer = (state = initialState, action) => {
                 visibility: action.payload.visibility,
                 bulletinList: action.payload.bulletinList,
                 homeworkList: action.payload.homeworkList,
-                quizList: action.payload.examList
+                quizList: action.payload.examList,
+                userIsCreator: action.payload.isCreator
+            }
+        case RESET_STUDENT_INFO:
+            return {
+                ...state,
+                studentInfos: {}
             }
         case FETCH_SINGLE_STUDENT_INFO:
             return {

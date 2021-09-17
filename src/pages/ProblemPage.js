@@ -63,6 +63,7 @@ export default function ProblemPage() {
     const [language, setLanguage] = useState("cpp")
     const [openSubmissions, setOpenSubmissions] = useState(false)
     const { ProblemID } = useParams()
+    const { ClassroomID } = useParams()
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -190,7 +191,7 @@ export default function ProblemPage() {
                         </div>
                     </Grid>
                 </Grid>
-                <SubmitBar ProblemID={ProblemID} sourceCode={sourceCode} language={language} handleCheckSubmission={handleCheckSubmission} />
+                <SubmitBar classroomID={ClassroomID} ProblemID={ProblemID} sourceCode={sourceCode} language={language} handleCheckSubmission={handleCheckSubmission} />
                 <Dialog open={openSubmissions} onClose={handleCloseSubmission} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">submissions</DialogTitle>
                     <div className={classes.submissionListRoot}>

@@ -36,13 +36,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SubmitBar(props) {
     const classes = useStyles()
-
+    const classroomID = props.classroomID
     const handleSubmit = () => {
         var submission = {
             sourceCode: props.sourceCode,
             languageID: getLanguageID(props.language)
         }
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/submit/problem/${props.ProblemID}`, {
+        const url = typeof classroomID === 'undefined' ? new URL(`${process.env.REACT_APP_BACKEND_URL}/submit/problem/${props.ProblemID}`) : new URL(`${process.env.REACT_APP_BACKEND_URL}/submit/problem/${props.ProblemID}?classroom=${classroomID}`)
+        fetch(url, {
             method: 'POST',
             credentials: "include",
             body: JSON.stringify(submission)

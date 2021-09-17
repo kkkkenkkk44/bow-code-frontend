@@ -41,6 +41,7 @@ function App() {
       <Route path='/course/:CourseID' component={CourseDetailPage} />
       <Route path='/problem/:ProblemID' component={ProblemPage} />
       <Route path='/createProblem' component={CreateProblemPage} />
+      <Route path='/classroom/:ClassroomID/problem/:ProblemID' component={ProblemPage} />
       <Route path='/classroom/:ClassroomID' component={ClassroomPage}/>
       <Redirect from='/' to='/home' />
     </Switch>

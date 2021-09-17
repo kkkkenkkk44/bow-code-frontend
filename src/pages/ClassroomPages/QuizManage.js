@@ -238,7 +238,7 @@ export default function QuizManage() {
                                 <ProblemListContent isPicker={true} />
                             </div>
                             <div className={classes.postButton}>
-                                <Button variant="contained" color="primary" size="large" onClick={() => { setShowProblemPicker(false); dispatch(resetPickedProblem()) }}>
+                                <Button variant="contained" color="primary" size="large" onClick={() => { setShowProblemPicker(false); }}>
                                     完成
                                 </Button>
                             </div>
@@ -247,7 +247,7 @@ export default function QuizManage() {
                     </Zoom>
                 </div>
                 <div className={classes.postButton}>
-                    <Button variant="contained" color="primary" size="large" onClick={() => {dispatch(createQuizAsync(problemType, title, selectedDate, pickedProblems, classroomID)) ; setCreateQuizExpanded(false)}}>
+                    <Button variant="contained" color="primary" size="large" onClick={() => {dispatch(createQuizAsync(problemType, title, selectedDate, pickedProblems, classroomID)) ; setCreateQuizExpanded(false);  dispatch(resetPickedProblem())}}>
                         發布
                     </Button>
                 </div>

@@ -35,6 +35,7 @@ import { useParams } from 'react-router-dom';
 
 function MainWindow(props) {
     const currentTab = useSelector(state => state.classroomPageReducer.currentTab)
+    const isCreator = props.isCreator
     return (
         <div>
             <div hidden={currentTab !== "overview"}>
@@ -44,13 +45,13 @@ function MainWindow(props) {
                 <BulletinBoard />
             </div>
             <div hidden={currentTab !== "student"}>
-                <Student />
+                {isCreator && <Student />}
             </div>
             <div hidden={currentTab !== "quiz"}>
-                <Quiz />
+                {!isCreator && <Quiz />}
             </div>
             <div hidden={currentTab !== "quizManage"}>
-                <QuizManage />
+                {isCreator && <QuizManage />}
             </div>
             <div hidden={currentTab !== "viewcourse"}>
                 <ViewCourse />
@@ -114,13 +115,13 @@ export default function ClassroomManagerPage(props) {
     const authFinish = useSelector(state => state.loginReducer.authFinish)
     const applicants = useSelector(state => state.classroomPageReducer.applicants)
     const classroom = useSelector(state => state.classroomPageReducer)
+    const isCreator = useSelector(state => state.classroomPageReducer.userIsCreator)
     const { ClassroomID } = useParams()
 
     useEffect(() => {
         dispatch(auth())
         dispatch(fetchClassroomAsync(ClassroomID))
     }, [])
-
     return (
         <div>
             <NavBar context="Bow-Code" />
@@ -145,24 +146,24 @@ export default function ClassroomManagerPage(props) {
                             </ListItemIcon>
                             <ListItemText primary="課程內容" />
                         </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("student"))}>
+                        {isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("student"))}>
                             <ListItemIcon>
                                 <HistoryIcon />
                             </ListItemIcon>
                             <ListItemText primary={<StyledBadge badgeContent={applicants.length} color="secondary">學生</StyledBadge>} />
-                        </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("quiz"))}>
+                        </ListItem>}
+                        {!isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("quiz"))}>
                             <ListItemIcon>
                                 <HistoryIcon />
                             </ListItemIcon>
                             <ListItemText primary="考試及作業" />
-                        </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("quizManage"))}>
+                        </ListItem>}
+                        {isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("quizManage"))}>
                             <ListItemIcon>
                                 <HistoryIcon />
                             </ListItemIcon>
                             <ListItemText primary="考試及作業管理" />
-                        </ListItem>
+                        </ListItem>}
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("bulletinBoard"))}>
                             <ListItemIcon>
                                 <HistoryIcon />
@@ -175,7 +176,7 @@ export default function ClassroomManagerPage(props) {
                 {
                     authFinish ?
                         <div className={classes.main}>
-                            <MainWindow />
+                            <MainWindow isCreator={isCreator}/>
                         </div> : null
                 }
             </div>
