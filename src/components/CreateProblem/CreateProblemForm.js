@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.secondary.main,
     },
     form: {
-      width: '50%', // Fix IE 11 issue.
+      width: '70%', // Fix IE 11 issue.
       marginTop: theme.spacing(3),
     },
     submit: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     difficultyText: {
-      marginRight: '20px',
+      marginRight: '15px',
         
     },
 
@@ -43,11 +43,13 @@ const useStyles = makeStyles((theme) => ({
     },
 
     categoryText: {
-      margin: '20px',
+      marginLeft: '40px',
+      marginRight: '15px',
     },
 
     visibilityText: {
-      margin: '20px',
+      marginLeft: '40px',
+      marginRight: '15px',
     },
 
   }));
