@@ -25,6 +25,7 @@ import FaceIcon from '@material-ui/icons/Face';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import SchoolIcon from '@material-ui/icons/School';
 import HistoryIcon from '@material-ui/icons/History';
+import { Redirect } from 'react-router';
 
 function MainWindow(props) {
     const currentTab = useSelector(state => state.userPageReducer.currentTab)
@@ -85,77 +86,83 @@ export default function UserPage(props) {
             paddingRight: "30px"
         }
     }));
+
     const classes = useStyles();
     const dispatch = useDispatch();
     const user = useSelector(state => state.loginReducer.user)
-    const authFinish = useSelector(state => state.loginReducer.authFinish)
+    const { isLogin, authFinish } = useSelector(state => state.loginReducer)
+
     useEffect(() => {
         dispatch(auth())
     }, [])
+
     return (
-        <div>
-            <NavBar context="Bow-Code" />
-            <div className={classes.root}>
-                <Paper className={classes.userInfo} square elevation={4}>
+        !isLogin ?
+            <Redirect to='/home' />
+            :
+            <div>
+                <NavBar context="Bow-Code" />
+                <div className={classes.root}>
+                    <Paper className={classes.userInfo} square elevation={4}>
 
-                    <Avatar className={classes.avatar} alt="Remy Sharp" src={typeof user.userInfo === 'undefined' ? null : user.userInfo.avatar} />
-                    <Typography className={classes.userName} variant="h4" component="h2">
-                        {typeof user.userInfo === 'undefined' ? "" : user.userInfo.name}
-                    </Typography>
-                    <Divider />
-                    <List>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("overview"))}>
-                            <ListItemIcon>
-                                <FaceIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="總覽" />
-                        </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myCourse"))}>
-                            <ListItemIcon>
-                                <MenuBookIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="教材" />
-                        </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("problemSubmission"))}>
-                            <ListItemIcon>
-                                <HistoryIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="作答紀錄" />
-                        </ListItem>
-                        <ListItem className={classes.listItem} button>
-                            <ListItemIcon>
-                                <NearMeIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="教學計畫" />
-                        </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myOwnClassroom"))}>
-                            <ListItemIcon>
-                                <SchoolIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="我管理的班級" />
-                        </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myJoinedClassroom"))}>
-                            <ListItemIcon>
-                                <SchoolIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="我加入的班級" />
-                        </ListItem>
-                        <ListItem className={classes.listItem} button>
-                            <ListItemIcon>
-                                <AttachFileIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="檔案" />
-                        </ListItem>
-                    </List>
+                        <Avatar className={classes.avatar} alt="Remy Sharp" src={typeof user.userInfo === 'undefined' ? null : user.userInfo.avatar} />
+                        <Typography className={classes.userName} variant="h4" component="h2">
+                            {typeof user.userInfo === 'undefined' ? "" : user.userInfo.name}
+                        </Typography>
+                        <Divider />
+                        <List>
+                            <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("overview"))}>
+                                <ListItemIcon>
+                                    <FaceIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="總覽" />
+                            </ListItem>
+                            <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myCourse"))}>
+                                <ListItemIcon>
+                                    <MenuBookIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="教材" />
+                            </ListItem>
+                            <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("problemSubmission"))}>
+                                <ListItemIcon>
+                                    <HistoryIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="作答紀錄" />
+                            </ListItem>
+                            <ListItem className={classes.listItem} button>
+                                <ListItemIcon>
+                                    <NearMeIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="教學計畫" />
+                            </ListItem>
+                            <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myOwnClassroom"))}>
+                                <ListItemIcon>
+                                    <SchoolIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="我管理的班級" />
+                            </ListItem>
+                            <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myJoinedClassroom"))}>
+                                <ListItemIcon>
+                                    <SchoolIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="我加入的班級" />
+                            </ListItem>
+                            <ListItem className={classes.listItem} button>
+                                <ListItemIcon>
+                                    <AttachFileIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="檔案" />
+                            </ListItem>
+                        </List>
 
-                </Paper>
-                {
-                    authFinish ?
-                        <div className={classes.main}>
-                            <MainWindow />
-                        </div> : null
-                }
+                    </Paper>
+                    {
+                        authFinish ?
+                            <div className={classes.main}>
+                                <MainWindow />
+                            </div> : null
+                    }
+                </div>
             </div>
-        </div>
     )
 }
