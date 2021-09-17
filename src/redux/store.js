@@ -9,7 +9,10 @@ import thunk from 'redux-thunk';
 import userPageReducer from "./userPageReducer";
 import problemPageReducer from "./problemPageReducer"
 import createProblemReducer from "./createProblemReducer";
+import classroomPageReducer from "./classroomPageReducer";
 import createCoursePlanReducer from "./createCoursePlanReducer";
+import coursePlanEditorReducer from "./coursePlanEditorReducer";
+import applyClassroomPageReducer from "./applyClassroomPageReducer";
 
 const store = createStore(combineReducers({
     reducer,
@@ -19,9 +22,12 @@ const store = createStore(combineReducers({
     loginReducer,
     userPageReducer,
     problemPageReducer,
+    createProblemReducer,
+    classroomPageReducer,
     createClassroomReducer,
     createCoursePlanReducer,
-    createProblemReducer,
+    coursePlanEditorReducer,
+    applyClassroomPageReducer
   }), applyMiddleware(thunk))
 
 export { store }

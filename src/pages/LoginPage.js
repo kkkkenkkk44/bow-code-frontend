@@ -13,7 +13,7 @@ import Container from '@material-ui/core/Container';
 import { GoogleLogin } from 'react-google-login';
 import { loginAsync } from '../actions/login'
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router';
+import { Redirect, useLocation } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -50,9 +50,16 @@ export default function LoginPage() {
     const classes = useStyles();
     const dispatch = useDispatch()
     const isLogin = useSelector(state => state.loginReducer.isLogin)
+    const location = useLocation()
+    console.log(location)
 
     return (
-        isLogin ? <Redirect to='/home' /> :
+        isLogin ?
+            location.state.from === 'applyClassroom'?
+                <Redirect to={`/classroom/${location.state.classroomID}`} />
+                :
+                <Redirect to='/home' />
+            :
             <div>
                 <NavBar context="Bow-Code" />
                 <Container component="main" maxWidth="xs">

@@ -210,7 +210,7 @@ export default function ImportBlockDialog(props) {
                                                     await fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.CourseID}/block/${newBlockID}`, {
                                                         method: "PUT",
                                                         credentials: "include",
-                                                        body: res[i]
+                                                        body: res[i],
                                                     })
                                                 }
                                                 newBlocksID.forEach((id, index) => blocksID.splice(importFromIndex + 1 + index, 0, id))

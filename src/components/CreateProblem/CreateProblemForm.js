@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.secondary.main,
     },
     form: {
-      width: '50%', // Fix IE 11 issue.
+      width: '70%', // Fix IE 11 issue.
       marginTop: theme.spacing(3),
     },
     submit: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     difficultyText: {
-      marginRight: '20px',
+      marginRight: '15px',
         
     },
 
@@ -43,11 +43,13 @@ const useStyles = makeStyles((theme) => ({
     },
 
     categoryText: {
-      margin: '20px',
+      marginLeft: '40px',
+      marginRight: '15px',
     },
 
     visibilityText: {
-      margin: '20px',
+      marginLeft: '40px',
+      marginRight: '15px',
     },
 
   }));
@@ -126,7 +128,10 @@ export default function CreatProblemForm() {
     const testdatas = useSelector(state => state.createProblemReducer.testdatas)
 
     const dispatch = useDispatch()
-
+    var score = [];
+    for (var i = 0; i < testdatas.length; i++) {
+      score.push(1);
+    }
     const handleSubmit = (event) => {
         if (name === ""){
           alert("請輸入題目名稱")
@@ -142,16 +147,17 @@ export default function CreatProblemForm() {
           var problem_info = {
             name,
             tags: tags.split(' '),
-            difficulty,
+            difficulty: parseInt(difficulty),
             creator: user.id,
             category,
             testcase: {
               testcaseCnt: testcase_input.length,
               input: testcase_input,
-              expectedOutput: testcase_output
+              expectedOutput: testcase_output,
+              score: score
             },
             description: desc,
-            visibility,
+            visibility: parseInt(visibility),
             content: content,
         }
         fetch(`${process.env.REACT_APP_BACKEND_URL}/problem`, {
@@ -208,9 +214,9 @@ export default function CreatProblemForm() {
                   name: 'difficulty',
                 }}
               >
-                <option value={"easy"}>簡單</option>
-                <option value={"medium"}>中等</option>
-                <option value={"hard"}>困難</option>
+                <option value={0}>簡單</option>
+                <option value={1}>挑戰</option>
+                <option value={2}>專精</option>
               </Select>
             </FormControl>
             <span className={classes.categoryText}>題目類別</span>
@@ -240,9 +246,9 @@ export default function CreatProblemForm() {
                   name: 'visibility',
                 }}
               >
-                <option value={""}>限定自己瀏覽</option>
-                <option value={""}>題庫存取者可瀏覽</option>
-                <option value={""}>所有人皆可瀏覽</option>
+                <option value={0}>限定自己瀏覽</option>
+                <option value={1}>題庫存取者可瀏覽</option>
+                <option value={2}>所有人皆可瀏覽</option>
               </Select>
             </FormControl>
             <Button

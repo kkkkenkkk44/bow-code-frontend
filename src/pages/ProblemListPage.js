@@ -3,7 +3,7 @@ import NavBar from '../components/NavBar'
 import ProblemListTile from '../components/ProblemListTile'
 import ProblemInfo from '../components/ProblemInfo'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchProblemListAsync, showProblemInfo, handleChangeKeyword, clickAllTags, changeTagsFilter } from '../actions/problemList'
+import { fetchProblemListAsync, showProblemInfo, handleChangeKeyword, clickAllTags, changeTagsFilter, problemPicker } from '../actions/problemList'
 import { CircularProgress, IconButton, Paper } from '@material-ui/core'
 import { changeDifficulty } from '../actions/problemList'
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,7 +18,8 @@ import { FormGroup } from '@material-ui/core'
 import { useHistory } from 'react-router'
 
 
-export default function ProblemListPage() {
+export function ProblemListContent(props) {
+    const isPicker = props.isPicker
     const useStyles = makeStyles((theme) => ({
         root: {
             height: "calc(100vh - 180px)",
@@ -111,14 +112,13 @@ export default function ProblemListPage() {
     if (!isfetching) {
         problemBoard = problemList.map((problem) =>
             filter(problem) ?
-                <div key={problem.id} className={classes.problemTile} onClick={() => {
-                    if(showingInfoProblem == null || problem.id !== showingInfoProblem.id) {
-                        dispatch(showProblemInfo(problem))
-                    } else {
-                        history.push(`/problem/${problem.id}`)
-                    }
+                <div key={problem.id} className={classes.problemTile} onMouseOver={() => {
+                    dispatch(showProblemInfo(problem))
+                }} onClick={() => {
+                    isPicker ? 
+                    dispatch(problemPicker(problem)) : history.push(`/problem/${problem.id}`)
                 }}>
-                    <ProblemListTile problem={problem} />
+                    <ProblemListTile problem={problem} isPicker={isPicker}/>
                 </div> : null
         )
         var tagList = tagsCount.map((tag) =>
@@ -141,7 +141,6 @@ export default function ProblemListPage() {
 
     return (
         <div>
-            <NavBar context="Bow-Code" />
             <div className={classes.root}>
                 <Typography className={classes.sectionTitle} variant="h5" component="h2">
                     所有題目
@@ -230,4 +229,11 @@ export default function ProblemListPage() {
             </div>
         </div >
     )
+}
+
+export default function problemListPage(){
+    return <div>
+        <NavBar context="Bow-Code" />
+        <ProblemListContent isPicker={false}></ProblemListContent>
+    </div>
 }

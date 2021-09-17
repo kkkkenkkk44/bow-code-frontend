@@ -1,18 +1,195 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import NavBar from '../components/NavBar'
-import BlockCard from '../components/BlockCard'
-import CourseInfoBar from '../components/CourseInfoBar'
-import { useSelector, useDispatch } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles';
-import { Button } from '@progress/kendo-react-buttons'
-import { useParams } from 'react-router-dom'
+import { Paper } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
+import { Avatar } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import { auth } from "../actions/login"
+import { withStyles } from '@material-ui/core';
 
-export default function ClassroomPage() {
+import Overview from './UserPages/Overview'
+import BulletinBoard from './ClassroomPages/BulletinBoard';
+import Student from './ClassroomPages/Student'
+import Quiz from './ClassroomPages/Quiz'
+import QuizManage from './ClassroomPages/QuizManage'
+import { fetchClassroomAsync, switchTo } from '../actions/classroomPage';
+import ViewCourse from './ClassroomPages/ViewCourse'
+// import ClassroomConfig from './ClassroomPages/ClassroomConfig'
+import ProblemSubmission from './UserPages/ProblemSubmission';
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import NearMeIcon from '@material-ui/icons/NearMe';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
+import FaceIcon from '@material-ui/icons/Face';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import SchoolIcon from '@material-ui/icons/School';
+import SettingsIcon from '@material-ui/icons/Settings';
+import HistoryIcon from '@material-ui/icons/History';
+import Badge from '@material-ui/core/Badge';
+import { useParams } from 'react-router-dom';
+import ApplicationTab from './ClassroomPages/ApplicationTab';
+
+function MainWindow(props) {
+    const currentTab = useSelector(state => state.classroomPageReducer.currentTab)
+    const isCreator = props.isCreator
+    return (
+        <div>
+            <div hidden={currentTab !== "overview"}>
+                <Overview />
+            </div>
+            <div hidden={currentTab !== "bulletinBoard"}>
+                <BulletinBoard />
+            </div>
+            <div hidden={currentTab !== "student"}>
+                {isCreator && <Student />}
+            </div>
+            <div hidden={currentTab !== "quiz"}>
+                {!isCreator && <Quiz />}
+            </div>
+            <div hidden={currentTab !== "quizManage"}>
+                {isCreator && <QuizManage />}
+            </div>
+            <div hidden={currentTab !== "viewcourse"}>
+                <ViewCourse />
+            </div>
+            <div hidden={currentTab !== "application"}>
+                <ApplicationTab />
+            </div>
+            {/* <div hidden={currentTab !== "config"}>
+                <ClassroomConfig />
+            </div> */}
+        </div>
+    )
+}
+
+const StyledBadge = withStyles((theme) => ({
+    badge: {
+        verticalAlign: 'center',
+        left: '50px',
+        top: '13px',
+        border: `2px solid ${theme.palette.background.paper}`,
+        padding: '0 4px',
+    },
+}))(Badge);
+
+export default function ClassroomManagerPage(props) {
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            display: 'flex',
+            height: "calc(100vh - 60px)",
+        },
+        userInfo: {
+            width: "300px",
+            zIndex: 2
+        },
+        main: {
+            flex: 1,
+            overflowX: "hidden",
+            overflowY: "scroll"
+        },
+        courseList: {
+            margin: theme.spacing(5),
+            height: theme.spacing(30)
+        },
+        avatar: {
+            marginTop: "30px",
+            width: "200px",
+            height: "200px",
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto"
+        },
+        userName: {
+            margin: "30px",
+            textAlign: 'center'
+        },
+        listItem: {
+            paddingLeft: "30px",
+            paddingRight: "30px"
+        }
+    }));
+    const classes = useStyles();
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.loginReducer.user)
+    const authFinish = useSelector(state => state.loginReducer.authFinish)
+    const applicants = useSelector(state => state.classroomPageReducer.applicants)
+    const classroom = useSelector(state => state.classroomPageReducer)
+    const isCreator = useSelector(state => state.classroomPageReducer.userIsCreator)
+    const { ClassroomID } = useParams()
+
+    useEffect(() => {
+        dispatch(auth())
+        dispatch(fetchClassroomAsync(ClassroomID))
+    }, [])
     return (
         <div>
             <NavBar context="Bow-Code" />
-            ClassroomPage
+            <div className={classes.root}>
+                <Paper className={classes.userInfo} square elevation={4}>
+                    <List>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("overview"))}>
+                            <ListItemIcon>
+                                <FaceIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="總覽" />
+                        </ListItem>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("config"))}>
+                            <ListItemIcon>
+                                <SettingsIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="教室設定" />
+                        </ListItem>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("viewcourse"))}>
+                            <ListItemIcon>
+                                <SchoolIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="課程內容" />
+                        </ListItem>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("application"))}>
+                            <ListItemIcon>
+                                <SchoolIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="申請連結" />
+                        </ListItem>
+                        {isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("student"))}>
+                            <ListItemIcon>
+                                <HistoryIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={<StyledBadge badgeContent={applicants.length} color="secondary">學生</StyledBadge>} />
+                        </ListItem>}
+                        {!isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("quiz"))}>
+                            <ListItemIcon>
+                                <HistoryIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="考試及作業" />
+                        </ListItem>}
+                        {isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("quizManage"))}>
+                            <ListItemIcon>
+                                <HistoryIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="考試及作業管理" />
+                        </ListItem>}
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("bulletinBoard"))}>
+                            <ListItemIcon>
+                                <HistoryIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="討論區" />
+                        </ListItem>
+                    </List>
+
+                </Paper>
+                {
+                    authFinish ?
+                        <div className={classes.main}>
+                            <MainWindow isCreator={isCreator}/>
+                        </div> : null
+                }
+            </div>
         </div>
     )
 }

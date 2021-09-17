@@ -3,6 +3,8 @@
 const initialCourseEditorState = {
     isFetching: false,
     isImporting: false,
+    isImportingProblem: false,
+    isProblemBlock: false,
     blocksID: [],
     name: "",
     abstract: "",
@@ -22,6 +24,17 @@ const courseEditorReducer = (state = initialCourseEditorState, action) => {
             return {
                 ...state,
                 isImporting: false
+            }
+        case "IMPORT_PROBLEM_START": 
+        return {
+            ...state,
+            isImportingProblem: true,
+            importFromIndex: action.payload.importFromIndex
+        }
+        case "IMPORT_PROBLEM_END":
+            return {
+                ...state,
+                isImportingProblem: false,
             }
         case "FETCH_COURSE_START":
             return {
@@ -49,6 +62,17 @@ const courseEditorReducer = (state = initialCourseEditorState, action) => {
             return {
                 ...state,
                 isFetching: false,
+                isProblemBlock: false,
+                blocks: newBlocks,
+                blocksID: action.payload.blocksID
+            }
+        case "ADD_NEW_PROBLEM_BLOCK":
+            newBlocks = Array.from(state.blocks)
+            newBlocks.splice(action.payload.index+1, 0, {content: ""})
+            return {
+                ...state,
+                isFetching: false,
+                isProblemBlock: true,
                 blocks: newBlocks,
                 blocksID: action.payload.blocksID
             }

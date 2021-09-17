@@ -1,15 +1,24 @@
-import { SWITCH_TO, FETCH_OWN_COURSE, FETCH_OWN_COURSE_START, FETCH_FAV_COURSE, FETCH_FAV_COURSE_START, 
-    FETCH_SUBMISSION_START, 
-    FETCH_SUBMISSION } from '../actions/userPage'
+import {
+    SWITCH_TO, FETCH_OWN_COURSE, FETCH_OWN_COURSE_START, FETCH_FAV_COURSE, FETCH_FAV_COURSE_START,
+    FETCH_SUBMISSION_START,
+    FETCH_SUBMISSION,
+    FETCH_CLASSROOM,
+    FETCH_OWN_COURSEPLAN, 
+    FETCH_OWN_COURSEPLAN_START,
+} from '../actions/userPage'
 
 const initialCourseListState = {
     currentTab: "overview",
     ownCourseFetching: false,
     favCourseFetching: false,
+    ownCoursePlanFetching: false,
     submissionFetching: false,
     ownCourse: [],
     favCourse: [],
-    submissions: []
+    submissions: [],
+    joinedClassrooms: [],
+    ownClassrooms: [],
+    ownCoursePlan: [],
 }
 
 const userPageReducer = (state = initialCourseListState, action) => {
@@ -41,6 +50,17 @@ const userPageReducer = (state = initialCourseListState, action) => {
                 favCourse: action.payload.courses,
                 favCourseFetching: false
             }
+        case FETCH_OWN_COURSEPLAN_START:
+            return {
+                ...state,
+                ownCoursePlanFetching: true,
+            }
+        case FETCH_OWN_COURSEPLAN:
+            return {
+                ...state,
+                ownCoursePlan: action.payload.coursePlans,
+                ownCoursePlanFetching: false
+            }
         case FETCH_SUBMISSION_START:
             return {
                 ...state,
@@ -51,6 +71,20 @@ const userPageReducer = (state = initialCourseListState, action) => {
                 ...state,
                 submissions: action.payload.submissions,
                 submissionFetching: false
+            }
+        case FETCH_CLASSROOM:
+            if (action.payload.type == "joined"){
+                return {
+                    ...state,
+                    joinedClassrooms: action.payload.classrooms
+                }
+            } else if (action.payload.type == "own"){
+                return {
+                    ...state,
+                    ownClassrooms: action.payload.classrooms
+                }
+            } else {
+                return state
             }
         default:
             return state;
