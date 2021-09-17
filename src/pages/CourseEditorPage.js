@@ -6,7 +6,7 @@ import { Redirect } from "react-router"
 import { useState } from "react"
 import { useSelector } from "react-redux"
 import ImportBlockDialog from '../components/ImportBlockDialog'
-
+import ImportProblemBlockDialog from '../components/ImportProblemBlockDialog'
 
 const useStyles = makeStyles((theme) => ({
     finishButton: {
@@ -53,6 +53,7 @@ export default function CourseEditorPage(props){
                 <></>
             }
             <ImportBlockDialog CourseID={props.match.params.CourseID}/>
+            <ImportProblemBlockDialog ProblemID={props.match.params.ProblemID}/>
         </div>
     )
 }

@@ -96,13 +96,14 @@ export default function CourseBlockEditor(props) {
             .then(res => res.json())
             .then(res => {
                 //res = blockid
-                blocksID.splice(props.index + 1, 0, { title: courseBlockTitle, id: res })
+                blocksID.splice(props.index + 1, 0, { type: "course", title: courseBlockTitle, id: res })
                 fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.courseID}/blockOrder`, {
                     method: "PUT",
                     credentials: "include",
                     body: JSON.stringify(blocksID),
                 })
                     .then(res => {
+                        //console.log(res)
                         dispatch({ type: "ADD_NEW_BLOCK", payload: { index: props.index, blocksID } })
                         setFocus(false)
                     })
@@ -268,6 +269,14 @@ export default function CourseBlockEditor(props) {
                                             }}
                                         >
                                             匯入文字
+                                        </MenuItem>
+                                        <MenuItem
+                                            onClick={() => {
+                                                console.log("open problem dialog")
+                                                dispatch({ type: "IMPORT_PROBLEM_START", payload: { importFromIndex: props.index } })
+                                            }}
+                                        >
+                                            匯入題目
                                         </MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>
