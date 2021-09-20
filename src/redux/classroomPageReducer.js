@@ -21,7 +21,7 @@ import { FETCH_LIST_START } from '../actions/courseList';
 
 const initialState = {
     currentTab: "overview",
-    isFetching: false,
+    isFetching: true,
     classroomID: "",
     applicants: [],
     apply: true,
@@ -158,12 +158,12 @@ const classroomPageReducer = (state = initialState, action) => {
         case FETCH_COURSEPLAN_START:
             return {
                 ...state,
-                isFetching: true
+                // isFetching: true
             }
         case FETCH_COURSEPLAN_FINISH:
             return {
                 ...state,
-                isFetching: false,
+                // isFetching: false,
                 courseList: action.payload.courseList
             }
         case ACCEPT_APPLICATION:
