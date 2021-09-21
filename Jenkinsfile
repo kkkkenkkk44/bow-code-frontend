@@ -8,23 +8,18 @@ pipeline {
     }
     
     stages {
-        
-    	stage('Clone') {
+        stage('shutdown') {
             steps {
-                echo 'Cloning..'
-                // sh "rm -rf ./bow-code-frontend"
-                // sh "git clone $GITHUB_REPO_URL"
-                // sh "ls"
+                sh "docker stop bow-code-frontend || true && docker rm bow-code-frontend || true"
             }
         }
-    
         stage('Build') {
             steps {
                 echo 'Building..'
-                // dir("bow-code-frontend") {
-                //     sh "docker build -t bow-code-frontend ."
-                //     sh "docker run -p $DEPLOY_PORT:3000 -d bow-code-frontend"
-                // }
+                dir("./") {
+                    sh "docker build -t bow-code-frontend ."
+                    sh "docker run -p $DEPLOY_PORT:3000 --name bow-code-frontend -d bow-code-frontend"
+                }
             }
         }
             
