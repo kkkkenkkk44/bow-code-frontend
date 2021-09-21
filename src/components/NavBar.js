@@ -67,6 +67,7 @@ export default function NavBar(props) {
         }
 
         setOpen(false);
+        setUserOpen(false)
     };
 
     return (
