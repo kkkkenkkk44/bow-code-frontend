@@ -3797,6 +3797,11 @@ cjs-module-lexer@^0.6.0:
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-0.6.0.tgz#4186fcca0eae175970aee870b9fe2d6cf8d5655f"
   integrity sha512-uc2Vix1frTfnuzxxu1Hp4ktSvM3QaI4oXl4ZUqL1wjTu/BGki9TrCWoqLTg/drR1KwAEarXuRFCG2Svr1GxPFw==
 
+ckeditor5-imgur-uploader@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/ckeditor5-imgur-uploader/-/ckeditor5-imgur-uploader-0.0.1.tgz#400aedef733947d64dd159c0914f1fe78fe11969"
+  integrity sha512-9Xl4YfySzExCSmWOxNWvhyTGeE6Qd7W2qRoV+GA+3dsmhWcbEgveuelqa2rKQx4d0eRTbn97KucSYcssNiUA8Q==
+
 ckeditor5@^29.0.0:
   version "29.0.0"
   resolved "https://registry.yarnpkg.com/ckeditor5/-/ckeditor5-29.0.0.tgz#f050345320b5380e0558fd928f3a370b0402241c"

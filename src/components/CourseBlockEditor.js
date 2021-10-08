@@ -1,5 +1,6 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import ImgurUploaderInit from 'ckeditor5-imgur-uploader'
 import { DialogTitle } from '@material-ui/core'
 // import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import { Grid, Popper, Paper, MenuList, MenuItem, ClickAwayListener, makeStyles, IconButton, Typography } from '@material-ui/core'
@@ -54,6 +55,7 @@ const EditorPreview = (props) => {
 }
 
 export default function CourseBlockEditor(props) {
+
 
     const classes = useStyles();
     const dispatch = useDispatch()
@@ -175,6 +177,8 @@ export default function CourseBlockEditor(props) {
         )
     }
 
+    const ImgurUploader = ImgurUploaderInit({clientID: '0c61d1804dc7f9a'})
+
     useEffect(() => {
         dispatch(fetchProblemListAsync())
     }, [])
@@ -247,6 +251,9 @@ export default function CourseBlockEditor(props) {
                 <Grid item xs={10}>
                     <Paper onClick={() => setFocus(true)}>
                         <CKEditor
+                            config={{
+                                extraPlugins: [ImgurUploader]
+                            }}
                             editor={ClassicEditor}
                             data={props.block.content}
                             onChange={(event, editor) => {
