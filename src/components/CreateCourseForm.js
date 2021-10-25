@@ -8,6 +8,10 @@ import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
 import { Redirect } from "react-router";
 import { useSelector } from 'react-redux';
+import ImageUploader from 'react-images-upload';
+import axios from 'axios';
+import { set } from 'date-fns';
+import Resizer from "react-image-file-resizer";
 
 
 
@@ -125,7 +129,6 @@ export default function CreatCourseForm() {
   setCategory(event.target.value);
   };
 
-
   const handleSubmit = (event) => {
     if (name === ""){
       alert("請輸入課程名稱")
@@ -144,6 +147,7 @@ export default function CreatCourseForm() {
         difficulty: parseInt(difficulty),
         isPublic: isPublic === 'true',
         category,
+        image: imageLink
       }
       fetch(`${process.env.REACT_APP_BACKEND_URL}/course`, {
         method: 'POST',
@@ -161,6 +165,37 @@ export default function CreatCourseForm() {
     }
   }
 
+  
+
+  const [image, setImage] = useState()
+
+  const [imageLink, setImageLink] = useState("")
+
+  const imageSelectedHandler = (event) => {
+    setImage(event.target.files[0])
+  }
+
+  const imageUploadHandler = (event) => {
+    //console.log(image)
+    const formdata = new FormData();
+    formdata.append('image', image)
+    const config = {
+      headers: {
+        Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`
+      },
+    };
+    
+    axios.post("https://api.imgur.com/3/image", formdata, config)
+
+    .then(data => {
+      //console.log(data.data.data.link)
+      setImageLink(data.data.data.link)
+    })
+    .catch(e => {
+      console.log(e)
+    })
+
+  }
     return (
       isSuccessful ? 
         <Redirect to={'/courseEditor/' + CourseID} />
@@ -245,6 +280,8 @@ export default function CreatCourseForm() {
                 <option value={"self-learn"}>自學用課程</option>
               </Select>
             </FormControl>
+            <input type="file" onChange={imageSelectedHandler}/>
+            <Button onClick={imageUploadHandler}>上傳課程封面</Button>
             <Button
                 //type="submit"
                 fullWidth

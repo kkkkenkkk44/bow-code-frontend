@@ -147,7 +147,7 @@ export default function CourseCard(props) {
                                 maxWidth: '100%',
                                 objectFit: "contain"
                             }}
-                            src="https://2.bp.blogspot.com/-VDnQXA1LJ-Y/Wfg0wEvvGSI/AAAAAAABH0A/L56uBITK8Y82HsE8-_xlJWjG6ZMjKZcFQCLcBGAs/s600/bg_school_room_yuyake.jpg"
+                            src={props.course.image}
                         />}
                     />
                     <CardContent className={classes.info}>
