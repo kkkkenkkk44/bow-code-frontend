@@ -178,6 +178,7 @@ export default function CourseBlockEditor(props) {
     }
 
     const ImgurUploader = ImgurUploaderInit({clientID: '0c61d1804dc7f9a'})
+    //const ImgurUploader = ImgurUploaderInit({clientID: `${process.env.REACT_APP_IMGUR_CLIENT_ID}`})
 
     useEffect(() => {
         dispatch(fetchProblemListAsync())
