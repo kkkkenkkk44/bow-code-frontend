@@ -87,7 +87,7 @@ export function fetchClassroomAsync(classroomID) {
                 const data = obj.classroom
                 dispatch(fetchClassroom(data, obj.isCreator))
                 dispatch(fetchBulletins(classroomID))
-                if(obj.isCreator){
+                if (obj.isCreator) {
                     dispatch(fetchStudentInfoAsync(data.students, classroomID))
                     dispatch(fetchApplicantInfoAsync(data.applicants))
                 }
@@ -113,13 +113,23 @@ export const fetchCoursePlan = (new_list) => {
 }
 
 export function fetchCoursePlanAsync(coursePlanID) {
-    var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/course`)
+    var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/course_plan/multiple?courseplans=${coursePlanID}`)
     return (dispatch) => {
         dispatch(fetchCoursePlanRequest())
         fetch(url, { method: "GET" })
-            .then(res => res.json())
+            .then(res => {
+                console.log(res)
+                return res.json()
+            })
             .then(data => {
-                dispatch(fetchCoursePlan(data))
+                var courses = data.coursePlanList[0].componentList.filter((component => { return component.type === 0 })).map(component => component.setList[0].id)
+                url = new URL(`${process.env.REACT_APP_BACKEND_URL}/course/details?courses=${courses.join()}`)
+                fetch(url, { method: "GET" })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data)
+                        dispatch(fetchCoursePlan(data))
+                    })
             })
             .catch(e => {
                 // error handling
@@ -128,7 +138,7 @@ export function fetchCoursePlanAsync(coursePlanID) {
     };
 }
 
-export function resetStudentInfo(){
+export function resetStudentInfo() {
     return {
         type: RESET_STUDENT_INFO
     }
@@ -237,7 +247,7 @@ export function createQuizAsync(quizType, title, deadline, problemList, classroo
     return (dispatch) => {
         dispatch(createQuizStart())
         fetch(url, { method: "POST", credentials: "include", body: JSON.stringify(body) })
-            .then(() => {dispatch(createQuizSuccessfully()); dispatch(resetStudentInfo()); dispatch(fetchClassroomAsync(classroomID))})
+            .then(() => { dispatch(createQuizSuccessfully()); dispatch(resetStudentInfo()); dispatch(fetchClassroomAsync(classroomID)) })
             .catch(() => dispatch(createQuizFailed()))
     }
 }
