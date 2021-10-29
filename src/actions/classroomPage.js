@@ -285,6 +285,9 @@ export function addProblemsToQuiz(quizType, quiz, problems, classroomID, index) 
 
 export function fetchBulletins(classroomID) {
     return (dispatch) => {
+        dispatch({
+            type: FETCH_BULLETIN_START
+        })
         var url = new URL(`${process.env.REACT_APP_BACKEND_URL}/classroom/bulletin/${classroomID}`)
         fetch(url, { method: "GET", credentials: "include" }).then(res => res.json())
             .then(data => {

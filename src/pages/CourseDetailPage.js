@@ -6,8 +6,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@progress/kendo-react-buttons'
 import { useParams } from 'react-router-dom'
+import ContentLoader from 'react-content-loader'
 
-
+import { asyncGetUserInfo } from '../utils/user'
 
 export default function CourseDetailPage() {
 
@@ -36,7 +37,8 @@ export default function CourseDetailPage() {
     const [abstract, setAbstract] = useState("")
     const [creator, setCreator] = useState({})
     const [displayBlockList, setDisplayBlockList] = useState([])
-    const [isFetched, setIsFetched] = useState(false)
+    const [isFetchingClassroom, setIsFetchingClassroom] = useState(true)
+    const [isFetchingCreator, setIsFetchingCreator] = useState(true)
 
     function BlockList() {
 
@@ -61,9 +63,12 @@ export default function CourseDetailPage() {
             .then(data => {
                 setName(data.name)
                 setAbstract(data.abstract)
-                setCreator(data.creator)
+                asyncGetUserInfo(data.creator).then(res => res.json()).then(data => {
+                    setCreator(data)
+                    setIsFetchingCreator(false)
+                })
                 setDisplayBlockList(() => data.blockList)
-                setIsFetched(true)
+                setIsFetchingClassroom(false)
             })
             .catch(error => console.error('Error:', error))
     }
@@ -76,11 +81,12 @@ export default function CourseDetailPage() {
         <div>
             <NavBar context="Bow-Code" />
             {
-                isFetched ? 
+                isFetchingClassroom ? null :
                     <div>
-                        <CourseInfoBar context={name} abstract={abstract} creator={creator} />
+                        {isFetchingCreator ?
+                        <ContentLoader /> : <CourseInfoBar context={name} abstract={abstract} creator={creator} />}
                         {BlockList()}
-                    </div> : null
+                    </div>
             }
         </div>
     )

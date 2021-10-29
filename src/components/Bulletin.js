@@ -12,6 +12,9 @@ import ThumbUpOutlinedIcon from '@material-ui/icons/ThumbUpOutlined';
 import { IconButton } from "@material-ui/core";
 import { reactToBulletin, reactToReply, replyToBulletin } from "../actions/classroomPage";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { asyncGetUserInfo } from "../utils/user";
+import ContentLoader from 'react-content-loader'
 
 function ReplyCard(props) {
     const reply = props.reply
@@ -47,11 +50,19 @@ function ReplyCard(props) {
     }))
     const classes = useStyle()
     const dispatch = useDispatch()
-    return <div className={classes.root} >
+    const [creator, setCreator] = useState({})
+    const [isFetchingCreator, setIsFetchingCreator] = useState(true)
+    useEffect(()=>{
+        asyncGetUserInfo(reply.creator).then(res => res.json()).then(data => {
+            setCreator(data)
+            setIsFetchingCreator(false)
+        })
+    }, [])
+    return isFetchingCreator? <div className={classes.root}><ContentLoader/></div> : <div className={classes.root} >
         <Card className={classes.card} square elevation={1}>
             <div className={classes.author}>
-                <Avatar alt={reply.creator.name} src={reply.creator.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
-                <Typography variant="subtitle2" style={{ marginLeft: '10px', marginRight: '10px' }}>{reply.creator}</Typography>
+                <Avatar alt={creator.userInfo.name} src={creator.userInfo.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
+                <Typography variant="subtitle2" style={{ marginLeft: '10px', marginRight: '10px' }}>{creator.userInfo.name}</Typography>
             </div>
             <Typography variant="subtitle1" className={classes.content}>
                 {reply.content}
@@ -164,18 +175,26 @@ export default function Bulletin(props) {
     const classes = useStyle()
     const dispatch = useDispatch()
     const [newReply, setNewReply] = useState("")
+    const [creator, setCreator] = useState({})
+    const [isFetchingCreator, setIsFetchingCreator] = useState(true)
     const classroomID = useSelector(state => state.classroomPageReducer.classroomID)
     const replies = bulletin.replies.map((reply, i) => <div key={reply.createTime} className={classes.expandedReplyCard}>
         <ReplyCard reply={reply} bulletinId={bulletin.id} index={i} />
     </div>)
-    return <div>
+    useEffect(()=>{
+        asyncGetUserInfo(bulletin.creator).then(res => res.json()).then(data => {
+            setCreator(data)
+            setIsFetchingCreator(false)
+        })
+    }, [])
+    return isFetchingCreator? <div><Card square elevation={5} className={classes.root}><ContentLoader/></Card></div> : <div>
         <Card square elevation={5}>
             <CardActionArea className={classes.root} onClick={() => setExpanded(true)}>
                 <Typography variant='h5' className={classes.title}>
                     {bulletin.title}
                 </Typography>
                 <Typography variant='subtitle1' className={classes.author}>
-                    {bulletin.creator.name}
+                    {creator.userInfo.name}
                 </Typography>
             </CardActionArea>
         </Card>
@@ -200,8 +219,8 @@ export default function Bulletin(props) {
                                 {bulletin.reactions.length}
                             </Typography>
                         </div>
-                        <Avatar alt={bulletin.creator} src={bulletin.creator.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
-                        <Typography variant="subtitle2" style={{ marginLeft: '10px', marginRight: '10px' }}>{bulletin.creator}</Typography>
+                        <Avatar alt={creator.userInfo.name} src={creator.userInfo.avatar} style={{ marginLeft: '10px', width: '35px', height: '35px', border: '1px solid lightgray' }} />
+                        <Typography variant="subtitle2" style={{ marginLeft: '10px', marginRight: '10px' }}>{creator.userInfo.name}</Typography>
                     </div>
 
                     <Divider className={classes.expandedDivider}></Divider>

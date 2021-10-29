@@ -1,4 +1,5 @@
 import React from "react"
+import { useEffect } from "react";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -11,6 +12,9 @@ import CreateIcon from '@material-ui/icons/Create';
 import { Chip } from "@material-ui/core";
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import StarIcon from '@material-ui/icons/Star';
+import ContentLoader from 'react-content-loader'
+
+import { asyncGetUserInfo } from "../utils/user";
 
 export default function CourseCard(props) {
     const useStyles = makeStyles((theme) => ({
@@ -79,7 +83,15 @@ export default function CourseCard(props) {
     const courseName = props.course.name
     const tags = props.course.tags
     var difficulty
-    //console.log(props.course.difficulty)
+    const [creatorInfo, setCreatorInfo] = React.useState(null)
+    const [isFetchingCreator, setIsFetchingCreator] = React.useState(true)
+
+    useEffect(()=>{
+        asyncGetUserInfo(creator).then(res => res.json()).then(data=>{
+            setCreatorInfo(data.userInfo)
+            setIsFetchingCreator(false)
+        })
+    }, [])
     switch (props.course.difficulty) {
         case 0:
             difficulty = <div className={classes.difficulty}>
@@ -115,8 +127,8 @@ export default function CourseCard(props) {
     }
 
     const tagChips = tags.map(tag => <Chip className={classes.tagChip} key={tag} label={tag} variant="outlined" />)
-
     return (
+        isFetchingCreator ? <ContentLoader/> : 
         props.brief ?
             <Card>
                 <CardActionArea onClick={props.unclickable?()=>{}:() => history.push(`/course/${props.course.id}`)}>
@@ -135,7 +147,7 @@ export default function CourseCard(props) {
                                 maxWidth: '100%',
                                 objectFit: "contain"
                             }}
-                            src="https://2.bp.blogspot.com/-VDnQXA1LJ-Y/Wfg0wEvvGSI/AAAAAAABH0A/L56uBITK8Y82HsE8-_xlJWjG6ZMjKZcFQCLcBGAs/s600/bg_school_room_yuyake.jpg"
+                            src={props.course.image}
                         />}
                     />
                     <CardContent className={classes.info}>
@@ -146,7 +158,7 @@ export default function CourseCard(props) {
                             <div className={classes.author}>
                                 <CreateIcon fontSize='inherit' style={{ marginRight: "2px" }} />
                                 <Typography variant="caption" component="h3">
-                                    {creator}
+                                    {creatorInfo.name}
                                 </Typography>
                             </div>
                         </div>

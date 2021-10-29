@@ -8,6 +8,7 @@ import {
     REACT_TO_BULLETIN,
     REACT_TO_REPLY,
     FETCH_BULLETIN,
+    FETCH_BULLETIN_START,
     CREATE_QUIZ,
     CREATE_QUIZ_FAILED,
     CREATE_QUIZ_START,
@@ -21,7 +22,8 @@ import { FETCH_LIST_START } from '../actions/courseList';
 
 const initialState = {
     currentTab: "overview",
-    isFetching: false,
+    isFetching: true,
+    isFetchingBulletins: true,
     classroomID: "",
     applicants: [],
     apply: true,
@@ -94,10 +96,16 @@ const classroomPageReducer = (state = initialState, action) => {
             return {
                 ...state
             }
+        case FETCH_BULLETIN_START:
+            return {
+                ...state,
+                isFetchingBulletins: true
+            }
         case FETCH_BULLETIN:
             return {
                 ...state,
-                bulletins: action.payload.bulletins
+                bulletins: action.payload.bulletins,
+                isFetchingBulletins: false
             }
         case FETCH_SINGLE_BULLETIN:
             return {
@@ -158,12 +166,12 @@ const classroomPageReducer = (state = initialState, action) => {
         case FETCH_COURSEPLAN_START:
             return {
                 ...state,
-                isFetching: true
+                // isFetching: true
             }
         case FETCH_COURSEPLAN_FINISH:
             return {
                 ...state,
-                isFetching: false,
+                // isFetching: false,
                 courseList: action.payload.courseList
             }
         case ACCEPT_APPLICATION:

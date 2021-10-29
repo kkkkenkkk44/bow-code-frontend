@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import NavBar from '../components/NavBar'
 import { Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core';
-import { Typography } from '@material-ui/core';
-import { Avatar } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { auth } from "../actions/login"
 import { withStyles } from '@material-ui/core';
@@ -22,11 +21,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import NearMeIcon from '@material-ui/icons/NearMe';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
 import SchoolIcon from '@material-ui/icons/School';
 import SettingsIcon from '@material-ui/icons/Settings';
 import HistoryIcon from '@material-ui/icons/History';
@@ -118,6 +113,7 @@ export default function ClassroomManagerPage(props) {
     const user = useSelector(state => state.loginReducer.user)
     const authFinish = useSelector(state => state.loginReducer.authFinish)
     const applicants = useSelector(state => state.classroomPageReducer.applicants)
+    const isFetching = useSelector(state => state.classroomPageReducer.isFetching)
     const classroom = useSelector(state => state.classroomPageReducer)
     const isCreator = useSelector(state => state.classroomPageReducer.userIsCreator)
     const { ClassroomID } = useParams()
@@ -129,7 +125,7 @@ export default function ClassroomManagerPage(props) {
     return (
         <div>
             <NavBar context="Bow-Code" />
-            <div className={classes.root}>
+            {isFetching ? <CircularProgress/> : <div className={classes.root}>
                 <Paper className={classes.userInfo} square elevation={4}>
                     <List>
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("overview"))}>
@@ -189,7 +185,7 @@ export default function ClassroomManagerPage(props) {
                             <MainWindow isCreator={isCreator}/>
                         </div> : null
                 }
-            </div>
+            </div>}
         </div>
     )
 }

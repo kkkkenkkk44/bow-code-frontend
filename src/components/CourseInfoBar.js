@@ -121,7 +121,7 @@ export default function CourseInfoBar(props) {
     }
 
     function checkUserIsCreator() {
-        if (props.creator === user.id) {
+        if (props.creator.id === user.id) {
             setIsCreator(true)
         }
         else {
@@ -314,7 +314,7 @@ export default function CourseInfoBar(props) {
                         {props.abstract}
                     </Typography>
                     <Typography className={classes.creator}>
-                        {`創建者：${props.creator}`}
+                        {`創建者：${props.creator.userInfo.name}`}
                     </Typography>
                 </div>
                 <div className={classes.button}>
