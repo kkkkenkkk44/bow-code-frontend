@@ -38,7 +38,7 @@ pipeline {
         stage('Healthy Check') {
             steps {
                 sleep(time:3)
-                sh "curl http://localhost:$DEPLOY_PORT"
+                sh "curl https://bow-code.ntu.im/"
             }
         }
     }
