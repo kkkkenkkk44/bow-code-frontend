@@ -26,7 +26,7 @@ export default function BlockDetailPage () {
 
     function fetchBlockDetail() {
 
-        fetch(`http://api.ramen-live.com:5050/file-server/files/course/${CourseID}/block/${index}/`, {
+        fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/${CourseID}/block/${index}/`, {
             method: 'GET',
             credentials: "include"
             })
