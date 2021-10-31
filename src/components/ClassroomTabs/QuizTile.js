@@ -21,14 +21,16 @@ import { Card } from '@material-ui/core'
 import { ProblemListContent } from '../../pages/ProblemListPage'
 import { DataGrid } from '@material-ui/data-grid'
 import { useDispatch, useSelector } from 'react-redux'
+import TextField from '@material-ui/core/TextField';
 import {
     MuiPickersUtilsProvider,
     KeyboardTimePicker,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { addProblemsToQuiz, changeDeadlineOfQuiz, publishQuiz } from '../../actions/classroomPage'
+import { addProblemsToQuiz, changeDeadlineOfQuiz, publishQuiz, changeQuizName } from '../../actions/classroomPage'
 import { resetPickedProblem } from '../../actions/problemList'
+import EditIcon from '@material-ui/icons/Edit';
 
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
@@ -69,6 +71,29 @@ function ScoreBoard(props) {
                 justifyContent: 'flex-end',
             }}>
                 <Button variant="contained" onClick={() => { handleClose() }}>關閉</Button>
+            </div>
+        </DialogActions>
+    </Dialog>
+}
+
+function QuizNameEditor(props) {
+    const { open, defaultName, handleClose, handleConfirmChange } = props
+    const [name, setName] = React.useState(defaultName)
+    return <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth="lg">
+        <DialogTitle id="simple-dialog-title">變更作業名稱</DialogTitle>
+        <div style={{ display: 'flex', margin: '15px' }}>
+            <TextField id="standard-basic" label="Standard" value={name} onChange={(e)=>{setName(e.target.value)}}/>
+        </div>
+        <DialogActions>
+            <div style={{
+                marginTop: 'auto',
+                marginRight: '20px',
+                marginBottom: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+            }}>
+                <Button variant="contained" color="primary" onClick={() => { handleConfirmChange(name); handleClose() }}>變更</Button>
             </div>
         </DialogActions>
     </Dialog>
@@ -216,6 +241,7 @@ export default function QuizTile(props) {
     const classes = useStyles()
     const dispatch = useDispatch()
     const [open, setOpen] = React.useState(false);
+    const [openEditName, setOpenEditName] = React.useState(false);
     const [expandPublishDialog, setExpandPublishDialog] = React.useState(false)
     const [showProblemPicker, setShowProblemPicker] = React.useState(false)
     const [showAddProblemDialog, setShowAddProblemDialog] = React.useState(false)
@@ -223,6 +249,7 @@ export default function QuizTile(props) {
     const classroomID = useSelector(state => state.classroomPageReducer.classroomID)
     const pickedProblems = useSelector(state => state.problemListReducer.pickedProblems)
     const onConfirmChange = (date) => { dispatch(changeDeadlineOfQuiz(quizType, quiz, date, classroomID, index)) }
+    const onConfirmNameChange = (name) => {dispatch(changeQuizName(quizType, quiz, name, classroomID, index))}
     const problemList = quiz.component.setList.map((problem, i) => <ListItemLink className={classes.content} key={i} target="_blank" rel="noopener noreferrer" href={`/classroom/${classroomID}/problem/${problem.id}`}>
         <ListItemText primary={problem.name} />
     </ListItemLink>)
@@ -239,14 +266,14 @@ export default function QuizTile(props) {
         remainText = parseInt(remain / 60 / 60 / 24).toString() + " 天"
     }
     var totalScore = 0
-    quiz.component.setList.map(p=>totalScore += p.totalScore)
+    quiz.component.setList.map(p => totalScore += p.totalScore)
     return <div className={classes.root}>
         <Accordion>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 className={classes.main}
             >
-                <Typography className={classes.title}>{quiz.component.name}</Typography>
+                <Typography className={classes.title}>{quiz.component.name}{!isRecord && <IconButton onClick={() => { setOpenEditName(true) }} style={{ maxHeight: '40px', maxWidth: '40px', zIndex: 20 }}><EditIcon></EditIcon></IconButton>}</Typography>
                 {isRecord && <Typography className={classes.score} variant="h5">{score}/{totalScore}</Typography>}
                 {isRecord && <div className={classes.gradingDisplay}></div>}
                 <div className={classes.deadline}>
@@ -255,6 +282,8 @@ export default function QuizTile(props) {
                     }
                     {!isRecord && <IconButton onClick={() => { setOpen(true) }} style={{ maxHeight: '40px', maxWidth: '40px', zIndex: 20 }}><EventIcon></EventIcon></IconButton>}
                 </div>
+                {openEditName}
+                <QuizNameEditor defaultName={quiz.component.name} open={openEditName} handleClose={() => { setOpenEditName(false) }} handleConfirmChange={onConfirmNameChange}></QuizNameEditor>
                 <DeadlineSetter defaultDeadline={new Date(quiz.end)} open={open} handleClose={() => { setOpen(false) }} handleConfirmChange={onConfirmChange}></DeadlineSetter>
             </AccordionSummary>
             {isRecord ?
