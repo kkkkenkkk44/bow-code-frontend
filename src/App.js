@@ -49,7 +49,6 @@ function App() {
       <Route path='/createClassroom' component={CreateClassroomPage} />
       <Route path='/createSingleClassroom' component={CreateSingleClassroomPage} />
       <Route path='/createMultipleClassroom' component={CreateMultipleClassroomPage} />
-      <Route path='/classroom/:ClassroomID' component={ClassroomPage} />
       <Route path='/createCoursePlan' component={CreateCoursePlanPage} />
       <Route path='/problem/:ProblemID' component={ProblemPage} />
       <Route path='/coursePlanEditor/:CoursePlanID' component={CoursePlanEditorPage} />
