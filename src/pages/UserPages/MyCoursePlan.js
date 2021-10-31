@@ -51,7 +51,7 @@ export default function MyCoursePlan() {
     return (
         <div>
             <Typography className={classes.sectionTitle} variant="h5" component="h2">
-                我建立的教學計畫
+                我建立的教案
                 <Divider className={classes.divider}></Divider>
             </Typography>
             <div className={classes.root}>

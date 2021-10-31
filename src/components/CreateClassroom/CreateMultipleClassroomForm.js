@@ -141,7 +141,7 @@ export default function CreateMultipleClassroomForm() {
                 onChange={handleCoursePlanID}
             />
             <div className={classes.reviewText}>
-              <span>教室是否需要審核</span>
+              <span>班級是否需要審核</span>
               <FormControl className={classes.formControl}>
                 <Select
                   native
@@ -159,7 +159,7 @@ export default function CreateMultipleClassroomForm() {
               </FormControl>
             </div>
             <div className={classes.applyText}>
-              <span>教室是否開放申請加入</span>
+              <span>班級是否開放申請加入</span>
               <FormControl className={classes.formControl}>
                 <Select
                   native
@@ -177,7 +177,7 @@ export default function CreateMultipleClassroomForm() {
               </FormControl>
             </div>
             <div className={classes.visibilityText}>
-              <span>教室權限</span>
+              <span>班級權限</span>
               <FormControl className={classes.formControl}>
                 <Select
                   native
