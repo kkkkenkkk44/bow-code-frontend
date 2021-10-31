@@ -29,7 +29,7 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import { addProblemsToQuiz, changeDeadlineOfQuiz, publishQuiz } from '../../actions/classroomPage'
 import { resetPickedProblem } from '../../actions/problemList'
-import useHistory from 'react-dom'
+import { useHistory } from "react-router-dom";
 
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
@@ -241,7 +241,7 @@ export default function QuizTile(props) {
         remainText = parseInt(remain / 60 / 60 / 24).toString() + " 天"
     }
     var totalScore = 0
-    quiz.component.setList.map(p=>totalScore += p.totalScore)
+    quiz.component.setList.map(p => totalScore += p.totalScore)
     return <div className={classes.root}>
         <Accordion>
             <AccordionSummary
