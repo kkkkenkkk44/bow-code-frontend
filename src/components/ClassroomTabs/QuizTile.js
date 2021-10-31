@@ -22,7 +22,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import { Zoom } from '@material-ui/core'
 import { Card } from '@material-ui/core'
 import { ProblemListContent } from '../../pages/ProblemListPage'
-import { DataGrid } from '@material-ui/data-grid'
+import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux'
 import TextField from '@material-ui/core/TextField';
 import {

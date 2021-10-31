@@ -1,6 +1,5 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
-import { DataGrid } from '@material-ui/data-grid';
 import { useSelector } from 'react-redux';
 import { IconButton, Tabs } from '@material-ui/core';
 import { Tab } from '@material-ui/core';
@@ -14,6 +13,7 @@ import { makeStyles } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
 import { acceptApplication } from '../../actions/classroomPage'
+import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 
 
 const StyledBadge = withStyles((theme) => ({
@@ -44,6 +44,15 @@ function ApplicantTile(props) {
         </ListItem>
     </div>
 }
+
+function CustomToolbar() {
+    return (
+        <GridToolbarContainer>
+            <GridToolbarExport />
+        </GridToolbarContainer>
+    );
+}
+
 
 export default function Student() {
     const useStyles = makeStyles(theme => ({
@@ -78,7 +87,7 @@ export default function Student() {
             width: 150,
         })
     })
-    
+
     const rows = Object.keys(studentInfos).map(id => {
         var row = { id: id, name: studentInfos[id].userInfo.name }
         homeworkList.map((hw, i) => {
@@ -109,6 +118,9 @@ export default function Student() {
                 <DataGrid
                     columns={columns}
                     rows={rows}
+                    components={{
+                        Toolbar: CustomToolbar,
+                    }}
                 />
             }
             {
