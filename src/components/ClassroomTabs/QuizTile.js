@@ -29,6 +29,7 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import { addProblemsToQuiz, changeDeadlineOfQuiz, publishQuiz } from '../../actions/classroomPage'
 import { resetPickedProblem } from '../../actions/problemList'
+import useHistory from 'react-dom'
 
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
@@ -122,6 +123,7 @@ export default function QuizTile(props) {
     const index = props.index
     const isRecord = props.isRecord
     const score = props.score
+    const history = useHistory()
     const useStyles = makeStyles((theme) => ({
         root: {
             width: '100%',
@@ -223,7 +225,7 @@ export default function QuizTile(props) {
     const classroomID = useSelector(state => state.classroomPageReducer.classroomID)
     const pickedProblems = useSelector(state => state.problemListReducer.pickedProblems)
     const onConfirmChange = (date) => { dispatch(changeDeadlineOfQuiz(quizType, quiz, date, classroomID, index)) }
-    const problemList = quiz.component.setList.map((problem, i) => <ListItemLink className={classes.content} key={i} target="_blank" rel="noopener noreferrer" href={`/classroom/${classroomID}/problem/${problem.id}`}>
+    const problemList = quiz.component.setList.map((problem, i) => <ListItemLink className={classes.content} key={i} target="_blank" rel="noopener noreferrer" onClick={() => history.push(`/classroom/${classroomID}/problem/${problem.id}`)}>
         <ListItemText primary={problem.name} />
     </ListItemLink>)
     const remain = (quiz.end - Date.now()) / 1000

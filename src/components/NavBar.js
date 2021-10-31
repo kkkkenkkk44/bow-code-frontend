@@ -12,6 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { Avatar } from '@material-ui/core';
 import zIndex from '@material-ui/core/styles/zIndex';
+import { useHistory } from 'react-router';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -52,6 +53,7 @@ export default function NavBar(props) {
     const [userOpen, setUserOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
     const userAnchorRef = React.useRef(null);
+    const history = useHistory();
 
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -77,10 +79,10 @@ export default function NavBar(props) {
                     <Typography variant="h6" className={classes.title}>
                         {props.context}
                     </Typography>
-                    <Button className={classes.toolbarButton} href="/courseList">
+                    <Button className={classes.toolbarButton} onClick={() => history.push('./courseList')}>
                         課程列表
                     </Button>
-                    <Button className={classes.toolbarButton} href="/problemList">
+                    <Button className={classes.toolbarButton} onClick={() => history.push('./problemList')}>
                         題目列表
                     </Button>
 
@@ -157,7 +159,7 @@ export default function NavBar(props) {
                                     )}
                                 </Popper>
                             </div> :
-                            <Button className={classes.toolbarButton} href="/login">
+                            <Button className={classes.toolbarButton} onClick={() => history.push('./login')}>    
                                 登入
                             </Button>
                     }

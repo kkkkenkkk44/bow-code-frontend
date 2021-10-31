@@ -125,18 +125,18 @@ export default function LoginPage() {
                             cookiePolicy={'single_host_origin'}
                         />
 
-                        <Grid container>
+                        {/* <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">
                                     Forgot password?
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link href="/123" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
 
                     </div>
                 </Container>

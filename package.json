@@ -2,6 +2,7 @@
   "name": "bow-code-frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/dev2",
   "dependencies": {
     "@ckeditor/ckeditor5-basic-styles": "^29.0.0",
     "@ckeditor/ckeditor5-build-classic": "^29.0.0",
