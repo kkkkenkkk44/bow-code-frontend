@@ -292,6 +292,15 @@ export function addProblemsToQuiz(quizType, quiz, problems, classroomID, index) 
     }
 }
 
+export function removeProblemFromQuiz(quizType, quiz, classroomID, index, i) {
+    quiz.component.setList.splice(i, 1)
+    const url = quizType == 'quiz' ? `${process.env.REACT_APP_BACKEND_URL}/classroom/exam/${classroomID}/${index}` : `${process.env.REACT_APP_BACKEND_URL}/classroom/homework/${classroomID}/${index}`
+    return (dispatch) => {
+        fetch(url, { method: "PUT", credentials: "include", body: JSON.stringify(quiz) })
+            .then(() => dispatch(fetchClassroomAsync(classroomID)))
+    }
+}
+
 export function fetchBulletins(classroomID) {
     return (dispatch) => {
         dispatch({
