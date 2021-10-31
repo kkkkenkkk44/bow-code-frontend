@@ -26,7 +26,7 @@ export default function BlockDetailPage () {
 
     function fetchBlockDetail() {
 
-        fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/${CourseID}/block/${index}/`, {
+        fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/files/course/${CourseID}/block/${index}/`, {
             method: 'GET',
             credentials: "include"
             })
