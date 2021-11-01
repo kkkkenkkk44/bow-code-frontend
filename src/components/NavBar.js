@@ -27,10 +27,12 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         marginLeft: theme.spacing(1),
-        flexGrow: 1,
+        marginRight: theme.spacing(3),
+        minWidth: '100px'
     },
     toolbar: {
-        height: '100%'
+        height: '100%',
+        display: 'flex'
     },
     appbar: {
         height: "60px",
@@ -39,14 +41,24 @@ const useStyles = makeStyles((theme) => ({
         position: "relative"
 
     },
+    endSection: {
+        flex: '1 0 auto',
+        display: 'flex',
+        flexGrow: 0,
+        marginLeft: 'auto'
+    },
     toolbarButton: {
         color: "#ffffff",
+        flex: '1 0 auto'
     },
     listButton: {
-       marginRight: "67%",
+       flex: 1,
+       flexGrow: 0,
+       display: 'flex'
     },
     listButtonText: {
-        color: "#D7D7D7"
+        color: "#D7D7D7",
+        flex: '1 0 auto'
     }
 }));
 
@@ -95,7 +107,7 @@ export default function NavBar(props) {
 
                     {
                         isLogin ?
-                            <div>
+                            <div className={classes.endSection}>
                                 <IconButton
                                     ref={anchorRef}
                                     aria-controls={open ? 'menu-list-grow' : undefined}
