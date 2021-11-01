@@ -118,7 +118,7 @@ export default function UserPage(props) {
                             <ListItemIcon>
                                 <MenuBookIcon />
                             </ListItemIcon>
-                            <ListItemText primary="教材" />
+                            <ListItemText primary="課程" />
                         </ListItem>
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("problemSubmission"))}>
                             <ListItemIcon>
@@ -130,7 +130,7 @@ export default function UserPage(props) {
                             <ListItemIcon>
                                 <NearMeIcon />
                             </ListItemIcon>
-                            <ListItemText primary="教學計畫" />
+                            <ListItemText primary="教案" />
                         </ListItem>
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myOwnClassroom"))}>
                             <ListItemIcon>

@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 function getSteps() {
-return ['選擇教案及填寫教室基本資訊', '建立多個教室'];
+return ['選擇教案及填寫班級基本資訊', '建立多個班級'];
 }
 
 function getStepContent(step) {

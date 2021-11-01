@@ -89,7 +89,7 @@ export default function CreateClassroomPage () {
                             />
                             <CardContent className={classes.cardContent}>
                                 <Typography align={'center'}>
-                                    建立單一教室
+                                    建立單一班級
                                 </Typography>
                             </CardContent>
                         </CardActionArea>
@@ -105,7 +105,7 @@ export default function CreateClassroomPage () {
                             />
                             <CardContent className={classes.cardContent}>
                                 <Typography align={'center'}>
-                                    以一個教案建立多個教室
+                                    以一個教案建立多個班級
                                 </Typography>
                             </CardContent>
                         </CardActionArea>

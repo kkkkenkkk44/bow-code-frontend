@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 function getSteps() {
-return ['教室基本資訊', '選擇教案'];
+return ['班級基本資訊', '選擇教案'];
 }
 
 function getStepContent(step) {
@@ -76,7 +76,7 @@ export default function CreateSingleClassroomPage() {
         <NavBar context="Bow-Code" />
         <div className={classes.paper}>
           <Typography component="h1" variant="h6">
-              建立單一教室
+              建立單一班級
           </Typography>
         </div>
         <Stepper className={classes.stepper} activeStep={activeStep}>

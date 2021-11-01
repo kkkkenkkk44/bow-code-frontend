@@ -1,6 +1,6 @@
 import AppBar from '@material-ui/core/AppBar'
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Toolbar, Typography, Link } from '@material-ui/core';
+import { Button, Toolbar, Typography, Link, IconButton} from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import React from "react";
@@ -12,6 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { Avatar } from '@material-ui/core';
 import zIndex from '@material-ui/core/styles/zIndex';
+import AddIcon from '@material-ui/icons/Add';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,10 +27,12 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         marginLeft: theme.spacing(1),
-        flexGrow: 1,
+        marginRight: theme.spacing(3),
+        minWidth: '100px'
     },
     toolbar: {
-        height: '100%'
+        height: '100%',
+        display: 'flex'
     },
     appbar: {
         height: "60px",
@@ -38,9 +41,25 @@ const useStyles = makeStyles((theme) => ({
         position: "relative"
 
     },
+    endSection: {
+        flex: '1 0 auto',
+        display: 'flex',
+        flexGrow: 0,
+        marginLeft: 'auto'
+    },
     toolbarButton: {
         color: "#ffffff",
+        flex: '1 0 auto'
     },
+    listButton: {
+       flex: 1,
+       flexGrow: 0,
+       display: 'flex'
+    },
+    listButtonText: {
+        color: "#D7D7D7",
+        flex: '1 0 auto'
+    }
 }));
 
 export default function NavBar(props) {
@@ -77,29 +96,26 @@ export default function NavBar(props) {
                     <Typography variant="h6" className={classes.title}>
                         {props.context}
                     </Typography>
-                    <Button className={classes.toolbarButton} href="/courseList">
-                        課程列表
-                    </Button>
-                    <Button className={classes.toolbarButton} href="/problemList">
-                        題目列表
-                    </Button>
-
+                    <div className={classes.listButton}>
+                        <Button href="/courseList" className={classes.listButtonText}>
+                            課程列表
+                        </Button>
+                        <Button href="/problemList" className={classes.listButtonText}>
+                            題目列表
+                        </Button>
+                    </div>
 
                     {
                         isLogin ?
-                            <div>
-                                <Button className={classes.toolbarButton}>
-                                    我的學習
-                                </Button>
-
-                                <Button
+                            <div className={classes.endSection}>
+                                <IconButton
                                     ref={anchorRef}
                                     aria-controls={open ? 'menu-list-grow' : undefined}
                                     aria-haspopup="true"
                                     onClick={handleToggle} className={classes.toolbarButton}
                                 >
-                                    我的教學
-                                </Button>
+                                    <AddIcon />
+                                </IconButton>
                                 <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal style={{ zIndex: '1' }}>
                                     {({ TransitionProps, placement }) => (
                                         <Grow
@@ -109,6 +125,9 @@ export default function NavBar(props) {
                                             <Paper>
                                                 <ClickAwayListener onClickAway={handleClose}>
                                                     <MenuList autoFocusItem={open} id="menu-list-grow" >
+                                                        <Link component={RouterLink} to={"/createCoursePlan"} color="inherit" aria-label="menu">
+                                                            <MenuItem onClick={handleClose}>建立教案</MenuItem>
+                                                        </Link>
                                                         <Link component={RouterLink} to={"/createCourse"} color="inherit" aria-label="menu">
                                                             <MenuItem onClick={handleClose}>建立課程</MenuItem>
                                                         </Link>
@@ -116,10 +135,7 @@ export default function NavBar(props) {
                                                             <MenuItem onClick={handleClose}>建立題目</MenuItem>
                                                         </Link>
                                                         <Link component={RouterLink} to={"/createClassroom"} color="inherit" aria-label="menu">
-                                                            <MenuItem onClick={handleClose}>建立教室</MenuItem>
-                                                        </Link>
-                                                        <Link component={RouterLink} to={"/createCoursePlan"} color="inherit" aria-label="menu">
-                                                            <MenuItem onClick={handleClose}>建立教案</MenuItem>
+                                                            <MenuItem onClick={handleClose}>建立班級</MenuItem>
                                                         </Link>
                                                     </MenuList>
                                                 </ClickAwayListener>
