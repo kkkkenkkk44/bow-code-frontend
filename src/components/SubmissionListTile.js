@@ -1,8 +1,16 @@
-import React from "react";
+import { React, useState }from "react";
 import { Paper } from "@material-ui/core";
 import { CardActionArea } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
-import { Typography } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import { Grid, Popper, MenuList, MenuItem, ClickAwayListener, IconButton, Typography } from '@material-ui/core'
+
 
 function statusText(code) {
     if (code & 0x8000) {
@@ -74,15 +82,45 @@ export default function SubmissionListTile(props) {
     } else {
         paperClass = classes.red
         var ac = 0
-        submission.judgements.forEach((jug) => { if (statusText(jug.status) == "AC") { ac += 1 } })
+        submission.judgements.forEach((jug) => { 
+            if (statusText(jug.status) == "AC") { ac += 1 } 
+        })
         score = `${ac}/${submission.judgementCompleted}`
         console.log(score)
     }
+    const { isFetchingSubmission, submissions, isFetching, name, description, defaultContent, difficulty } = useSelector(state => state.problemPageReducer)
+
+    var judgementList = submission.judgements.map((judgement) =>
+        <Grid container spacing={2}>
+            <Grid item xs={4}>
+                {judgement.input}
+            </Grid>
+            <Grid item xs={4}>
+                {judgement.output}
+            </Grid>
+            <Grid item xs={4}>
+                {judgement.expected_output}
+            </Grid>
+        </Grid>
+        )
+
+    const [openJudgements, setOpenjudgements] = useState(false)
+
+
+    const handleOpenJudgementsDialog = () => {
+        setOpenjudgements(true)
+        console.log(submission.judgements)
+    }
+
+    const handleCloseJudgementsDialog = () => {
+        setOpenjudgements(false)
+    }
+
 
     var scoreText = submission.testcaseCnt != submission.judgementCompleted ? "-/-" : score
 
     return <Paper elevation={1} square >
-        <CardActionArea className={paperClass} onClick={() => { }}>
+        <CardActionArea className={paperClass} onClick={handleOpenJudgementsDialog}>
             <div className={classes.status}>
                 <Typography className={classes.statusText} variant="h6" component="h5">
                     {submission.testcaseCnt == submission.judgementCompleted ? statusText(submission.status) : "處理中"}
@@ -100,5 +138,33 @@ export default function SubmissionListTile(props) {
                 {submission.createTime}
             </div>
         </CardActionArea>
+        <Dialog
+            open={openJudgements}
+            onClose={handleCloseJudgementsDialog}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            fullWidth="true"
+            maxWidth="sm"
+        >
+            <DialogContent>
+                <Grid container spacing={2}>
+                    <Grid item xs={4}>
+                        輸入
+                    </Grid>
+                    <Grid item xs={4}>
+                        輸出
+                    </Grid>
+                    <Grid item xs={4}>
+                        正確輸出
+                    </Grid>
+                </Grid>
+                {judgementList}
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleCloseJudgementsDialog} autoFocus>
+                確定
+            </Button>
+            </DialogActions>
+        </Dialog>
     </Paper>
 }

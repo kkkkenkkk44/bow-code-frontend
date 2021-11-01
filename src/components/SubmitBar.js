@@ -98,6 +98,7 @@ export default function SubmitBar(props) {
             .then(res => res.json())
             .then(res => {
                 props.handleCheckSubmission()
+                console.log(res)
             })
     }
 
