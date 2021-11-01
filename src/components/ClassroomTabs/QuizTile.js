@@ -8,6 +8,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { List } from '@material-ui/core'
 import { ListItem } from '@material-ui/core'
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { Switch } from '@material-ui/core'
 import { Button } from '@material-ui/core'
 import EventIcon from '@material-ui/icons/Event';
@@ -16,20 +18,23 @@ import { TimePicker } from "@material-ui/pickers";
 import { Dialog } from '@material-ui/core'
 import { DialogTitle } from '@material-ui/core'
 import { DialogActions } from '@material-ui/core'
+import DialogContentText from '@material-ui/core/DialogContentText';
 import { Zoom } from '@material-ui/core'
 import { Card } from '@material-ui/core'
 import { ProblemListContent } from '../../pages/ProblemListPage'
-import { DataGrid } from '@material-ui/data-grid'
+import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux'
+import TextField from '@material-ui/core/TextField';
 import {
     MuiPickersUtilsProvider,
     KeyboardTimePicker,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { addProblemsToQuiz, changeDeadlineOfQuiz, publishQuiz } from '../../actions/classroomPage'
+import { addProblemsToQuiz, changeDeadlineOfQuiz, publishQuiz, changeQuizName, removeProblemFromQuiz } from '../../actions/classroomPage'
 import { resetPickedProblem } from '../../actions/problemList'
 import { useHistory } from "react-router-dom";
+import EditIcon from '@material-ui/icons/Edit';
 
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
@@ -75,6 +80,29 @@ function ScoreBoard(props) {
     </Dialog>
 }
 
+function QuizNameEditor(props) {
+    const { open, defaultName, handleClose, handleConfirmChange } = props
+    const [name, setName] = React.useState(defaultName)
+    return <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth="lg">
+        <DialogTitle id="simple-dialog-title">變更作業名稱</DialogTitle>
+        <div style={{ display: 'flex', margin: '15px' }}>
+            <TextField id="standard-basic" label="Standard" value={name} onChange={(e) => { setName(e.target.value) }} />
+        </div>
+        <DialogActions>
+            <div style={{
+                marginTop: 'auto',
+                marginRight: '20px',
+                marginBottom: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+            }}>
+                <Button variant="contained" color="primary" onClick={() => { handleConfirmChange(name); handleClose() }}>變更</Button>
+            </div>
+        </DialogActions>
+    </Dialog>
+}
+
 function DeadlineSetter(props) {
     const { open, defaultDeadline, handleClose, handleConfirmChange } = props
     const [date, changeDate] = React.useState(defaultDeadline);
@@ -112,6 +140,31 @@ function DeadlineSetter(props) {
                 justifyContent: 'flex-end',
             }}>
                 <Button variant="contained" color="primary" onClick={() => { handleConfirmChange(date); handleClose() }}>變更</Button>
+            </div>
+        </DialogActions>
+    </Dialog>
+}
+
+function RemoveAlert(props){
+    const { open, handleClose, handleConfirmChange, problemName, quizName} = props
+    return <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth="lg">
+        <DialogTitle id="simple-dialog-title">移除題目</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {`確定要將「${problemName}」從${quizName}中移除嗎?`}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+            <div style={{
+                marginTop: 'auto',
+                marginRight: '20px',
+                marginBottom: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+            }}>
+                <Button variant="contained" color="secondary" onClick={() => { handleClose() }}>取消</Button>
+                <Button variant="contained" color="primary" onClick={() => { handleConfirmChange(); handleClose() }}>移除</Button>
             </div>
         </DialogActions>
     </Dialog>
@@ -218,6 +271,9 @@ export default function QuizTile(props) {
     const classes = useStyles()
     const dispatch = useDispatch()
     const [open, setOpen] = React.useState(false);
+    const [openEditName, setOpenEditName] = React.useState(false);
+    const [openRemoveAlert, setOpenRemoveAlert] = React.useState(-1);
+    const [removingProblemName, setRemovingProblemName] = React.useState("");
     const [expandPublishDialog, setExpandPublishDialog] = React.useState(false)
     const [showProblemPicker, setShowProblemPicker] = React.useState(false)
     const [showAddProblemDialog, setShowAddProblemDialog] = React.useState(false)
@@ -225,9 +281,18 @@ export default function QuizTile(props) {
     const classroomID = useSelector(state => state.classroomPageReducer.classroomID)
     const pickedProblems = useSelector(state => state.problemListReducer.pickedProblems)
     const onConfirmChange = (date) => { dispatch(changeDeadlineOfQuiz(quizType, quiz, date, classroomID, index)) }
-    const problemList = quiz.component.setList.map((problem, i) => <ListItemLink className={classes.content} key={i} target="_blank" rel="noopener noreferrer" onClick={() => history.push(`/classroom/${classroomID}/problem/${problem.id}`)}>
-        <ListItemText primary={problem.name} />
-    </ListItemLink>)
+    const onConfirmNameChange = (name) => { dispatch(changeQuizName(quizType, quiz, name, classroomID, index)) }
+    const onConfirmRemove = (i) => {dispatch(removeProblemFromQuiz(quizType, quiz, classroomID, index, i)); setOpenRemoveAlert(-1)}
+    const problemList = quiz.component.setList.map((problem, i) => <ListItem key={i} >
+        <ListItemLink className={classes.content} target="_blank" rel="noopener noreferrer" onClick={() => history.push(`/classroom/${classroomID}/problem/${problem.id}`)}>
+            <ListItemText primary={problem.name} />
+        </ListItemLink>
+        <ListItemSecondaryAction>
+            <IconButton edge="end" aria-label="delete" onClick={()=>{setOpenRemoveAlert(i); setRemovingProblemName(problem.name)}}>
+                <DeleteIcon />
+            </IconButton>
+        </ListItemSecondaryAction>
+    </ListItem>)
     const remain = (quiz.end - Date.now()) / 1000
     var remainText = ""
     var due = false
@@ -248,7 +313,7 @@ export default function QuizTile(props) {
                 expandIcon={<ExpandMoreIcon />}
                 className={classes.main}
             >
-                <Typography className={classes.title}>{quiz.component.name}</Typography>
+                <Typography className={classes.title}>{quiz.component.name}{!isRecord && <IconButton onClick={() => { setOpenEditName(true) }} style={{ maxHeight: '40px', maxWidth: '40px', zIndex: 20 }}><EditIcon></EditIcon></IconButton>}</Typography>
                 {isRecord && <Typography className={classes.score} variant="h5">{score}/{totalScore}</Typography>}
                 {isRecord && <div className={classes.gradingDisplay}></div>}
                 <div className={classes.deadline}>
@@ -257,7 +322,10 @@ export default function QuizTile(props) {
                     }
                     {!isRecord && <IconButton onClick={() => { setOpen(true) }} style={{ maxHeight: '40px', maxWidth: '40px', zIndex: 20 }}><EventIcon></EventIcon></IconButton>}
                 </div>
+                {openEditName}
+                <QuizNameEditor defaultName={quiz.component.name} open={openEditName} handleClose={() => { setOpenEditName(false) }} handleConfirmChange={onConfirmNameChange}></QuizNameEditor>
                 <DeadlineSetter defaultDeadline={new Date(quiz.end)} open={open} handleClose={() => { setOpen(false) }} handleConfirmChange={onConfirmChange}></DeadlineSetter>
+                <RemoveAlert  open={openRemoveAlert>=0} handleClose={()=>{setOpenRemoveAlert(-1)}} handleConfirmChange={()=>onConfirmRemove(openRemoveAlert)} problemName={removingProblemName} quizName={quiz.component.name}/>
             </AccordionSummary>
             {isRecord ?
                 <AccordionDetails className={classes.detail}>

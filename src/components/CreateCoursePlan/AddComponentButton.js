@@ -223,10 +223,28 @@ export default function AddComponentButton(props) {
     };
     const pickedProblems = useSelector(state => state.problemListReducer.pickedProblems)
 
+    const [openProblemNameDialog, setOpenProblemNameDialog] = useState(false)
+
+    const [quizOrHomeworkName, setQuizOrHomeworkName] = useState("")
+
+    const handleOpenProblemNameDialog = () => {
+        setOpenProblemNameDialog(true)
+
+    }
+    const handleCloseProblemNameDialog = () => {
+        //handleCloseProblemOption()
+        setOpenProblemNameDialog(false);
+    };
+
+    const handleQuizOrHomeworkName = (event) => {
+        setQuizOrHomeworkName(event.target.value)
+    }
+
     const handleSubmitProblem = () => {
         console.log(pickedProblems)
+        //console.log(quizOrHomeworkName)
         updateCoursePlan(prevCoursePlanDetail)
-        
+        setOpenProblemNameDialog(false)
         setOpenProblemDialog(false)
     }
 
@@ -234,12 +252,12 @@ export default function AddComponentButton(props) {
         //console.log(prevCoursePlanDetail)
         var newSetList = []
         Promise.all(pickedProblems.map(pickedProblem =>
-            newSetList.push({ id: pickedProblem.id })
+            newSetList.push({ name: pickedProblem.name, id: pickedProblem.id})
         ))
         //console.log(newSetList)
 
         prevCoursePlanDetail.componentList.push({
-            name: "quiz 或 homework",
+            name: quizOrHomeworkName,
             type: 1,
             setList: newSetList,
         })
@@ -264,7 +282,7 @@ export default function AddComponentButton(props) {
                     .then(res => res.json())
                     .then(res => {
                         var newComponentList = res.componentList
-                        console.log(res)
+                        //console.log(res)
                         dispatch({ type: "SAVE_COURSEPLAN_INFO", payload: res })
                         Promise.all(res.componentList.map(component => {
                             switch (component.type) {
@@ -293,7 +311,7 @@ export default function AddComponentButton(props) {
                                 }
                             }))
                             .then(res => {
-                                console.log(res)
+                                //console.log(res)
                                 dispatch({ type: "SAVE_COMPONENT_DETAIL_LIST", payload: { componentDetailList: res } })
                             })
                     })
@@ -442,9 +460,26 @@ export default function AddComponentButton(props) {
                                         <Button onClick={handleCloseProblemDialog} color="primary">
                                             取消
                                     </Button>
-                                        <Button autoFocus onClick={handleSubmitProblem} color="primary">
-                                            確認加入
+                                        <Button autoFocus onClick={handleOpenProblemNameDialog} color="primary">
+                                            輸入考試或作業名稱
                                     </Button>
+                                    <Dialog open={openProblemNameDialog} onClose={handleCloseProblemNameDialog}>
+                                        <DialogTitle>考試或作業名稱</DialogTitle>
+                                        <DialogContent>
+                                            <TextField
+                                                autoFocus
+                                                margin="dense"
+                                                id="name"
+                                                label="名稱"
+                                                variant="standard"
+                                                onChange={handleQuizOrHomeworkName}
+                                            />
+                                        </DialogContent>
+                                        <DialogActions>
+                                        <Button onClick={handleCloseProblemNameDialog}>取消</Button>
+                                        <Button onClick={handleSubmitProblem}>確定加入</Button>
+                                        </DialogActions>
+                                    </Dialog>
                                     </DialogActions>
                                 </Dialog>
                             </MenuList>
