@@ -144,7 +144,7 @@ export default function CreatProblemForm() {
     
     var score = [];
     for (var i = 0; i < testdatas.length; i++) {
-      score.push(1);
+      score.push(10);
     }
     const handleSubmit = (event) => {
         if (name === ""){
@@ -175,11 +175,13 @@ export default function CreatProblemForm() {
               testcaseCnt: testcase_input.length,
               input: testcase_input,
               expectedOutput: testcase_output,
-              score: score
+              score: score,
+              showDetail: testcase_input.map(e=>true)
             },
             description: desc,
             visibility: parseInt(visibility),
             defaultContent: tempDefaultContent,
+            totalScore: score.reduce((a,b)=>a+b)
         }
         fetch(`${process.env.REACT_APP_BACKEND_URL}/problem`, {
             method: 'POST',

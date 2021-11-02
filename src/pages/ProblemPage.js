@@ -83,7 +83,12 @@ export default function ProblemPage() {
             .then(res => res.json())
             .then(res => {
                 console.log(res)
-                setCodeTemplate(res.defaultContent[0].content)
+                if(res.defaultContent.length === 0){
+                    setCodeTemplate("")
+                }
+                else{
+                    setCodeTemplate(res.defaultContent[0].content)
+                }
                 dispatch({ type: "FETCH_PROBLEM_END", payload: res })
             })
     }, [])
