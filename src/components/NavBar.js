@@ -176,9 +176,11 @@ export default function NavBar(props) {
                                     )}
                                 </Popper>
                             </div> :
-                            <Button className={classes.toolbarButton} onClick={() => history.push('./login')}>
-                                登入
-                            </Button>
+                            <div className={classes.endSection}>
+                                <Button className={classes.toolbarButton} onClick={() => history.push('/login')}>
+                                    登入
+                                </Button>
+                            </div>
                     }
                 </Toolbar>
             </AppBar>
