@@ -41,15 +41,28 @@ function ListItemLink(props) {
 }
 
 function ScoreBoard(props) {
-    const { open, handleClose } = props
+    const { open, handleClose, hw, idx } = props
+    const studentInfos = useSelector(state => state.classroomPageReducer.studentInfos)
     var columns = [
         {
             field: 'name',
             headerName: '名稱',
             width: 150,
+        },
+        {
+            field: hw.component.name,
+            headerName: "分數",
+            type: 'number',
+            width: 150
         }
     ];
-    var rows = [{ id: 0, name: "test" }]
+    const rows = Object.keys(studentInfos).map(id => {
+        var row = { id: id, name: studentInfos[id].userInfo.name }
+        var totalScore = 0
+        studentInfos[id].scores.homeworkComponentScoreList[idx].setScoreList.map(problem => totalScore += problem.score == -1 ? 0 : problem.score)
+        row[hw.component.name] = totalScore
+        return row
+    })
     return <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth="xl">
         <DialogTitle id="simple-dialog-title">作答結果</DialogTitle>
         <div style={{
@@ -387,7 +400,7 @@ export default function QuizTile(props) {
                         </div>
                         <div>
                             <Button variant="contained" onClick={() => { setShowScores(true) }}>作答結果</Button>
-                            <ScoreBoard open={showScores} handleClose={() => setShowScores(false)} />
+                            <ScoreBoard open={showScores} handleClose={() => setShowScores(false)} hw={quiz} idx={index}/>
                         </div>
                     </div>
                     <Dialog
