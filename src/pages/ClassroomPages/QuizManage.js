@@ -118,7 +118,8 @@ export default function QuizManage() {
             flexDirection: 'column'
         },
         problemList: {
-            maxHeight: '90%'
+            maxHeight: '90%',
+            overflowY: 'auto'
         },
         expandedTitle: {
             margin: '20px'

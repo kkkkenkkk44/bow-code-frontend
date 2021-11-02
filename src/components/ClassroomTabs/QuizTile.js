@@ -247,7 +247,8 @@ export default function QuizTile(props) {
             flexDirection: 'column'
         },
         problemList: {
-            maxHeight: '90%'
+            maxHeight: '90%',
+            overflowY: 'auto'
         },
         postButton: {
             marginTop: 'auto',
