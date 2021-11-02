@@ -46,11 +46,11 @@ export default function ViewCourse() {
         if(classroom.coursePlan)
             dispatch(fetchCoursePlanAsync(classroom.coursePlan))
     }, [classroom.coursePlan])
-
+    
     if (!classroom.isfetching) {
         cardList = classroom.courseList.map((course) =>
             <div key={course.id} className={classes.courseCard}>
-                <CourseCard course={course} />
+                <CourseCard course={course} classroomID={ClassroomID}/>
             </div>
         )
     }

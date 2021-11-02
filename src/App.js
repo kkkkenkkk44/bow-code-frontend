@@ -53,6 +53,9 @@ function App() {
       <Route path='/problem/:ProblemID' component={ProblemPage} />
       <Route path='/coursePlanEditor/:CoursePlanID' component={CoursePlanEditorPage} />
       <Route path='/createProblem' component={CreateProblemPage} />
+      <Route path='/classroom/:ClassroomID/course/:CourseID/problem/:ProblemID' component={ProblemPage} />
+      <Route path='/classroom/:ClassroomID/course/:CourseID/:index' component={BlockDetailPage} />
+      <Route path='/classroom/:ClassroomID/course/:CourseID' component={CourseDetailPage} />
       <Route path='/classroom/:ClassroomID/problem/:ProblemID' component={ProblemPage} />
       <Route path='/classroom/:ClassroomID' component={ClassroomPage}/>
       <Route path="/apply/:ClassroomID" component={ApplyClassroomPage} />

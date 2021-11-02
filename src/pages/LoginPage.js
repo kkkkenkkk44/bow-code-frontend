@@ -14,6 +14,7 @@ import { GoogleLogin } from 'react-google-login';
 import { loginAsync } from '../actions/login'
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useLocation } from 'react-router';
+import { applyClassroom } from "../actions/applyClassroomPage";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -51,12 +52,16 @@ export default function LoginPage() {
     const dispatch = useDispatch()
     const isLogin = useSelector(state => state.loginReducer.isLogin)
     const location = useLocation()
-    console.log(location)
+
+    const applyClassroomAndRedirect = () => {
+        applyClassroom(location.state.classroomID)
+        return <Redirect to={`/classroom/${location.state.classroomID}`} />
+    }
 
     return (
         isLogin ?
-            location.state && (location.state.from === 'applyClassroom')?
-                <Redirect to={`/classroom/${location.state.classroomID}`} />
+            location.state && (location.state.from === 'applyClassroom') ?
+                applyClassroomAndRedirect()
                 :
                 <Redirect to='/home' />
             :

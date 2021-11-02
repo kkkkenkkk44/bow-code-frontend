@@ -31,7 +31,7 @@ export default function CourseDetailPage() {
     const classes = useStyles();
 
     //const exampleCourseID = '60ebca1c14447a1cc7d84bc0'
-    const { CourseID } = useParams()
+    const { ClassroomID, CourseID } = useParams()
 
     const [name, setName] = useState("")
     const [abstract, setAbstract] = useState("")
@@ -41,11 +41,9 @@ export default function CourseDetailPage() {
     const [isFetchingCreator, setIsFetchingCreator] = useState(true)
 
     function BlockList() {
-
         var cardList = []
         cardList = displayBlockList.map((value) =>
-            <BlockCard key={value.id} value={value} />)
-
+            <BlockCard key={value.id} value={value} classroomID={ClassroomID} />)
         return (
             <div>
                 {cardList}
@@ -54,7 +52,6 @@ export default function CourseDetailPage() {
     }
 
     function fetchCourseDetail() {
-
         fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${CourseID}`, {
             method: 'GET',
             credentials: "include"
@@ -84,7 +81,7 @@ export default function CourseDetailPage() {
                 isFetchingClassroom ? null :
                     <div>
                         {isFetchingCreator ?
-                        <ContentLoader /> : <CourseInfoBar context={name} abstract={abstract} creator={creator} />}
+                            <ContentLoader /> : <CourseInfoBar context={name} abstract={abstract} creator={creator} />}
                         {BlockList()}
                     </div>
             }

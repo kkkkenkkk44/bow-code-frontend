@@ -1,4 +1,4 @@
-import React, { useEffect, useState }from "react"
+import React, { useEffect, useState } from "react"
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -21,7 +21,7 @@ export default function BlockCard(props) {
             marginLeft: '280px',
             borderColor: 'primary.main',
         },
-        
+
     }));
     const classes = useStyles();
     const history = useHistory();
@@ -32,18 +32,21 @@ export default function BlockCard(props) {
     var blockIndex = props.value.id
     const route2ProblemOrCourse = () => {
         isProblemBlock ?
-        history.push(`/problem/${blockIndex}`)
-        :
-        history.push(`/course/${CourseID}/${blockIndex}`)
+            history.push(`/problem/${blockIndex}`)
+            :
+            typeof props.classroomID === 'undefined' ?
+                history.push(`/course/${CourseID}/${blockIndex}`)
+                :
+                history.push(`/classroom/${props.classroomID}/course/${CourseID}/${blockIndex}`)
     }
-       
+
     return (
-            <Card className={classes.card}>
-                <CardActionArea onClick={route2ProblemOrCourse}>
-                    <CardContent className={classes.title}>
-                        <h2>{props.value.title}</h2>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
+        <Card className={classes.card}>
+            <CardActionArea onClick={route2ProblemOrCourse}>
+                <CardContent className={classes.title}>
+                    <h2>{props.value.title}</h2>
+                </CardContent>
+            </CardActionArea>
+        </Card>
     )
 }

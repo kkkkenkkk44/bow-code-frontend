@@ -15,6 +15,7 @@ import StarIcon from '@material-ui/icons/Star';
 import ContentLoader from 'react-content-loader'
 
 import { asyncGetUserInfo } from "../utils/user";
+import ClassroomCard from "./ClassroomCard";
 
 export default function CourseCard(props) {
     const useStyles = makeStyles((theme) => ({
@@ -81,13 +82,14 @@ export default function CourseCard(props) {
     const abstract = props.course.abstract
     const creator = props.course.creator
     const courseName = props.course.name
+    const classroomID = props.classroomID
     const tags = props.course.tags
     var difficulty
     const [creatorInfo, setCreatorInfo] = React.useState(null)
     const [isFetchingCreator, setIsFetchingCreator] = React.useState(true)
 
-    useEffect(()=>{
-        asyncGetUserInfo(creator).then(res => res.json()).then(data=>{
+    useEffect(() => {
+        asyncGetUserInfo(creator).then(res => res.json()).then(data => {
             setCreatorInfo(data.userInfo)
             setIsFetchingCreator(false)
         })
@@ -126,55 +128,66 @@ export default function CourseCard(props) {
 
     }
 
+    const handleClick = () => {
+        if (!props.unclickable) {
+            if (typeof classroomID === 'undefined') {
+                history.push(`/course/${props.course.id}`)
+            }
+            else {
+                history.push(`/classroom/${classroomID}/course/${props.course.id}`)
+            }
+        }
+    }
+
     const tagChips = tags.map(tag => <Chip className={classes.tagChip} key={tag} label={tag} variant="outlined" />)
     return (
-        isFetchingCreator ? <ContentLoader/> : 
-        props.brief ?
-            <Card>
-                <CardActionArea onClick={props.unclickable?()=>{}:() => history.push(`/course/${props.course.id}`)}>
-                    <CardContent className={classes.title}>
-                        <h3>{props.course.name}</h3>
-                    </CardContent>
-                </CardActionArea>
-            </Card> :
-            <Card>
-                <CardActionArea onClick={props.unclickable?()=>{}:() => history.push(`/course/${props.course.id}`)} className={classes.root}>
-                    <CardMedia
-                        className={classes.cover}
-                        children={<img
-                            style={{
-                                maxHeight: '100%',
-                                maxWidth: '100%',
-                                objectFit: "contain"
-                            }}
-                            src={props.course.image}
-                        />}
-                    />
-                    <CardContent className={classes.info}>
-                        <div className={classes.title}>
-                            <Typography variant="h4" component="h3">
-                                {courseName}
-                            </Typography>
-                            <div className={classes.author}>
-                                <CreateIcon fontSize='inherit' style={{ marginRight: "2px" }} />
-                                <Typography variant="caption" component="h3">
-                                    {creatorInfo.name}
+        isFetchingCreator ? <ContentLoader /> :
+            props.brief ?
+                <Card>
+                    <CardActionArea onClick={handleClick}>
+                        <CardContent className={classes.title}>
+                            <h3>{props.course.name}</h3>
+                        </CardContent>
+                    </CardActionArea>
+                </Card> :
+                <Card>
+                    <CardActionArea onClick={handleClick} className={classes.root}>
+                        <CardMedia
+                            className={classes.cover}
+                            children={<img
+                                style={{
+                                    maxHeight: '100%',
+                                    maxWidth: '100%',
+                                    objectFit: "contain"
+                                }}
+                                src={props.course.image}
+                            />}
+                        />
+                        <CardContent className={classes.info}>
+                            <div className={classes.title}>
+                                <Typography variant="h4" component="h3">
+                                    {courseName}
                                 </Typography>
+                                <div className={classes.author}>
+                                    <CreateIcon fontSize='inherit' style={{ marginRight: "2px" }} />
+                                    <Typography variant="caption" component="h3">
+                                        {creatorInfo.name}
+                                    </Typography>
+                                </div>
                             </div>
-                        </div>
-                        <div className={classes.abstract}>
-                            <p>{abstract}</p>
-                        </div>
-                        <div className={classes.tagAndDiff}>
-                            <div className={classes.tags}>
-                                {tagChips}
+                            <div className={classes.abstract}>
+                                <p>{abstract}</p>
                             </div>
-                            <div className={classes.difficulty}>
-                                {difficulty}
+                            <div className={classes.tagAndDiff}>
+                                <div className={classes.tags}>
+                                    {tagChips}
+                                </div>
+                                <div className={classes.difficulty}>
+                                    {difficulty}
+                                </div>
                             </div>
-                        </div>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
     )
 }

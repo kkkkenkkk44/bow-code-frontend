@@ -12,7 +12,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Zoom from '@material-ui/core/Zoom';
 import { Button } from '@material-ui/core';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import {getLanguageID} from '../constants'
+import { getLanguageID } from '../constants'
 
 export default function ProblemPage() {
     const useStyles = makeStyles((theme) => ({
@@ -71,7 +71,7 @@ export default function ProblemPage() {
     const { ClassroomID } = useParams()
     const isLogin = useSelector(state => state.loginReducer.isLogin)
     const dispatch = useDispatch()
-    
+
     useEffect(() => {
         dispatch({ type: "FETCH_PROBLEM_START" })
         fetch(`${process.env.REACT_APP_BACKEND_URL}/problem/${ProblemID}`, {
