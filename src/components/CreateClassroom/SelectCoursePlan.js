@@ -119,12 +119,13 @@ export default function SelectCoursePlan() {
     }
 
     const handleSubmitCoursePlan = () => {
+      console.log(selectedCoursePlanID)
       setOpenCoursePlanDialog(false)
     }
     const handleSubmit = (event) => {
           var classroom_info = {
               name: name,
-              coursePlan: coursePlanID,
+              coursePlan: selectedCoursePlanID,
               review: review === "true",
               apply: apply === "true",
               visibility: parseInt(visibility),
