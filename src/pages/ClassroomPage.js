@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import NavBar from '../components/NavBar'
-import { Paper } from '@material-ui/core'
+import { Paper, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core';
 import { CircularProgress } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ import Student from './ClassroomPages/Student'
 import Quiz from './ClassroomPages/Quiz'
 import QuizManage from './ClassroomPages/QuizManage'
 import { fetchClassroomAsync, switchTo } from '../actions/classroomPage';
+import Divider from '@material-ui/core/Divider';
 import ViewCourse from './ClassroomPages/ViewCourse'
 // import ClassroomConfig from './ClassroomPages/ClassroomConfig'
 import ProblemSubmission from './UserPages/ProblemSubmission';
@@ -25,6 +26,10 @@ import FaceIcon from '@material-ui/icons/Face';
 import SchoolIcon from '@material-ui/icons/School';
 import SettingsIcon from '@material-ui/icons/Settings';
 import HistoryIcon from '@material-ui/icons/History';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import LinkIcon from '@material-ui/icons/Link';
+import ForumIcon from '@material-ui/icons/Forum';
+import DescriptionIcon from '@material-ui/icons/Description';
 import Badge from '@material-ui/core/Badge';
 import { useParams } from 'react-router-dom';
 import ApplicationTab from './ClassroomPages/ApplicationTab';
@@ -106,6 +111,10 @@ export default function ClassroomManagerPage(props) {
         listItem: {
             paddingLeft: "30px",
             paddingRight: "30px"
+        },
+        classroomTitle: {
+            textAlign: 'center',
+            margin: '20px'
         }
     }));
     const classes = useStyles();
@@ -125,20 +134,18 @@ export default function ClassroomManagerPage(props) {
     return (
         <div>
             <NavBar context="Bow-Code" />
-            {isFetching ? <CircularProgress/> : <div className={classes.root}>
+            {isFetching ? <CircularProgress /> : <div className={classes.root}>
                 <Paper className={classes.userInfo} square elevation={4}>
+                    <Typography variant="h4" className={classes.classroomTitle}>
+                        {classroom.name}
+                    </Typography>
+                    <Divider style={{marginLeft: '20px', marginRight: '20px'}} />
                     <List>
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("overview"))}>
                             <ListItemIcon>
-                                <FaceIcon />
+                                <VisibilityIcon />
                             </ListItemIcon>
                             <ListItemText primary="總覽" />
-                        </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("config"))}>
-                            <ListItemIcon>
-                                <SettingsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="教室設定" />
                         </ListItem>
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("viewcourse"))}>
                             <ListItemIcon>
@@ -146,33 +153,33 @@ export default function ClassroomManagerPage(props) {
                             </ListItemIcon>
                             <ListItemText primary="課程內容" />
                         </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("application"))}>
+                        {isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("application"))}>
                             <ListItemIcon>
-                                <SchoolIcon />
+                                <LinkIcon />
                             </ListItemIcon>
                             <ListItemText primary="申請連結" />
-                        </ListItem>
-                        {isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("student"))}>
-                            <ListItemIcon>
-                                <HistoryIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={<StyledBadge badgeContent={applicants.length} color="secondary">學生</StyledBadge>} />
                         </ListItem>}
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("student"))}>
+                            <ListItemIcon>
+                                <FaceIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={<StyledBadge badgeContent={applicants.length} color="secondary">學生名單與成績</StyledBadge>} />
+                        </ListItem>
                         {!isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("quiz"))}>
                             <ListItemIcon>
-                                <HistoryIcon />
+                                <DescriptionIcon />
                             </ListItemIcon>
                             <ListItemText primary="考試及作業" />
                         </ListItem>}
                         {isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("quizManage"))}>
                             <ListItemIcon>
-                                <HistoryIcon />
+                                <DescriptionIcon />
                             </ListItemIcon>
                             <ListItemText primary="考試及作業管理" />
                         </ListItem>}
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("bulletinBoard"))}>
                             <ListItemIcon>
-                                <HistoryIcon />
+                                <ForumIcon />
                             </ListItemIcon>
                             <ListItemText primary="討論區" />
                         </ListItem>
@@ -182,7 +189,7 @@ export default function ClassroomManagerPage(props) {
                 {
                     authFinish ?
                         <div className={classes.main}>
-                            <MainWindow isCreator={isCreator}/>
+                            <MainWindow isCreator={isCreator} />
                         </div> : null
                 }
             </div>}

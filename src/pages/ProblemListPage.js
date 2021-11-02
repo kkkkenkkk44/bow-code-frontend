@@ -48,8 +48,8 @@ export function ProblemListContent(props) {
         },
         problemAll: {
             display: 'flex',
-            marginLeft: "20%",
-            marginRight: "20%",
+            marginLeft: "10%",
+            marginRight: "10%",
             justifyContent: 'center'
         },
         problemAllproblemList: {

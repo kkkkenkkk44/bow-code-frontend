@@ -20,6 +20,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import NearMeIcon from '@material-ui/icons/NearMe';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FaceIcon from '@material-ui/icons/Face';
@@ -93,6 +94,8 @@ export default function UserPage(props) {
     const dispatch = useDispatch();
     const user = useSelector(state => state.loginReducer.user)
     const authFinish = useSelector(state => state.loginReducer.authFinish)
+    const myOwnClassroomList = useSelector(state => state.userPageReducer.ownClassrooms)
+    const myJoinedClassroomList = useSelector(state => state.userPageReducer.joinedClassrooms)
     useEffect(() => {
         dispatch(auth())
     }, [])
@@ -110,7 +113,7 @@ export default function UserPage(props) {
                     <List>
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("overview"))}>
                             <ListItemIcon>
-                                <FaceIcon />
+                                <VisibilityIcon />
                             </ListItemIcon>
                             <ListItemText primary="總覽" />
                         </ListItem>
@@ -132,18 +135,18 @@ export default function UserPage(props) {
                             </ListItemIcon>
                             <ListItemText primary="教案" />
                         </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myOwnClassroom"))}>
+                        {myOwnClassroomList.length != 0 && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myOwnClassroom"))}>
                             <ListItemIcon>
                                 <SchoolIcon />
                             </ListItemIcon>
                             <ListItemText primary="我管理的班級" />
-                        </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myJoinedClassroom"))}>
+                        </ListItem>}
+                        {myJoinedClassroomList.length != 0 &&<ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myJoinedClassroom"))}>
                             <ListItemIcon>
                                 <SchoolIcon />
                             </ListItemIcon>
                             <ListItemText primary="我加入的班級" />
-                        </ListItem>
+                        </ListItem>}
                         <ListItem className={classes.listItem} button>
                             <ListItemIcon>
                                 <AttachFileIcon />
