@@ -159,12 +159,12 @@ export default function ClassroomManagerPage(props) {
                             </ListItemIcon>
                             <ListItemText primary="申請連結" />
                         </ListItem>}
-                        {isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("student"))}>
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("student"))}>
                             <ListItemIcon>
                                 <FaceIcon />
                             </ListItemIcon>
                             <ListItemText primary={<StyledBadge badgeContent={applicants.length} color="secondary">學生名單與成績</StyledBadge>} />
-                        </ListItem>}
+                        </ListItem>
                         {!isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("quiz"))}>
                             <ListItemIcon>
                                 <DescriptionIcon />
