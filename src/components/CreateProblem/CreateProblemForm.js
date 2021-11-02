@@ -9,6 +9,13 @@ import { Redirect } from "react-router";
 import { useSelector } from 'react-redux';
 import { resetForm } from '../../actions/createProblem';
 import { useDispatch } from 'react-redux';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import Editor from "@monaco-editor/react";
+import {getLanguageID} from '../../constants'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +57,11 @@ const useStyles = makeStyles((theme) => ({
     visibilityText: {
       marginLeft: '40px',
       marginRight: '15px',
+    },
+    functionButton: {
+      margin: theme.spacing(1),
+      width: '25%',
+      position: 'relative',
     },
 
   }));
@@ -121,13 +133,15 @@ export default function CreatProblemForm() {
     setVisibility(event.target.value);
     };
 
-    const [content, setContent] = useState("")
-
     const user = useSelector(state => state.loginReducer.user)
     const desc = useSelector(state => state.createProblemReducer.description)
     const testdatas = useSelector(state => state.createProblemReducer.testdatas)
 
+    const [languageID, setLanguageID] = useState("")
+
     const dispatch = useDispatch()
+
+    
     var score = [];
     for (var i = 0; i < testdatas.length; i++) {
       score.push(1);
@@ -144,6 +158,13 @@ export default function CreatProblemForm() {
             testcase_input.push(data.input)
             testcase_output.push(data.output)
           })
+          var tempDefaultContent = [
+            {
+              language: parseInt(getLanguageID(language)),
+              content: codeTemplate,
+            }
+          ]
+          console.log(tempDefaultContent)
           var problem_info = {
             name,
             tags: tags.split(' '),
@@ -158,7 +179,7 @@ export default function CreatProblemForm() {
             },
             description: desc,
             visibility: parseInt(visibility),
-            content: content,
+            defaultContent: tempDefaultContent,
         }
         fetch(`${process.env.REACT_APP_BACKEND_URL}/problem`, {
             method: 'POST',
@@ -173,6 +194,27 @@ export default function CreatProblemForm() {
         })
         .catch(error => console.error('Error:', error))
         }
+    }
+    //const { defaultContent, difficulty } = useSelector(state => state.problemPageReducer)
+    //const [sourceCode, setSourceCode] = useState(defaultContent)
+
+    const [openCodeTemplateDialog, setOpenCodeTemplateDialog] = useState(false)
+
+    const [codeTemplate, setCodeTemplate] = useState("")
+
+    const handleOpenCodeTemplateDialog = () => {
+      setOpenCodeTemplateDialog(true)
+    }
+
+    const handleCloseCodeTemplateDialog = () => {
+      setOpenCodeTemplateDialog(false)
+      console.log(codeTemplate)
+    }
+
+    const [language, setLanguage] = useState("cpp")
+
+    const handleCodeTemplateChange = (value, event) => {
+      setCodeTemplate(value)
     }
 
     return (
@@ -251,6 +293,54 @@ export default function CreatProblemForm() {
                 <option value={2}>所有人皆可瀏覽</option>
               </Select>
             </FormControl>
+            <Button
+                variant="contained"
+                color="secondary"
+                className={classes.functionButton}
+                onClick={handleOpenCodeTemplateDialog}
+              >
+                撰寫程式碼模板
+            </Button>
+            <Dialog
+              open={openCodeTemplateDialog}
+              onClose={handleCloseCodeTemplateDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              maxWidth="md"
+              fullWidth={true}
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"程式碼模板"}
+              </DialogTitle>
+              <DialogContent>
+              <Select
+                  native
+                  autoWidth
+                  labelId="language"
+                  value={language}
+                  onChange={(e) => { setLanguage(e.target.value) }}
+                  className={classes.languageSelector}
+              >
+                  <option value={"cpp"}>C++</option>
+                  <option value={"c"}>C</option>
+                  <option value={"csp"}>C#</option>
+                  <option value={"python"}>Python</option>
+              </Select>
+              <Editor
+
+                  height="calc(100vh - 220px)"
+                  language={language}
+                  //defaultValue={defaultContent[getLanguageID(language)]}
+                  onChange={handleCodeTemplateChange}
+              />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseCodeTemplateDialog}>取消</Button>
+                <Button onClick={handleCloseCodeTemplateDialog} autoFocus>
+                  確定
+                </Button>
+              </DialogActions>
+            </Dialog>
             <Button
                 //type="submit"
                 fullWidth

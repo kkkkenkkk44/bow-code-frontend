@@ -88,11 +88,11 @@ const TitleBLock = (props) => {
             }
             }>
             <Grid container justify="center" alignItems="center" onClick={() => setFocus(true)}>
-                {focus ? <Grid item xs={1} className={classes.button_container} /> : <></>}
+                <Grid item xs={1} className={classes.button_container} />
                 <Grid item xs={10}>
                     <Typography variant="h4">{props.title}</Typography>
                 </Grid>
-                {focus ?
+                
                     <Grid item xs={1} className={classes.button_container}>
                         <Tooltip title="新增">
                             <IconButton
@@ -163,9 +163,6 @@ const TitleBLock = (props) => {
                             </Paper>
                         </Popper>
                     </Grid>
-                    :
-                    <></>
-                }
 
             </Grid>
         </ClickAwayListener>
@@ -225,22 +222,20 @@ export default function CourseEditor(props) {
                             <TitleBLock title={name} courseID={props.CourseID}/>
                         </div>
                         {
-                            blocks.length !== 0 ?
-                                blocks.map((block, index) => {
-                                    return (
-                                        <div className={classes.courseBlockEditor} key={index}>
-                                            <CourseBlockEditor
-                                                index={index}
-                                                block={block}
-                                                courseID={props.CourseID}
-                                                blockID={blocksID[index].id}
-                                                id={`courseBlockEditor_${index}`}
-                                            />
-                                        </div>
-                                    )
-                                })
-                                :
-                                <button onClick={() => console.log(blocks.length)}>no block</button>
+                            
+                            blocks.map((block, index) => {
+                                return (
+                                    <div className={classes.courseBlockEditor} key={index}>
+                                        <CourseBlockEditor
+                                            index={index}
+                                            block={block}
+                                            courseID={props.CourseID}
+                                            blockID={blocksID[index].id}
+                                            id={`courseBlockEditor_${index}`}
+                                        />
+                                    </div>
+                                )
+                            })
                         }
                     </>
                 }

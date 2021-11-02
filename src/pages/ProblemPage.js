@@ -65,6 +65,8 @@ export default function ProblemPage() {
 
     const { isFetchingSubmission, submissions, isFetching, name, description, defaultContent, difficulty } = useSelector(state => state.problemPageReducer)
     const [sourceCode, setSourceCode] = useState(defaultContent)
+
+    const [codeTemplate, setCodeTemplate] = useState("")
     const [language, setLanguage] = useState("cpp")
     const [openSubmissions, setOpenSubmissions] = useState(false)
     const { ProblemID } = useParams()
@@ -80,6 +82,8 @@ export default function ProblemPage() {
         })
             .then(res => res.json())
             .then(res => {
+                console.log(res)
+                setCodeTemplate(res.defaultContent[0].content)
                 dispatch({ type: "FETCH_PROBLEM_END", payload: res })
             })
     }, [])
@@ -192,7 +196,7 @@ export default function ProblemPage() {
 
                                     height="calc(100vh - 220px)"
                                     language={language}
-                                    defaultValue={defaultContent[getLanguageID(language)]}
+                                    defaultValue={codeTemplate}
                                     onChange={handleEditorChange}
                                 />
                             </div>
