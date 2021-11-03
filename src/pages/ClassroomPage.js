@@ -46,7 +46,7 @@ function MainWindow(props) {
                 <BulletinBoard />
             </div>
             <div hidden={currentTab !== "student"}>
-                {isCreator && <Student />}
+                { <Student />}
             </div>
             <div hidden={currentTab !== "quiz"}>
                 {!isCreator && <Quiz />}
