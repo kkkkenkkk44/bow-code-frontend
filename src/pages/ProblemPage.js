@@ -209,7 +209,7 @@ export default function ProblemPage() {
                     </Grid>
                 </Grid>
                 <SubmitBar classroomID={ClassroomID} ProblemID={ProblemID} sourceCode={sourceCode} language={language} handleCheckSubmission={handleCheckSubmission} />
-                <Dialog open={openSubmissions} onClose={handleCloseSubmission} aria-labelledby="form-dialog-title">
+                <Dialog open={openSubmissions} onClose={handleCloseSubmission} aria-labelledby="form-dialog-title" maxWidth="lg" fullWidth={true}>
                     <DialogTitle id="form-dialog-title">submissions</DialogTitle>
                     <div className={classes.submissionListRoot}>
                         {
