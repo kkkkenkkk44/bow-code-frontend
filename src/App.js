@@ -6,6 +6,7 @@ import CreateProblemPage from "./pages/CreateProblemPage";
 import CreateClassroomPage from "./pages/CreateClassroomPage";
 import CreateSingleClassroomPage from "./pages/CreateSingleClassroomPage";
 import CreateMultipleClassroomPage from "./pages/CreateMultipleClassroomPage";
+import RedirectToProblemPage from "./pages/RedirectToProblemPage"
 import CreateCoursePlanPage from "./pages/CreateCoursePlanPage";
 import CourseListPage from "./pages/CourseListPage";
 import ProblemListPage from "./pages/ProblemListPage"
@@ -43,7 +44,9 @@ function App() {
       <Route path='/signup' component={SignUpPage} />
       <Route path='/user' component={UserPage} />
       <Route path='/createCourse' component={CreateCoursePage} />
+      <Route path='/courseEditor/problem/:ProblemID' component={RedirectToProblemPage} />
       <Route path='/courseEditor/:CourseID' component={CourseEditorPage} />
+      <Route path='/course/:CourseID/problem/:ProblemID' component={RedirectToProblemPage} />
       <Route path='/course/:CourseID/:index' component={BlockDetailPage} />
       <Route path='/course/:CourseID' component={CourseDetailPage} />
       <Route path='/createClassroom' component={CreateClassroomPage} />
