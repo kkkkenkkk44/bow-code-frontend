@@ -264,7 +264,7 @@ export default function SubmitBar(props) {
     
 
     return (
-        <AppBar position="sticky" color="primary" className={classes.appbar} elevation={3}>
+        <AppBar position="fixed" color="primary" className={classes.appbar} elevation={3}>
             <Toolbar className={classes.toolbar}>
                 {/* <Typography className={classes.context}>123</Typography> */}
                 <Button className={classes.submissionButton} onClick={props.handleCheckSubmission}>

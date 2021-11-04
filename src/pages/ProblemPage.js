@@ -17,9 +17,9 @@ import { getLanguageID } from '../constants'
 export default function ProblemPage() {
     const useStyles = makeStyles((theme) => ({
         root: {
-            height: "calc(100vh - 165px)",
+            maxHeight: "calc(100vh - 200px)",
             padding: theme.spacing(5),
-            overflow: "visible"
+            overflow: "auto"
         },
         root2: {
             padding: theme.spacing(3),
@@ -83,10 +83,10 @@ export default function ProblemPage() {
             .then(res => res.json())
             .then(res => {
                 console.log(res)
-                if(res.defaultContent.length === 0){
+                if (res.defaultContent.length === 0) {
                     setCodeTemplate("")
                 }
-                else{
+                else {
                     setCodeTemplate(res.defaultContent[0].content)
                 }
                 dispatch({ type: "FETCH_PROBLEM_END", payload: res })
