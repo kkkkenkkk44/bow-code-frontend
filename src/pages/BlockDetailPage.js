@@ -25,10 +25,13 @@ export default function BlockDetailPage () {
     const [blockContent, setBlockContent] = useState()
 
     function fetchBlockDetail() {
-
+        var myHeaders = new Headers();
+        myHeaders.append('pragma', 'no-cache');
+        myHeaders.append('cache-control', 'no-cache');
         fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/files/course/${CourseID}/block/${index}/`, {
             method: 'GET',
-            credentials: "include"
+            credentials: "include",
+            headers: myHeaders
             })
         .then(res => res.text())
         .then(data => {

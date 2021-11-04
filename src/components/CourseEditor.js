@@ -176,6 +176,9 @@ export default function CourseEditor(props) {
     const dispatch = useDispatch()
 
     useEffect(() => {
+        var myHeaders = new Headers();
+        myHeaders.append('pragma', 'no-cache');
+        myHeaders.append('cache-control', 'no-cache');
         // tell redux that fetch start
         dispatch({ type: "FETCH_COURSE_START" })
         fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.CourseID}`, {
@@ -190,7 +193,8 @@ export default function CourseEditor(props) {
                 Promise.all(blockList.map(block => {
                     return fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/files/course/${props.CourseID}/block/${block.id}/`, {
                         method: "GET",
-                        credentials: "include"
+                        credentials: "include",
+                        headers: myHeaders
                     })
                 }))
                     .then(res => {

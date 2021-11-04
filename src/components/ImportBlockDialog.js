@@ -102,8 +102,8 @@ export default function ImportBlockDialog(props) {
         if (course.tags == null) {
             return false
         }
-        if (!allChecked){
-            if (course.tags.length == 0){
+        if (!allChecked) {
+            if (course.tags.length == 0) {
                 return false
             }
             for (var i = 0; i < course.tags.length; i++) {
@@ -126,9 +126,9 @@ export default function ImportBlockDialog(props) {
             </div>
         )
     }
-    
+
     const handleEnterSearch = (event) => {
-        if(event.key === 'Enter') {
+        if (event.key === 'Enter') {
             filter = {
                 "keyword": keyword.split(/[\s,]+/).filter((w) => w != "")
             }
@@ -144,7 +144,7 @@ export default function ImportBlockDialog(props) {
                     id="standard-full-width"
                     placeholder="搜尋課程"
                     fullWidth
-                    onChange={(e)=>dispatch(handleChangeKeyword(e.target.value))}
+                    onChange={(e) => dispatch(handleChangeKeyword(e.target.value))}
                     onKeyDown={handleEnterSearch}
                     InputProps={{
                         classes: {
@@ -183,10 +183,14 @@ export default function ImportBlockDialog(props) {
                             .then(res => res.json())
                             .then(res => {
                                 const { abstract, blockList } = res
+                                var myHeaders = new Headers();
+                                myHeaders.append('pragma', 'no-cache');
+                                myHeaders.append('cache-control', 'no-cache');
                                 Promise.all(blockList.map(block => {
                                     return fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/files/course/${importCourseID}/block/${block.id}/`, {
                                         method: "GET",
-                                        credentials: "include"
+                                        credentials: "include",
+                                        headers: myHeaders
                                     })
                                 }))
                                     .then(res => {
@@ -199,7 +203,7 @@ export default function ImportBlockDialog(props) {
                                                         await fetch(`${process.env.REACT_APP_BACKEND_URL}/course/${props.CourseID}/block`, {
                                                             method: "POST",
                                                             credentials: "include",
-                                                            body: JSON.stringify({title: blockList[i].title})
+                                                            body: JSON.stringify({ title: blockList[i].title })
 
                                                         })
                                                             .then(res => res.json())
