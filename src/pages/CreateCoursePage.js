@@ -37,7 +37,7 @@ export default function CreateCoursePage() {
             <NavBar context="Bow-Code" />
             <div className={classes.paper}>
                 <Typography component="h1" variant="h6">
-                    建立課程
+                    建立單元
                 </Typography>
                 <CreateCourseForm />
             </div>

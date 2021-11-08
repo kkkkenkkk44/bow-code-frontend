@@ -318,13 +318,13 @@ export default function CourseBlockEditor(props) {
                                         <Dialog open={openBlockTitleDialog} onClose={handleCloseTitleDialog} aria-labelledby="form-dialog-title">
                                             <DialogContent>
                                             <DialogContentText>
-                                                請輸入課程方塊的標題
+                                                請輸入單元方塊的標題
                                             </DialogContentText>
                                             <TextField
                                                 autoFocus
                                                 margin="dense"
                                                 id="title"
-                                                label="課程方塊標題"
+                                                label="單元方塊標題"
                                                 type="title"
                                                 fullWidth
                                                 onChange={handleBlockTitleValue}

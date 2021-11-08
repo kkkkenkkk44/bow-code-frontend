@@ -61,7 +61,7 @@ export default function CourseListPage() {
     return (
         <div>
             <Typography className={classes.sectionTitle} variant="h5" component="h2">
-                我編寫的教材
+                我編寫的單元
                 <Divider className={classes.divider}></Divider>
             </Typography>
             <div className={classes.root}>

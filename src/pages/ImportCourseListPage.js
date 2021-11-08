@@ -147,7 +147,7 @@ export default function CourseListPage() {
             <NavBar context="Bow-Code" />
             <div className={classes.root}>
                 <Typography className={classes.sectionTitle} variant="h5" component="h2">
-                    所有教材
+                    所有單元
                     <Divider className={classes.divider}></Divider>
                 </Typography>
                 <div className={classes.courseAll}>
@@ -155,7 +155,7 @@ export default function CourseListPage() {
                         <div className={classes.textfield}>
                             <TextField
                                 id="standard-full-width"
-                                placeholder="搜尋課程"
+                                placeholder="搜尋單元"
                                 fullWidth
                                 onChange={(e)=>dispatch(handleChangeKeyword(e.target.value))}
                                 InputProps={{
@@ -227,8 +227,8 @@ export default function CourseListPage() {
                                     onChange={(e) => { dispatch(changeCategory(e.target.value)) }}
                                 >
                                     <option value={"all"}>全部</option>
-                                    <option value={"teach"}>教學用課程</option>
-                                    <option value={"self-learn"}>自學用課程</option>
+                                    <option value={"teach"}>教學用單元</option>
+                                    <option value={"self-learn"}>自學用單元</option>
                                 </Select>
                             </ListItem>
                             <ListItem style={{ marginTop: '8px' }}>

@@ -318,7 +318,7 @@ export default function CourseInfoBar(props) {
                     </Typography>
                 </div>
                 <div className={classes.button}>
-                    <Tooltip title="收藏課程" TransitionComponent={Zoom}>
+                    <Tooltip title="收藏單元" TransitionComponent={Zoom}>
                         <Button
                             variant="contained"
                             color="secondary"
@@ -419,7 +419,7 @@ export default function CourseInfoBar(props) {
                             </Button>
                         </DialogActions>
                     </Dialog>
-                    <Tooltip title="編輯課程" TransitionComponent={Zoom}>
+                    <Tooltip title="編輯單元" TransitionComponent={Zoom}>
                         <Button
                             variant="contained"
                             color="secondary"
@@ -431,7 +431,7 @@ export default function CourseInfoBar(props) {
                             編輯
                         </Button>
                     </Tooltip>
-                    <Tooltip title="刪除課程" TransitionComponent={Zoom}>
+                    <Tooltip title="刪除單元" TransitionComponent={Zoom}>
                         <Button
                             variant="contained"
                             color="secondary"
@@ -450,7 +450,7 @@ export default function CourseInfoBar(props) {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">{"是否要刪除此課程?"}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">{"是否要刪除此單元?"}</DialogTitle>
                     <DialogActions>
                         <Button onClick={handleClose} color="primary">
                             取消

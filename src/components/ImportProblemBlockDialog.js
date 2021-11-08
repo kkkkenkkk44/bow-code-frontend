@@ -190,7 +190,7 @@ export default function ImportBlockDialog(props) {
                 <div className={classes.search}>
                     <TextField
                         id="standard-full-width"
-                        placeholder="搜尋課程"
+                        placeholder="搜尋單元"
                         fullWidth
                         onChange={(e) => dispatch(handleChangeKeyword(e.target.value))}
                         InputProps={{

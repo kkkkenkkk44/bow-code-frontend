@@ -58,7 +58,7 @@ export default function ViewCourse() {
     return (
         <div>
             <Typography className={classes.sectionTitle} variant="h5" component="h2">
-                課程內容
+                單元內容
                 <Divider className={classes.divider}></Divider>
             </Typography>
             <div className={classes.root}>

@@ -131,11 +131,11 @@ export default function CreatCourseForm() {
 
   const handleSubmit = (event) => {
     if (name === ""){
-      alert("請輸入課程名稱")
+      alert("請輸入單元名稱")
       document.getElementById("name").focus()
     }
     else if (abstract === ""){
-      alert("請輸入課程說明")
+      alert("請輸入單元說明")
       document.getElementById("abstract").focus()
     }
     else{
@@ -208,7 +208,7 @@ export default function CreatCourseForm() {
                 required
                 fullWidth
                 id="name"
-                label="課程名稱"
+                label="單元名稱"
                 name="name"
                 onChange={handleName}
             />
@@ -218,7 +218,7 @@ export default function CreatCourseForm() {
                 required
                 fullWidth
                 name="abstract"
-                label="課程說明"
+                label="單元說明"
                 type="abstract"
                 id="abstract"
                 onChange={handleAbstract}
@@ -229,12 +229,12 @@ export default function CreatCourseForm() {
                 required
                 fullWidth
                 name="tags"
-                label="課程標籤，請用空白分開"
+                label="單元標籤，請用空白分開"
                 type="tags"
                 id="tags"
                 onChange={handleTags}
             />
-            <span className={classes.difficultyText}>選擇課程難度</span>
+            <span className={classes.difficultyText}>選擇單元難度</span>
             <FormControl className={classes.formControl}>
               <Select
                 native
@@ -250,38 +250,38 @@ export default function CreatCourseForm() {
                 <option value={2}>進階</option>
               </Select>
             </FormControl>
-            <span className={classes.publicText}>是否公開課程</span>
+            <span className={classes.publicText}>是否公開單元</span>
             <FormControl className={classes.formControl}>
               <Select
                 native
                 value={isPublic}
                 onChange={handleIsPublic}
-                label="公開課程"
+                label="公開單元"
                 inputProps={{
                   name: 'isPublic',
                 }}
               >
-                <option value={true}>公開課程</option>
-                <option value={false}>私人課程</option>
+                <option value={true}>公開單元</option>
+                <option value={false}>私人單元</option>
               </Select>
             </FormControl>
-            <span className={classes.categoryText}>課程類別</span>
+            <span className={classes.categoryText}>單元類別</span>
             <FormControl className={classes.formControl}>
               <Select
                 native
                 value={category}
                 onChange={handleCategory}
-                label="課程類別"
+                label="單元類別"
                 inputProps={{
                   name: 'category',
                 }}
               >
-                <option value={"teach"}>教學用課程</option>
-                <option value={"self-learn"}>自學用課程</option>
+                <option value={"teach"}>教學用單元</option>
+                <option value={"self-learn"}>自學用單元</option>
               </Select>
             </FormControl>
             <input type="file" onChange={imageSelectedHandler}/>
-            <Button onClick={imageUploadHandler}>上傳課程封面</Button>
+            <Button onClick={imageUploadHandler}>上傳單元封面</Button>
             <Button
                 //type="submit"
                 fullWidth
@@ -290,7 +290,7 @@ export default function CreatCourseForm() {
                 className={classes.submit}
                 onClick={handleSubmit}
             >
-                建立課程
+                建立單元
             </Button>
             </form>
         </div>

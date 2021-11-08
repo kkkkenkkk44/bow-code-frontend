@@ -1,7 +1,7 @@
 const initialProblemPageState = {
     isFetching: false,
-    name: "課程名稱",
-    description: "課程敘述",
+    name: "單元名稱",
+    description: "單元敘述",
     defaultContent: "code",
     tags: ["math", "C++"],
     difficulty: 2,

@@ -219,10 +219,10 @@ export default function SelectCourse() {
           <Grid container spacing={3} >
             <Grid item xs={6}>
               
-              <Typography variant="h6" component="h3" className={classes.copyTitle}>點擊課程即可複製該課程 id</Typography>
+              <Typography variant="h6" component="h3" className={classes.copyTitle}>點擊單元即可複製該單元 id</Typography>
               <TextField
                 id="standard-full-width"
-                placeholder="搜尋課程"
+                placeholder="搜尋單元"
                 fullWidth
                 onChange={(e)=>dispatch(handleChangeKeyword(e.target.value))}
                 InputProps={{
@@ -248,7 +248,7 @@ export default function SelectCourse() {
               </Grid>
               <Grid item xs={6}>
                 
-                  <Typography  variant='h6'>課程 id</Typography>
+                  <Typography  variant='h6'>單元 id</Typography>
                     {courseIDs.map((jump, index) => (
                         <Box key={"jump" + index}>
                         <Grid container spacing={1} alignItems="flex-end">
@@ -257,7 +257,7 @@ export default function SelectCourse() {
                                 autoFocus
                                 
                                 margin="dense"
-                                label="課程 id"
+                                label="單元 id"
                                 value={jump || ""}
                                 onChange={(e) => handleValueChange(index, e)}
                                 fullWidth

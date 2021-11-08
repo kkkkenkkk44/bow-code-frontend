@@ -323,7 +323,7 @@ export default function AddComponentButton(props) {
     return (
         <div>
             <Grid container direction="column" alignItems="center">
-                <Tooltip title="加入課程" TransitionComponent={Zoom}>
+                <Tooltip title="加入單元" TransitionComponent={Zoom}>
                     <IconButton
                         id={`addCourseButton_${props.index}`}
                         onClick={(e) => {
@@ -352,10 +352,10 @@ export default function AddComponentButton(props) {
                             }}>
                             <MenuList>
                                 <MenuItem onClick={() => history.push(`/courseList`)}>
-                                    跳轉至課程列表瀏覽
+                                    跳轉至單元列表瀏覽
                                 </MenuItem>
                                 <MenuItem onClick={handleOwnAndFavCourseDialog}>
-                                    加入我建立或收藏的課程
+                                    加入我建立或收藏的單元
                                 </MenuItem>
                                 <Dialog
                                     onClose={handleCloseOwnAndFavCourseDialog}
@@ -365,13 +365,13 @@ export default function AddComponentButton(props) {
                                     fullWidth="true"
                                 >
                                     <DialogTitle id="customized-dialog-title" onClose={handleCloseOwnAndFavCourseDialog}>
-                                        我建立或收藏的課程
+                                        我建立或收藏的單元
                                     </DialogTitle>
                                     <DialogContent dividers>
 
                                         <Grid container spacing={1}>
                                             <Grid item xs={12} sm={6} >
-                                                <Typography className={classes.paper}>我建立的課程</Typography>
+                                                <Typography className={classes.paper}>我建立的單元</Typography>
                                                 <div className={classes.card}>
                                                     {
                                                         ownFetching ?
@@ -381,7 +381,7 @@ export default function AddComponentButton(props) {
                                                 </div>
                                             </Grid>
                                             <Grid item xs={12} sm={6} >
-                                                <Typography className={classes.paper}>我收藏的課程</Typography>
+                                                <Typography className={classes.paper}>我收藏的單元</Typography>
                                                 <div className={classes.card}>
                                                     {
                                                         favFetching ?
@@ -504,7 +504,7 @@ export default function AddComponentButton(props) {
                     fullWidth="true"
                 >
                     <DialogTitle id="customized-dialog-title" onClose={() => setOrderOptionConfig(false)}>
-                        已加入的課程、作業及考試
+                        已加入的單元、作業及考試
                     </DialogTitle>
                     <DialogContent dividers>
                         <div>

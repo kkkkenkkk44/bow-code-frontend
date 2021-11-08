@@ -155,7 +155,7 @@ export default function CourseCardForCoursePlan(props) {
                     <CardActionArea onClick={clickAction}>
                     <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
                         <Alert onClose={handleCloseSnackbar} severity="success">
-                            成功複製課程 id !
+                            成功複製單元 id !
                         </Alert>
                     </Snackbar>
                     <CardContent className={classes.info}>
@@ -172,7 +172,7 @@ export default function CourseCardForCoursePlan(props) {
                         </div>
                         <div className={classes.courseID}>
                             <Typography variant="caption" component="h3">
-                                課程 id ：
+                                單元 id ：
                                 {props.course.id}
                             </Typography>
                         </div>

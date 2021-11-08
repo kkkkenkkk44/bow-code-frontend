@@ -151,7 +151,7 @@ export default function ClassroomManagerPage(props) {
                             <ListItemIcon>
                                 <SchoolIcon />
                             </ListItemIcon>
-                            <ListItemText primary="課程內容" />
+                            <ListItemText primary="單元內容" />
                         </ListItem>
                         {isCreator && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("application"))}>
                             <ListItemIcon>

@@ -138,11 +138,11 @@ export default function ImportBlockDialog(props) {
 
     return (
         <Dialog open={isImporting} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth="lg">
-            <DialogTitle id="form-dialog-title">匯入課程</DialogTitle>
+            <DialogTitle id="form-dialog-title">匯入單元</DialogTitle>
             <DialogContent>
                 <TextField
                     id="standard-full-width"
-                    placeholder="搜尋課程"
+                    placeholder="搜尋單元"
                     fullWidth
                     onChange={(e) => dispatch(handleChangeKeyword(e.target.value))}
                     onKeyDown={handleEnterSearch}

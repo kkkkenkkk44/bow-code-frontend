@@ -121,7 +121,7 @@ export default function UserPage(props) {
                             <ListItemIcon>
                                 <MenuBookIcon />
                             </ListItemIcon>
-                            <ListItemText primary="課程" />
+                            <ListItemText primary="單元" />
                         </ListItem>
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("problemSubmission"))}>
                             <ListItemIcon>

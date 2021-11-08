@@ -103,7 +103,7 @@ export default function NavBar(props) {
                     </Button>
                     <div className={classes.listButton}>
                         <Button className={classes.toolbarButton} onClick={() => history.push('/courseList')}>
-                            課程列表
+                            單元列表
                         </Button>
                         <Button className={classes.toolbarButton} onClick={() => history.push('/problemList')}>
                             題目列表
@@ -134,7 +134,7 @@ export default function NavBar(props) {
                                                             <MenuItem onClick={handleClose}>建立教案</MenuItem>
                                                         </Link>
                                                         <Link component={RouterLink} to={"/createCourse"} color="inherit" aria-label="menu">
-                                                            <MenuItem onClick={handleClose}>建立課程</MenuItem>
+                                                            <MenuItem onClick={handleClose}>建立單元</MenuItem>
                                                         </Link>
                                                         <Link component={RouterLink} to={"/createProblem"} color="inherit" aria-label="menu">
                                                             <MenuItem onClick={handleClose}>建立題目</MenuItem>
