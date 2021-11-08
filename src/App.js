@@ -36,6 +36,7 @@ function App() {
   }, [])
   return (
     <Switch>
+      {isLogin && <Redirect from='/home' to='/user' />}
       <Route path='/home' component={MainPage} />
       <Route path='/courseList' component={CourseListPage} />
       <Route path='/problemList' component={ProblemListPage} />

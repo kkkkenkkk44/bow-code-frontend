@@ -8,7 +8,7 @@ import {
 } from '../actions/userPage'
 
 const initialCourseListState = {
-    currentTab: "overview",
+    currentTab: "myJoinedClassroom",
     ownCourseFetching: false,
     favCourseFetching: false,
     ownCoursePlanFetching: false,

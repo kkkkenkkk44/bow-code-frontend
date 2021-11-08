@@ -28,8 +28,9 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(3),
-        minWidth: '100px'
+        marginRight: theme.spacing(1),
+        minWidth: '100px',
+        color: 'white'
     },
     toolbar: {
         height: '100%',
@@ -95,10 +96,11 @@ export default function NavBar(props) {
         <div>
             <AppBar position="static" className={classes.appbar} elevation={3}>
                 <Toolbar className={classes.toolbar}>
-                    <Typography variant="h6" className={classes.title}>
-                        {props.context}
-                    </Typography>
-
+                    <Button onClick={() => history.push('/home')} style={{textTransform: 'none'}}>
+                        <Typography variant="h6" className={classes.title} >
+                            {props.context}
+                        </Typography>
+                    </Button>
                     <div className={classes.listButton}>
                         <Button className={classes.toolbarButton} onClick={() => history.push('/courseList')}>
                             課程列表
@@ -163,9 +165,6 @@ export default function NavBar(props) {
                                             <Paper>
                                                 <ClickAwayListener onClickAway={handleClose}>
                                                     <MenuList autoFocusItem={userOpen} id="menu-list-grow" >
-                                                        <Link component={RouterLink} to={"/user"} color="inherit" aria-label="menu">
-                                                            <MenuItem onClick={handleClose}>用戶主頁</MenuItem>
-                                                        </Link>
                                                         <Link component={RouterLink} to={"/logout"} color="inherit" aria-label="menu">
                                                             <MenuItem onClick={handleClose}>登出</MenuItem>
                                                         </Link>

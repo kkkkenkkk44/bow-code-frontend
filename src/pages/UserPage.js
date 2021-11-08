@@ -32,17 +32,11 @@ function MainWindow(props) {
     const currentTab = useSelector(state => state.userPageReducer.currentTab)
     return (
         <div>
-            <div hidden={currentTab !== "overview"}>
-                <Overview />
-            </div>
             <div hidden={currentTab !== "myCourse"}>
                 <MyCourse />
             </div>
             <div hidden={currentTab !== "problemSubmission"}>
                 <ProblemSubmission />
-            </div>
-            <div hidden={currentTab !== "myOwnClassroom"}>
-                <MyOwnClassroom />
             </div>
             <div hidden={currentTab !== "myJoinedClassroom"}>
                 <MyJoinedClassroom />
@@ -96,9 +90,9 @@ export default function UserPage(props) {
     const authFinish = useSelector(state => state.loginReducer.authFinish)
     const myOwnClassroomList = useSelector(state => state.userPageReducer.ownClassrooms)
     const myJoinedClassroomList = useSelector(state => state.userPageReducer.joinedClassrooms)
-    useEffect(() => {
-        dispatch(auth())
-    }, [])
+    // useEffect(() => {
+    //     dispatch(auth())
+    // }, [])
     return (
         <div>
             <NavBar context="Bow-Code" />
@@ -111,11 +105,17 @@ export default function UserPage(props) {
                     </Typography>
                     <Divider />
                     <List>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("overview"))}>
+                        {<ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myJoinedClassroom"))}>
                             <ListItemIcon>
-                                <VisibilityIcon />
+                                <SchoolIcon />
                             </ListItemIcon>
-                            <ListItemText primary="總覽" />
+                            <ListItemText primary="班級" />
+                        </ListItem>}
+                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myCoursePlan"))}>
+                            <ListItemIcon>
+                                <NearMeIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="教案" />
                         </ListItem>
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myCourse"))}>
                             <ListItemIcon>
@@ -128,30 +128,6 @@ export default function UserPage(props) {
                                 <HistoryIcon />
                             </ListItemIcon>
                             <ListItemText primary="作答紀錄" />
-                        </ListItem>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myCoursePlan"))}>
-                            <ListItemIcon>
-                                <NearMeIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="教案" />
-                        </ListItem>
-                        {myOwnClassroomList.length != 0 && <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myOwnClassroom"))}>
-                            <ListItemIcon>
-                                <SchoolIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="我管理的班級" />
-                        </ListItem>}
-                        {myJoinedClassroomList.length != 0 &&<ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("myJoinedClassroom"))}>
-                            <ListItemIcon>
-                                <SchoolIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="我加入的班級" />
-                        </ListItem>}
-                        <ListItem className={classes.listItem} button>
-                            <ListItemIcon>
-                                <AttachFileIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="檔案" />
                         </ListItem>
                     </List>
 

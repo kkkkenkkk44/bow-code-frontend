@@ -8,6 +8,7 @@ import { Typography } from '@material-ui/core'
 import { Divider } from '@material-ui/core'
 
 export default function MyJoinedClassroom() {
+    const myOwnClassroomList = useSelector(state => state.userPageReducer.ownClassrooms)
     const myJoinedClassroomList = useSelector(state => state.userPageReducer.joinedClassrooms)
     const user = useSelector(state => state.loginReducer.user);
     const dispatch = useDispatch()
@@ -15,26 +16,35 @@ export default function MyJoinedClassroom() {
         if (typeof user.id !== 'undefined') {
             dispatch(fetchClassroomsAsync(user.joinedClassroomList, "joined"))
         }
+        if (typeof user.id !== 'undefined') {
+            dispatch(fetchClassroomsAsync(user.ownClassroomList, "own"))
+        }
     }, [user])
-    const classroomCards = myJoinedClassroomList.map(obj => <ClassroomCard classroom={obj.classroom} key={obj.classroom.id} />)
+    const ownClassroomCards = myOwnClassroomList.map(obj => <ClassroomCard classroom={obj.classroom} key={obj.classroom.id} compress />)
+    const joinedClassroomCards = myJoinedClassroomList.map(obj => <ClassroomCard classroom={obj.classroom} key={obj.classroom.id} compress />)
     return <div style={{
         marginTop: '30px'
     }}>
-        <Typography variant="h5" style={{
-            marginLeft: "10%"
-        }}>我加入的班級</Typography>
-        <Divider style={{
-            marginLeft: "10%",
-            marginBottom: '20px'
-        }} />
-        <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            marginLeft: '10%',
-            marginRight: '10%',
-        }}>
-            {classroomCards}
-        </div>
+        {ownClassroomCards.length && <div>
+            <Typography variant="h5" style={{
+                marginLeft: "10%"
+            }}>我管理的班級</Typography>
+            <Divider style={{
+                marginLeft: "10%",
+                marginBottom: '20px'
+            }} />
+            {ownClassroomCards}
+        </div>}
+        {joinedClassroomCards.length && <div>
+            <Typography variant="h5" style={{
+                marginLeft: "10%",
+                marginTop: '20px'
+            }}>已加入的班級</Typography>
+            <Divider style={{
+                marginLeft: "10%",
+                marginBottom: '20px',
+            }} />
+            {joinedClassroomCards}
+        </div>}
     </div>
 }
