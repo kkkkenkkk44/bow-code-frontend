@@ -13,6 +13,8 @@ import Zoom from '@material-ui/core/Zoom';
 import { Button } from '@material-ui/core';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import { getLanguageID } from '../constants'
+import { IconButton } from '@material-ui/core';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 export default function ProblemPage() {
     const useStyles = makeStyles((theme) => ({
@@ -60,6 +62,10 @@ export default function ProblemPage() {
             display: "flex",
             justifyContent: "center"
         },
+        refreshButton: {
+            height: '40px',
+            width: '40px'
+        }
     }))
     const classes = useStyles()
 
@@ -210,7 +216,8 @@ export default function ProblemPage() {
                 </Grid>
                 <SubmitBar classroomID={ClassroomID} ProblemID={ProblemID} sourceCode={sourceCode} language={language} handleCheckSubmission={handleCheckSubmission} />
                 <Dialog open={openSubmissions} onClose={handleCloseSubmission} aria-labelledby="form-dialog-title" maxWidth="lg" fullWidth={true}>
-                    <DialogTitle id="form-dialog-title">submissions</DialogTitle>
+                    <DialogTitle id="form-dialog-title">submissions 
+                    <IconButton className={classes.refreshButton} onClick={handleCheckSubmission}><RefreshIcon /></IconButton></DialogTitle>
                     <div className={classes.submissionListRoot}>
                         {
                             isFetchingSubmission ?
