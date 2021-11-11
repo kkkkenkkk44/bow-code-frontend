@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { handleChangeDescription } from "../../actions/createProblem";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import ClassicEditor from 'ckeditor5-build-classic-bow-code'
 import { useDispatch, useSelector } from "react-redux";
 import ImgurUploaderInit from 'ckeditor5-imgur-uploader'
 

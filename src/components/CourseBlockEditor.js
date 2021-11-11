@@ -1,6 +1,5 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import ImgurUploaderInit from 'ckeditor5-imgur-uploader'
+import ClassicEditor from 'ckeditor5-build-classic-bow-code'
 import { DialogTitle } from '@material-ui/core'
 // import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import { Grid, Popper, Paper, MenuList, MenuItem, ClickAwayListener, makeStyles, IconButton, Typography } from '@material-ui/core'
@@ -177,7 +176,6 @@ export default function CourseBlockEditor(props) {
         )
     }
 
-    const ImgurUploader = ImgurUploaderInit({clientID: '0c61d1804dc7f9a'})
     //const ImgurUploader = ImgurUploaderInit({clientID: `${process.env.REACT_APP_IMGUR_CLIENT_ID}`})
 
     useEffect(() => {
@@ -253,7 +251,7 @@ export default function CourseBlockEditor(props) {
                     <Paper onClick={() => setFocus(true)}>
                         <CKEditor
                             config={{
-                                extraPlugins: [ImgurUploader]
+                                extraPlugins: []
                             }}
                             editor={ClassicEditor}
                             data={props.block.content}
