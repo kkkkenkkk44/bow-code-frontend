@@ -39,9 +39,6 @@ function MainWindow(props) {
     const isCreator = props.isCreator
     return (
         <div>
-            <div hidden={currentTab !== "overview"}>
-                <Overview />
-            </div>
             <div hidden={currentTab !== "bulletinBoard"}>
                 <BulletinBoard />
             </div>
@@ -141,12 +138,6 @@ export default function ClassroomManagerPage(props) {
                     </Typography>
                     <Divider style={{marginLeft: '20px', marginRight: '20px'}} />
                     <List>
-                        <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("overview"))}>
-                            <ListItemIcon>
-                                <VisibilityIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="總覽" />
-                        </ListItem>
                         <ListItem className={classes.listItem} button onClick={() => dispatch(switchTo("viewcourse"))}>
                             <ListItemIcon>
                                 <SchoolIcon />

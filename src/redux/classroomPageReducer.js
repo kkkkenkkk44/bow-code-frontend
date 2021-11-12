@@ -21,7 +21,7 @@ import {
 import { FETCH_LIST_START } from '../actions/courseList';
 
 const initialState = {
-    currentTab: "overview",
+    currentTab: "viewcourse",
     isFetching: true,
     isFetchingBulletins: true,
     classroomID: "",
