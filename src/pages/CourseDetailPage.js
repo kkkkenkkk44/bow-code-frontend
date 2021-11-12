@@ -6,9 +6,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@progress/kendo-react-buttons'
 import { useParams } from 'react-router-dom'
+import { Card } from '@material-ui/core'
 import ContentLoader from 'react-content-loader'
 
 import { asyncGetUserInfo } from '../utils/user'
+import BlockDetailPage from './BlockDetailPage'
 
 export default function CourseDetailPage() {
 
@@ -17,15 +19,14 @@ export default function CourseDetailPage() {
             display: 'flex',
             flexWrap: 'wrap',
             height: theme.spacing(1),
-            margin: theme.spacing(5),
         },
-        blockListStyle: {
-            flex: 3,
-            margin: theme.spacing(3)
+        info: {
+            flex: 1
         },
-        history: {
-            flex: 1,
-            margin: theme.spacing(3)
+        content: {
+            flex: 4,
+            height:  "calc(100vh - 60px)",
+            overflowY: 'auto'
         }
     }));
     const classes = useStyles();
@@ -39,6 +40,7 @@ export default function CourseDetailPage() {
     const [displayBlockList, setDisplayBlockList] = useState([])
     const [isFetchingClassroom, setIsFetchingClassroom] = useState(true)
     const [isFetchingCreator, setIsFetchingCreator] = useState(true)
+    const showingCourseIndex = useSelector(state => state.courseDetailPageReducer.showingCourseIndex)
 
     function BlockList() {
         var cardList = []
@@ -79,10 +81,15 @@ export default function CourseDetailPage() {
             <NavBar context="Bow-Code" />
             {
                 isFetchingClassroom ? null :
-                    <div>
-                        {isFetchingCreator ?
-                            <ContentLoader /> : <CourseInfoBar context={name} abstract={abstract} creator={creator} />}
-                        {BlockList()}
+                    <div className={classes.root}>
+                        <Card className={classes.info}>
+                            {isFetchingCreator ?
+                                <ContentLoader /> : <CourseInfoBar context={name} abstract={abstract} creator={creator} />}
+                            {BlockList()}
+                        </Card>
+                        <div className={classes.content}>
+                            {showingCourseIndex != "" && <BlockDetailPage courseId={CourseID} index={showingCourseIndex}></BlockDetailPage>}
+                        </div>
                     </div>
             }
         </div>

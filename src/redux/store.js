@@ -13,6 +13,7 @@ import classroomPageReducer from "./classroomPageReducer";
 import createCoursePlanReducer from "./createCoursePlanReducer";
 import coursePlanEditorReducer from "./coursePlanEditorReducer";
 import applyClassroomPageReducer from "./applyClassroomPageReducer";
+import courseDetailPageReducer from "./courseDetailPageReducer";
 
 const store = createStore(combineReducers({
     reducer,
@@ -27,7 +28,8 @@ const store = createStore(combineReducers({
     createClassroomReducer,
     createCoursePlanReducer,
     coursePlanEditorReducer,
-    applyClassroomPageReducer
+    applyClassroomPageReducer,
+    courseDetailPageReducer
   }), applyMiddleware(thunk))
 
 export { store }

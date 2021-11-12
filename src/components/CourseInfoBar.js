@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(1),
         flexGrow: 1,
         margin: '20px',
-        marginLeft: '280px',
+        marginLeft: '20px',
 
     },
     toolbar: {
@@ -56,14 +56,14 @@ const useStyles = makeStyles((theme) => ({
     abstract: {
         marginLeft: theme.spacing(1),
         margin: '20px',
-        marginLeft: '280px',
+        marginLeft: '20px',
 
 
     },
     creator: {
         marginLeft: theme.spacing(1),
         margin: '20px',
-        marginLeft: '280px',
+        marginLeft: '20px',
 
     },
     left: {
@@ -73,12 +73,11 @@ const useStyles = makeStyles((theme) => ({
     button: {
         margin: theme.spacing(1),
         width: '90%',
-        paddingLeft: '265px',
+        paddingLeft: '20px',
         flex: '1',
     },
     functionButton: {
         margin: theme.spacing(1),
-        width: '8%',
         position: 'relative',
     },
     addNewCoursePlan: {

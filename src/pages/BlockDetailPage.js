@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
 
 
-export default function BlockDetailPage () {
+export default function BlockDetailPage (props) {
 
     const useStyles = makeStyles((theme) => ({
         text: {
@@ -16,9 +16,11 @@ export default function BlockDetailPage () {
         },
 
     }));
-
+    
     const { CourseID } = useParams()
     const { index } = useParams()
+    const CourseID_ = props.courseId || CourseID
+    const index_ = props.index || index
 
     const classes = useStyles()
 
@@ -28,7 +30,7 @@ export default function BlockDetailPage () {
         var myHeaders = new Headers();
         myHeaders.append('pragma', 'no-cache');
         myHeaders.append('cache-control', 'no-cache');
-        fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/files/course/${CourseID}/block/${index}/`, {
+        fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/files/course/${CourseID_}/block/${index_}/`, {
             method: 'GET',
             credentials: "include",
             headers: myHeaders
@@ -40,14 +42,10 @@ export default function BlockDetailPage () {
         })
         .catch(error => console.error('Error:', error))
     }
-
-    useEffect(() => {
-        fetchBlockDetail()
-    }, [])
+    fetchBlockDetail()
 
     return (
         <div>
-            <NavBar context="Bow-Code" />
             <div className={classes.text}>
                 <div dangerouslySetInnerHTML={{__html: blockContent}} />
             </div>
