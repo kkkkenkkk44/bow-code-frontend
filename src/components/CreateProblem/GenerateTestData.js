@@ -17,7 +17,7 @@ function TestDataPair(props) {
         root: {
             display: 'flex',
             alignItems: 'baseline',
-            height: '40px'
+            minheight: '40px'
         },
         input: {
             marginLeft: '5%',
@@ -41,9 +41,9 @@ function TestDataPair(props) {
     const dispatch = useDispatch()
     return <div>
         <div className={classes.root}>
-            <TextField autoFocus className={classes.input} id="input" value={props.data.input} onChange={(e) => dispatch(changeTestDataIdx(props.index, e.target.value, "input"))} />
+            <TextField multiline autoFocus className={classes.input} id="input" value={props.data.input} onChange={(e) => dispatch(changeTestDataIdx(props.index, e.target.value, "input"))} />
             <Typography className={classes.arrow} variant="subtitle1"> {">"} </Typography>
-            <TextField className={classes.output} id="output" value={props.data.output} onChange={(e) => dispatch(changeTestDataIdx(props.index, e.target.value, "output"))} />
+            <TextField multiline className={classes.output} id="output" value={props.data.output} onChange={(e) => dispatch(changeTestDataIdx(props.index, e.target.value, "output"))} />
             <Typography className={classes.remove} variant="subtitle1">
                 <IconButton className={classes.remove} onClick={() => dispatch(removeTestData(props.index))}>
                     <ClearIcon fontSize="inherit"></ClearIcon>
