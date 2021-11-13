@@ -21,7 +21,9 @@ export default function CourseDetailPage() {
             height: theme.spacing(1),
         },
         info: {
-            flex: 1
+            flex: 1,
+            height:  "calc(100vh - 60px)",
+            overflowY: 'auto'
         },
         content: {
             flex: 4,

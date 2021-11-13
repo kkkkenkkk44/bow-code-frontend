@@ -25,7 +25,7 @@ export default function MyJoinedClassroom() {
     return <div style={{
         marginTop: '30px'
     }}>
-        {ownClassroomCards.length && <div>
+        {ownClassroomCards.length > 0 && <div>
             <Typography variant="h5" style={{
                 marginLeft: "10%"
             }}>我管理的班級</Typography>
@@ -35,7 +35,7 @@ export default function MyJoinedClassroom() {
             }} />
             {ownClassroomCards}
         </div>}
-        {joinedClassroomCards.length && <div>
+        {joinedClassroomCards.length > 0 && <div>
             <Typography variant="h5" style={{
                 marginLeft: "10%",
                 marginTop: '20px'
