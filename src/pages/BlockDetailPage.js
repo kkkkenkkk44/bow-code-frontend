@@ -8,10 +8,8 @@ export default function BlockDetailPage (props) {
 
     const useStyles = makeStyles((theme) => ({
         text: {
-            width: '60%',
-            margin: '20px',
-            marginLeft: '280px',
-            marginTop: '50px',
+            width: '80%',
+            margin: '40px',
             borderColor: 'primary.main',
         },
 

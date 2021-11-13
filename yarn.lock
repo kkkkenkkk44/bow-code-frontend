@@ -4141,7 +4141,7 @@ cjs-module-lexer@^0.6.0:
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-0.6.0.tgz#4186fcca0eae175970aee870b9fe2d6cf8d5655f"
   integrity sha512-uc2Vix1frTfnuzxxu1Hp4ktSvM3QaI4oXl4ZUqL1wjTu/BGki9TrCWoqLTg/drR1KwAEarXuRFCG2Svr1GxPFw==
 
-ckeditor5-build-classic-bow-code@^31.0.0:
+ckeditor5-build-classic-bow-code@31.0.4:
   version "31.0.4"
   resolved "https://registry.yarnpkg.com/ckeditor5-build-classic-bow-code/-/ckeditor5-build-classic-bow-code-31.0.4.tgz#d82aa68428c90f351e3bc25666ab90e3b7dcfb46"
   integrity sha512-2R9ZcgA9lN+CT1bR8veaL9M6WeKqi9apFFMK2Odr/RDRjAPkHLwfLmmarBU+2D2JhNwP5ZWxluyQdV+P1KI2hg==
