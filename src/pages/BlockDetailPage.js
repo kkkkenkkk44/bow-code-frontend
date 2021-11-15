@@ -45,7 +45,7 @@ export default function BlockDetailPage (props) {
     return (
         <div>
             <div className={classes.text}>
-                <div dangerouslySetInnerHTML={{__html: blockContent}} />
+                <div dangerouslySetInnerHTML={{__html: blockContent}} className="ck-content"/>
             </div>
         </div>
     )
