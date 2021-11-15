@@ -165,6 +165,9 @@ export default function NavBar(props) {
                                             <Paper>
                                                 <ClickAwayListener onClickAway={handleClose}>
                                                     <MenuList autoFocusItem={userOpen} id="menu-list-grow" >
+                                                        <Link component={RouterLink} to={"/user"} color="inherit" aria-label="menu">
+                                                            <MenuItem onClick={handleClose}>用戶主頁</MenuItem>
+                                                        </Link>
                                                         <Link component={RouterLink} to={"/logout"} color="inherit" aria-label="menu">
                                                             <MenuItem onClick={handleClose}>登出</MenuItem>
                                                         </Link>
