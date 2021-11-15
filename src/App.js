@@ -36,7 +36,8 @@ function App() {
   }, [])
   return (
     <Switch>
-      <Route exact strict path="/course/:CourseID" render={props => <Redirect to={`${props.location.pathname}/`}/>} />
+      <Route exact strict path="/course/:CourseID" render={props => <Redirect to={`${props.location.pathname}/`} />} />
+      <Route exact strict path="/classroom/:ClassroomID/course/:CourseID" render={props => <Redirect to={`${props.location.pathname}/`} />} />
       {isLogin && <Redirect from='/home' to='/user' />}
       <Route path='/home' component={MainPage} />
       <Route path='/courseList' component={CourseListPage} />
@@ -62,7 +63,7 @@ function App() {
       <Route path='/classroom/:ClassroomID/course/:CourseID/:index' component={BlockDetailPage} />
       <Route path='/classroom/:ClassroomID/course/:CourseID' component={CourseDetailPage} />
       <Route path='/classroom/:ClassroomID/problem/:ProblemID' component={ProblemPage} />
-      <Route path='/classroom/:ClassroomID' component={ClassroomPage}/>
+      <Route path='/classroom/:ClassroomID' component={ClassroomPage} />
       <Route path="/apply/:ClassroomID" component={ApplyClassroomPage} />
       <Route path='/register' component={RegisterPage} />
       <Redirect from='/' to='/home' />
