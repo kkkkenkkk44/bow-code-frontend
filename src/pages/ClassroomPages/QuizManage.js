@@ -103,7 +103,8 @@ export default function QuizManage() {
             marginTop: '10vh',
             zIndex: 100,
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            overflowY: 'auto'
         },
         problemPicker: {
             position: 'fixed',
