@@ -1324,6 +1324,13 @@
     "@ckeditor/ckeditor5-utils" "^19.0.1"
     lodash-es "^4.17.10"
 
+"@ckeditor/ckeditor5-code-block@^31.0.0":
+  version "31.0.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-code-block/-/ckeditor5-code-block-31.0.0.tgz#1340c5ad1854d078b31af427e51ba64a17039051"
+  integrity sha512-UCmY6BFB16POqCOjGyd+TA/dtOhDJ7I56KFxa8iC+sL2B8NkDVVx0Ll+z1PKp4j0FuZ/0YEW4ffGI8dN2ZU1jQ==
+  dependencies:
+    ckeditor5 "^31.0.0"
+
 "@ckeditor/ckeditor5-core@^19.0.1":
   version "19.0.1"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-core/-/ckeditor5-core-19.0.1.tgz#becf3723c69f96bcaf35880530a5cc986e145020"
@@ -4141,10 +4148,10 @@ cjs-module-lexer@^0.6.0:
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-0.6.0.tgz#4186fcca0eae175970aee870b9fe2d6cf8d5655f"
   integrity sha512-uc2Vix1frTfnuzxxu1Hp4ktSvM3QaI4oXl4ZUqL1wjTu/BGki9TrCWoqLTg/drR1KwAEarXuRFCG2Svr1GxPFw==
 
-ckeditor5-build-classic-bow-code@31.0.4:
-  version "31.0.4"
-  resolved "https://registry.yarnpkg.com/ckeditor5-build-classic-bow-code/-/ckeditor5-build-classic-bow-code-31.0.4.tgz#d82aa68428c90f351e3bc25666ab90e3b7dcfb46"
-  integrity sha512-2R9ZcgA9lN+CT1bR8veaL9M6WeKqi9apFFMK2Odr/RDRjAPkHLwfLmmarBU+2D2JhNwP5ZWxluyQdV+P1KI2hg==
+ckeditor5-build-classic-bow-code@31.0.11:
+  version "31.0.11"
+  resolved "https://registry.yarnpkg.com/ckeditor5-build-classic-bow-code/-/ckeditor5-build-classic-bow-code-31.0.11.tgz#b007914987575aeeaca977aabb3ef93f7224f561"
+  integrity sha512-i37gSTc5vC7VZePOGOS6cZDn0/6taOR3ApMhApZ8+Zfv57SdopIq0ah8y+HyrZppRg0aQgOSa+ZSvDC757b7vQ==
   dependencies:
     "@ckeditor/ckeditor5-adapter-ckfinder" "^31.0.0"
     "@ckeditor/ckeditor5-autoformat" "^31.0.0"
@@ -4152,6 +4159,7 @@ ckeditor5-build-classic-bow-code@31.0.4:
     "@ckeditor/ckeditor5-block-quote" "^31.0.0"
     "@ckeditor/ckeditor5-ckfinder" "^31.0.0"
     "@ckeditor/ckeditor5-cloud-services" "^31.0.0"
+    "@ckeditor/ckeditor5-code-block" "^31.0.0"
     "@ckeditor/ckeditor5-easy-image" "^31.0.0"
     "@ckeditor/ckeditor5-editor-classic" "^31.0.0"
     "@ckeditor/ckeditor5-essentials" "^31.0.0"
