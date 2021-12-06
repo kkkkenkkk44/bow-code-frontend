@@ -25,7 +25,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.4",
-    "ckeditor5-build-classic-bow-code": "31.0.21",
+    "ckeditor5-build-classic-bow-code": "31.0.22",
     "ckeditor5-build-classic-with-codeblock": "^19.0.2",
     "ckeditor5-codeblock-with-syntax-highlight": "^1.0.1",
     "ckeditor5-imgur-uploader": "^0.0.1",
