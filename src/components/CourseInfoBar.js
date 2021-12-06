@@ -12,7 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { useParams } from 'react-router-dom';
 import loginReducer from '../redux/loginReducer.js';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 import CreateIcon from '@material-ui/icons/Create';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -29,6 +29,7 @@ import { changeName, changeVisibility } from '../actions/createCoursePlan';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
+import CheckIcon from '@material-ui/icons/Check';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -302,6 +303,8 @@ export default function CourseInfoBar(props) {
             .catch(error => console.error('Error:', error))
     }
 
+    const [redirectToCourseDetailPage, setRedirectToCourseDetailPage] = useState(false)
+
     return (
         <div>
             <AppBar position="static" className={classes.appbar} elevation={3}>
@@ -316,133 +319,150 @@ export default function CourseInfoBar(props) {
                         {`創建者：${props.creator.userInfo.name}`}
                     </Typography>
                 </div>
-                <div className={classes.button}>
-                    <Tooltip title="收藏單元" TransitionComponent={Zoom}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            className={classes.functionButton}
-                            startIcon={<FavoriteIcon />}
-                            style={isLogin ? { display: '' } : { display: 'none' }}
-                            onClick={handleFavoriteCourse}
-                        >
-                            收藏
-                        </Button>
-                    </Tooltip>
-                    <Tooltip title="加入教案" TransitionComponent={Zoom}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            className={classes.functionButton}
-                            startIcon={<PlaylistAddIcon />}
-                            style={isLogin ? { display: '' } : { display: 'none' }}
-                            onClick={handleOpenCoursePlanDialog}
-                        >
-                            加入
-                        </Button>
-                    </Tooltip>
-                    <Dialog
-                        maxWidth='xs'
-                        fullWidth={true}
-                        aria-labelledby="confirmation-dialog-title"
-                        open={openCoursePlanDialog}
-                        onClose={handleCloseCoursePlanDialog}
-                    >
-                        <DialogTitle id="confirmation-dialog-title">選擇教案</DialogTitle>
-                        <DialogContent dividers>
-                            <RadioGroup
-                                ref={radioGroupRef}
-                                aria-label="ringtone"
-                                name="coursePlanList"
-                                value={selectedCoursePlanID}
-                                onChange={handleChange}
+                {props.forEditor ?
+                    <div className={classes.button}>
+                        <Tooltip title="結束編輯" TransitionComponent={Zoom}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                className={classes.functionButton}
+                                startIcon={<CheckIcon />}
+                                style={isLogin ? { display: '' } : { display: 'none' }}
+                                onClick={() => setRedirectToCourseDetailPage(true)}
                             >
-                                {coursePlanListFromReducer.map((coursePlan) => (
-                                    <FormControlLabel value={coursePlan.id} key={coursePlan.id} control={<Radio />} label={coursePlan.name} />
-                                ))}
-                            </RadioGroup>
-                        </DialogContent>
-                        <DialogContent dividers >
-                            <ListItem button onClick={displayCreateCoursePlanForm}>
-                                <AddIcon />
-                                <ListItemText primary="建立新教案並加入此教案" style={{ 'paddingLeft': '10px' }} />
+                                完成
+                            </Button>
+                        </Tooltip>
+                    </div>
+                    :
+                    <div className={classes.button}>
+                        <Tooltip title="收藏單元" TransitionComponent={Zoom}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                className={classes.functionButton}
+                                startIcon={<FavoriteIcon />}
+                                style={isLogin ? { display: '' } : { display: 'none' }}
+                                onClick={handleFavoriteCourse}
+                            >
+                                收藏
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title="加入教案" TransitionComponent={Zoom}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                className={classes.functionButton}
+                                startIcon={<PlaylistAddIcon />}
+                                style={isLogin ? { display: '' } : { display: 'none' }}
+                                onClick={handleOpenCoursePlanDialog}
+                            >
+                                加入
+                            </Button>
+                        </Tooltip>
+                        <Dialog
+                            maxWidth='xs'
+                            fullWidth={true}
+                            aria-labelledby="confirmation-dialog-title"
+                            open={openCoursePlanDialog}
+                            onClose={handleCloseCoursePlanDialog}
+                        >
+                            <DialogTitle id="confirmation-dialog-title">選擇教案</DialogTitle>
+                            <DialogContent dividers>
+                                <RadioGroup
+                                    ref={radioGroupRef}
+                                    aria-label="ringtone"
+                                    name="coursePlanList"
+                                    value={selectedCoursePlanID}
+                                    onChange={handleChange}
+                                >
+                                    {coursePlanListFromReducer.map((coursePlan) => (
+                                        <FormControlLabel value={coursePlan.id} key={coursePlan.id} control={<Radio />} label={coursePlan.name} />
+                                    ))}
+                                </RadioGroup>
+                            </DialogContent>
+                            <DialogContent dividers >
+                                <ListItem button onClick={displayCreateCoursePlanForm}>
+                                    <AddIcon />
+                                    <ListItemText primary="建立新教案並加入此教案" style={{ 'paddingLeft': '10px' }} />
 
-                            </ListItem>
-                            <ListItem >
-                                {isClickedAddButton ?
-                                    <TextField
-                                        id="name"
-                                        label="教案名稱"
-                                        onChange={handleName}
-                                    />
-                                    :
-                                    null
-                                }
-                            </ListItem>
-                            <ListItem style={{ 'marginTop': '20px' }}>
-                                {isClickedAddButton ?
-                                    <FormControl className={classes.formControl}>
-                                        <InputLabel id="demo-simple-select-label">教案權限</InputLabel>
-                                        <Select
-                                            native
-                                            value={visibility}
-                                            onChange={handleVisibility}
-                                            label="教案權限"
-                                            inputProps={{
-                                                name: 'visibility',
-                                            }}
-                                            className={classes.visibilityValue}
-                                        >
-                                            <option value={0}>不公開</option>
-                                            <option value={1}>公開</option>
-                                        </Select>
-                                        <Button variant="outlined" color="secondary" style={{ marginTop: '20px' }} onClick={() => setIsClickedAddButton(false)}>
-                                            取消建立
-                                        </Button>
-                                    </FormControl>
-                                    :
-                                    null
-                                }
-                            </ListItem>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button autoFocus onClick={handleCloseCoursePlanDialog} color="primary">
-                                取消
+                                </ListItem>
+                                <ListItem >
+                                    {isClickedAddButton ?
+                                        <TextField
+                                            id="name"
+                                            label="教案名稱"
+                                            onChange={handleName}
+                                        />
+                                        :
+                                        null
+                                    }
+                                </ListItem>
+                                <ListItem style={{ 'marginTop': '20px' }}>
+                                    {isClickedAddButton ?
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel id="demo-simple-select-label">教案權限</InputLabel>
+                                            <Select
+                                                native
+                                                value={visibility}
+                                                onChange={handleVisibility}
+                                                label="教案權限"
+                                                inputProps={{
+                                                    name: 'visibility',
+                                                }}
+                                                className={classes.visibilityValue}
+                                            >
+                                                <option value={0}>不公開</option>
+                                                <option value={1}>公開</option>
+                                            </Select>
+                                            <Button variant="outlined" color="secondary" style={{ marginTop: '20px' }} onClick={() => setIsClickedAddButton(false)}>
+                                                取消建立
+                                            </Button>
+                                        </FormControl>
+                                        :
+                                        null
+                                    }
+                                </ListItem>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button autoFocus onClick={handleCloseCoursePlanDialog} color="primary">
+                                    取消
+                                </Button>
+                                <Button onClick={handleSubmit} color="primary" disabled={selectedCoursePlanID === ""}>
+                                    {isClickedAddButton ?
+                                        <div>確定建立並加入</div>
+                                        :
+                                        <div>確定加入</div>
+                                    }
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                        <Tooltip title="編輯單元" TransitionComponent={Zoom}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                className={classes.functionButton}
+                                startIcon={<CreateIcon />}
+                                style={isCreator ? { display: '' } : { display: 'none' }}
+                                onClick={() => history.push(`/courseEditor/${CourseID}`)}
+                            >
+                                編輯
                             </Button>
-                            <Button onClick={handleSubmit} color="primary" disabled={selectedCoursePlanID === ""}>
-                                {isClickedAddButton ?
-                                    <div>確定建立並加入</div>
-                                    :
-                                    <div>確定加入</div>
-                                }
+                        </Tooltip>
+                        <Tooltip title="刪除單元" TransitionComponent={Zoom}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                className={classes.functionButton}
+                                startIcon={<DeleteIcon />}
+                                style={isCreator ? { display: '' } : { display: 'none' }}
+                                onClick={handleDeleteCourseButton}
+                            >
+                                刪除
                             </Button>
-                        </DialogActions>
-                    </Dialog>
-                    <Tooltip title="編輯單元" TransitionComponent={Zoom}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            className={classes.functionButton}
-                            startIcon={<CreateIcon />}
-                            style={isCreator ? { display: '' } : { display: 'none' }}
-                            onClick={() => history.push(`/courseEditor/${CourseID}`)}
-                        >
-                            編輯
-                        </Button>
-                    </Tooltip>
-                    <Tooltip title="刪除單元" TransitionComponent={Zoom}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            className={classes.functionButton}
-                            startIcon={<DeleteIcon />}
-                            style={isCreator ? { display: '' } : { display: 'none' }}
-                            onClick={handleDeleteCourseButton}
-                        >
-                            刪除
-                        </Button>
-                    </Tooltip>
-                </div>
+                        </Tooltip>
+                    </div>
+                }
                 <Dialog
                     open={open}
                     onClose={handleClose}
@@ -464,6 +484,11 @@ export default function CourseInfoBar(props) {
                     </DialogActions>
                 </Dialog>
             </AppBar>
+            {redirectToCourseDetailPage ?
+                <Redirect to={`/course/${CourseID}`} />
+                :
+                <></>
+            }
         </div>
     )
 }
