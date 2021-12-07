@@ -126,9 +126,9 @@ export default function SelectCoursePlan() {
           var classroom_info = {
               name: name,
               coursePlan: selectedCoursePlanID,
-              review: review === "true",
-              apply: apply === "true",
-              visibility: parseInt(visibility),
+              review: review,
+              apply: true,
+              visibility: parseInt("1"),
           }
           console.log(classroom_info)
           fetch(`${process.env.REACT_APP_BACKEND_URL}/classroom`, {
