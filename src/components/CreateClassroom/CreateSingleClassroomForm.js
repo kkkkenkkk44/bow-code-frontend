@@ -102,7 +102,6 @@ export default function CreateSingleClassroomForm() {
 
     const name = useSelector(state => state.createClassroomReducer.name)
     const review = useSelector(state => state.createClassroomReducer.review)
-    const [reviewLocal, setReviewLocal] = useState(true)
     const apply = useSelector(state => state.createClassroomReducer.apply)
     const visibility = useSelector(state => state.createClassroomReducer.visibility)
 
@@ -117,10 +116,11 @@ export default function CreateSingleClassroomForm() {
 
     //const [review, setReview] = useState(false)
     const handleReview = (e) => {
-      setReviewLocal(e.target.checked);
+      //setReviewLocal(e.target.checked);
       //console.log(review)
-      dispatch(changeReview(!(reviewLocal)));
-      console.log(reviewLocal)
+      dispatch(changeReview(e.target.checked));
+      //console.log(reviewLocal)
+      //setReviewLocal(false);
     };
 
     //const [apply, setApply] = useState(true)
@@ -153,7 +153,7 @@ export default function CreateSingleClassroomForm() {
                 <FormGroup>
                   <FormControlLabel
                     control={
-                      <Checkbox checked={reviewLocal} onChange={handleReview} name="review" />
+                      <Checkbox checked={review} onChange={handleReview} name="review" />
                     }
                     label="申請需要老師審核"
                   />
