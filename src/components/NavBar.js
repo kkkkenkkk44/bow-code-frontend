@@ -96,12 +96,15 @@ export default function NavBar(props) {
         <div>
             <AppBar position="static" className={classes.appbar} elevation={3}>
                 <Toolbar className={classes.toolbar}>
-                    <Button onClick={() => history.push('/home')} style={{textTransform: 'none'}}>
+                    <Button onClick={() => history.push('/home')} style={{ textTransform: 'none' }}>
                         <Typography variant="h6" className={classes.title} >
                             {props.context}
                         </Typography>
                     </Button>
                     <div className={classes.listButton}>
+                        <Button className={classes.toolbarButton} onClick={() => history.push('/coursePlanList')}>
+                            教案列表
+                        </Button>
                         <Button className={classes.toolbarButton} onClick={() => history.push('/courseList')}>
                             單元列表
                         </Button>
