@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Paper } from "@material-ui/core";
+import { Card, Paper } from "@material-ui/core";
 import { CardActionArea } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
@@ -8,17 +8,20 @@ import { Chip } from "@material-ui/core";
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import StarIcon from '@material-ui/icons/Star';
 import { useSelector } from "react-redux";
+import { useHistory, useParams } from "react-router-dom";
 
 export default function ProblemListTile(props) {
     const problem = props.problem
     const isPicker = props.isPicker
     const picked = useSelector(state => state.problemListReducer.pickedProblemIds)
+    const { ClassroomID } = useParams()
+    const history = useHistory()
     const useStyles = makeStyles((theme) => ({
         root: {
             display: 'flex',
             height: theme.spacing(7),
             alignItems: "center",
-            backgroundColor: `${(isPicker && picked.includes(problem.id))? '#aeddc1' : '#ffffff'}`
+            backgroundColor: `${(isPicker && picked.includes(problem.id)) ? '#aeddc1' : '#ffffff'}`
         },
         name: {
             flex: 6,
@@ -66,17 +69,33 @@ export default function ProblemListTile(props) {
             break
 
     }
-    return <Paper elevation={1} square >
-        <CardActionArea className={classes.root}>
-            {difficulty}
-            <div className={classes.name}>
-                <Typography className={classes.statusText} variant="h6" component="h5">
-                    {problem.name}
-                </Typography>
-            </div>
-            <div className={classes.tags}>
-                {tagChips}
-            </div>
-        </CardActionArea>
-    </Paper>
+
+    const handleClick = () => {
+        if (!props.unclickable) {
+            if (typeof ClassroomID === 'undefined') {
+                history.push(`/problem/${problem.id}`)
+            }
+            else {
+                history.push(`/classroom/${ClassroomID}/problem/${problem.id}`)
+            }
+        }
+    }
+
+    return (
+        <Paper elevation={1} square >
+            <Card>
+                <CardActionArea className={classes.root} onClick={e => handleClick()}>
+                    {difficulty}
+                    <div className={classes.name}>
+                        <Typography className={classes.statusText} variant="h6" component="h5">
+                            {problem.name}
+                        </Typography>
+                    </div>
+                    <div className={classes.tags}>
+                        {tagChips}
+                    </div>
+                </CardActionArea>
+            </Card>
+        </Paper>
+    )
 }

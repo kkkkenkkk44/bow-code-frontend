@@ -23,7 +23,8 @@ export default function CoursePlanEditorPage(props) {
 
     const { CoursePlanID } = useParams()
     const classes = useStyles()
-    const { isFetching, componentList, componentDetailList } = useSelector(state => state.coursePlanEditorReducer)
+    const { isFetching, componentList, componentDetailList, creator } = useSelector(state => state.coursePlanEditorReducer)
+    const user = useSelector(state => state.loginReducer.user)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -73,7 +74,7 @@ export default function CoursePlanEditorPage(props) {
     var componentCardList = []
     componentCardList = componentDetailList.map(component => {
         if (component.type === 0) {
-            return <div className={classes.componentCard}><CourseCard course={component.setList[0]} unclickable /></div>
+            return <div className={classes.componentCard}><CourseCard course={component.setList[0]} /></div>
         }
         else if (component.type === 1) {
             return (
@@ -118,7 +119,11 @@ export default function CoursePlanEditorPage(props) {
                         }
                     </Grid>
                     <Grid item xs={2}>
-                        <AddComponentButton />
+                        {user.id === creator ?
+                            <AddComponentButton />
+                            :
+                            <></>
+                        }
                     </Grid>
                 </Grid>
             </div>

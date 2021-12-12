@@ -486,7 +486,7 @@ export default function AddComponentButton(props) {
                         </ClickAwayListener>
                     </Paper>
                 </Popper>
-                <Tooltip title="調整順序" TransitionComponent={Zoom}>
+                {/* <Tooltip title="調整順序" TransitionComponent={Zoom}>
                     <IconButton
                         id={`orderButton_${props.index}`}
                         onClick={(e) => {
@@ -495,7 +495,7 @@ export default function AddComponentButton(props) {
                     >
                         <MenuBookIcon />
                     </IconButton>
-                </Tooltip>
+                </Tooltip> */}
                 <Dialog
                     onClose={() => setOrderOptionConfig(false)}
                     aria-labelledby="customized-dialog-title"
