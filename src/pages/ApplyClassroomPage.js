@@ -21,7 +21,7 @@ export default function ApplyClassroomPage() {
 
     return (
         <div>
-            <NavBar context="CoDai" />
+            <NavBar context="CoDai 教室" />
             <div className={classes.paper}>
                 {loginInfo.isLogin === false ?
                     <NotLoggedIn />

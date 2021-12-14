@@ -17,7 +17,7 @@ export default function LogoutPage() {
     return (
         isLogin ? <Redirect to='/home' /> :
             <div>
-                <NavBar context="CoDai" />
+                <NavBar context="CoDai 教室" />
             </div>
     );
 }

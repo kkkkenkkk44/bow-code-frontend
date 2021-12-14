@@ -73,7 +73,7 @@ export default function CreateSingleClassroomPage() {
     console.log(activeStep, steps.length)
     return (
       <div className={classes.root}>
-        <NavBar context="CoDai" />
+        <NavBar context="CoDai 教室" />
         <div className={classes.paper}>
           <Typography component="h1" variant="h6">
               建立單一班級
