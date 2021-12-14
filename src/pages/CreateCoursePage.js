@@ -34,7 +34,7 @@ export default function CreateCoursePage() {
 
     return (
         <div>
-            <NavBar context="Bow-Code" />
+            <NavBar context="CoDai 教室" />
             <div className={classes.paper}>
                 <Typography component="h1" variant="h6">
                     建立單元

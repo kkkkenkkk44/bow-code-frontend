@@ -22,12 +22,12 @@ export default function CourseDetailPage() {
         },
         info: {
             flex: 1,
-            height:  "calc(100vh - 60px)",
+            height: "calc(100vh - 60px)",
             overflowY: 'auto'
         },
         content: {
             flex: 4,
-            height:  "calc(100vh - 60px)",
+            height: "calc(100vh - 60px)",
             overflowY: 'auto'
         }
     }));
@@ -43,6 +43,7 @@ export default function CourseDetailPage() {
     const [isFetchingClassroom, setIsFetchingClassroom] = useState(true)
     const [isFetchingCreator, setIsFetchingCreator] = useState(true)
     const showingCourseIndex = useSelector(state => state.courseDetailPageReducer.showingCourseIndex)
+    const dispatch = useDispatch()
 
     function BlockList() {
         var cardList = []
@@ -76,11 +77,12 @@ export default function CourseDetailPage() {
 
     useEffect(() => {
         fetchCourseDetail()
+        dispatch({ type: 'RESET_SHOWINGCOURSEINDEX' })
     }, [])
 
     return (
         <div>
-            <NavBar context="Bow-Code" />
+            <NavBar context="CoDai 教室" />
             {
                 isFetchingClassroom ? null :
                     <div className={classes.root}>

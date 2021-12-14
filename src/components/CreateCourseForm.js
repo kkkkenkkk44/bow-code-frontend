@@ -119,7 +119,7 @@ export default function CreatCourseForm() {
   setDifficulty(event.target.value);
   };
 
-  const [isPublic, setIsPublic] = useState(Boolean)
+  const [isPublic, setIsPublic] = useState(true)
   const handleIsPublic = (event) => {
   setIsPublic(event.target.value);
   };
@@ -145,10 +145,11 @@ export default function CreatCourseForm() {
         abstract,
         tags: tags.split(/[\s,]+/).filter((w) => w != ""),
         difficulty: parseInt(difficulty),
-        isPublic: isPublic === 'true',
+        isPublic,
         category,
         image: imageLink
       }
+      console.log(course_info)
       fetch(`${process.env.REACT_APP_BACKEND_URL}/course`, {
         method: 'POST',
         body: JSON.stringify(course_info),

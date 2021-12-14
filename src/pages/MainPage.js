@@ -18,7 +18,7 @@ export default function MainPage() {
     }
     return (
         <div>
-            <NavBar context="Bow-Code" />
+            <NavBar context="CoDai 教室" />
             {homepage}
         </div>
     )

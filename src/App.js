@@ -20,6 +20,7 @@ import CourseDetailPage from "./pages/CourseDetailPage";
 import BlockDetailPage from "./pages/BlockDetailPage";
 import RegisterPage from "./pages/RegisterPage"
 import ProblemPage from "./pages/ProblemPage";
+import CoursePlanListPage from "./pages/CoursePlanListPage";
 import ApplyClassroomPage from "./pages/ApplyClassroomPage";
 import { Redirect, Route, Switch } from "react-router";
 import { auth } from "./actions/login"
@@ -42,6 +43,7 @@ function App() {
       <Route path='/home' component={MainPage} />
       <Route path='/courseList' component={CourseListPage} />
       <Route path='/problemList' component={ProblemListPage} />
+      <Route path="/coursePlanList" component={CoursePlanListPage}/>
       <Route path='/login' component={LoginPage} />
       <Route path='/logout' component={LogoutPage} />
       <Route path='/signup' component={SignUpPage} />

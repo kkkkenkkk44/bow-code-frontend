@@ -153,7 +153,7 @@ export default function CourseListPage() {
 
     return (
         <div>
-            <NavBar context="Bow-Code" />
+            <NavBar context="CoDai 教室" />
             <div className={classes.root}>
                 <Typography className={classes.sectionTitle} variant="h5" component="h2">
                     所有單元

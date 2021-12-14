@@ -156,7 +156,7 @@ export default function ProblemPage() {
             <CircularProgress />
             :
             <div>
-                <NavBar context="Bow-Code" />
+                <NavBar context="CoDai 教室" />
                 <Grid container justify="center">
                     <Grid item xs={5}>
                         <div className={classes.rootHeight}>

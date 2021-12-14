@@ -130,7 +130,7 @@ export default function ClassroomManagerPage(props) {
     }, [])
     return (
         <div>
-            <NavBar context="Bow-Code" />
+            <NavBar context="CoDai 教室" />
             {isFetching ? <CircularProgress /> : <div className={classes.root}>
                 <Paper className={classes.userInfo} square elevation={4}>
                     <Typography variant="h4" className={classes.classroomTitle}>
