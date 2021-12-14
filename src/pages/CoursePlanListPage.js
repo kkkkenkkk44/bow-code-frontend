@@ -1,16 +1,17 @@
-import { CircularProgress, Grid, Card, makeStyles, CardContent, Typography, Divider, CardActionArea } from "@material-ui/core"
-import { useEffect } from "react"
+import { CircularProgress, Grid, Card, makeStyles, CardContent, Typography, Divider, CardActionArea, IconButton, Tooltip, Zoom, Dialog, DialogTitle, DialogActions, Button, DialogContent } from "@material-ui/core"
+import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import NavBar from "../components/NavBar"
-import { fetchCoursePlanList } from "../actions/coursePlanListPage"
+import { copyCoursePlan, fetchCoursePlanList } from "../actions/coursePlanListPage"
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 import { useHistory } from "react-router-dom"
 
 const useStyle = makeStyles((theme) => ({
     coursePlanCard: {
         margin: "20px",
-        height: "205px"
+        // height: "250px"
     },
     root: {
         height: "calc(100vh - 180px)",
@@ -25,7 +26,8 @@ const useStyle = makeStyles((theme) => ({
     },
     coursePlanCardCourse: {
         display: "flex",
-        alignItems: "flex-start"
+        alignItems: "flex-start",
+        // maxHeight: "65px"
     },
     coursePlanCardActions: {
         display: 'flex',
@@ -37,6 +39,9 @@ const useStyle = makeStyles((theme) => ({
     coursePlanCardActionsIcon: {
         fontSize: 30,
         margin: '10px'
+    },
+    coursePlanCardActionArea: {
+        // maxHeight: 175
     }
 }))
 
@@ -47,15 +52,22 @@ export default function CoursePlanListPage() {
     const { isFetching, coursePlanList } = useSelector(state => state.coursePlanListReducer)
     const { isLogin, user } = useSelector(state => state.loginReducer)
     const history = useHistory()
+    const [openCopyDialog, setOpenCopyDialog] = useState(false)
+    const [copyCoursePlanID, setCopyCoursePlanID] = useState(true)
 
     useEffect(() => {
         dispatch(fetchCoursePlanList())
     }, [])
 
-    //for adding favorite coursePlan
-    var favoriteCoursePlanList = []
-    if (isLogin) {
-        console.log(user)
+    // for adding favorite coursePlan
+    // var favoriteCoursePlanList = []
+    // if (isLogin) {
+    //     console.log(user)
+    // }
+
+    const handleCopy = (CoursePlanID) => {
+        setCopyCoursePlanID(CoursePlanID)
+        setOpenCopyDialog(true)
     }
 
     var CoursePlanList = []
@@ -65,7 +77,7 @@ export default function CoursePlanListPage() {
             return (
                 <Grid item xs={6} md={4} lg={3} key={id}>
                     <Card className={classes.coursePlanCard}>
-                        <CardActionArea onClick={e => { history.push(`./coursePlanEditor/${id}`) }}>
+                        <CardActionArea className={classes.coursePlanCardActionArea} onClick={e => { history.push(`./coursePlanEditor/${id}`) }}>
                             <CardContent>
                                 <Typography className={classes.coursePlanCardTitle}>
                                     {name}
@@ -88,12 +100,24 @@ export default function CoursePlanListPage() {
                                 </div>
                             </CardContent>
                         </CardActionArea>
-                        {/* <Divider /> */}
-                        {/* <div className={classes.coursePlanCardActions}>
-                            <FavoriteBorderIcon className={classes.coursePlanCardActionsIcon}/>
-                            <Divider orientation="vertical" flexItem className={classes.coursePlanCardActionDivider}/>
-                            <FavoriteIcon className={classes.coursePlanCardActionsIcon}/>
-                        </div> */}
+                        <Divider />
+                        <div className={classes.coursePlanCardActions}>
+                            <Tooltip title="收藏教案" TransitionComponent={Zoom}>
+                                <IconButton
+                                // onClick={() => setRedirectToCourseDetailPage(true)}  
+                                >
+                                    <FavoriteBorderIcon className={classes.coursePlanCardActionsIcon} />
+                                </IconButton>
+                            </Tooltip>
+                            {/* <Divider orientation="vertical" flexItem className={classes.coursePlanCardActionDivider} /> */}
+                            <Tooltip title="複製教案" TransitionComponent={Zoom}>
+                                <IconButton
+                                    onClick={() => handleCopy(id)}
+                                >
+                                    <FileCopyIcon className={classes.coursePlanCardActionsIcon} />
+                                </IconButton>
+                            </Tooltip>
+                        </div>
                     </Card>
                 </Grid>
             )
@@ -102,7 +126,7 @@ export default function CoursePlanListPage() {
 
     return (
         <div>
-            <NavBar context="Bow-Code" />
+            <NavBar context="Bow-code" />
             <div className={classes.root}>
                 <Typography className={classes.sectionTitle} variant="h5" component="h2">
                     所有教案
@@ -117,7 +141,28 @@ export default function CoursePlanListPage() {
                         </Grid>
                 }
             </div>
-
+            <Dialog open={openCopyDialog} onClose={() => setOpenCopyDialog(false)} aria-labelledby="form-dialog-title" maxWidth="lg">
+                <DialogTitle id="form-dialog-title">確定要複製此教案？</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        將新增一份屬於你的教案
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {
+                        setOpenCopyDialog(false)
+                    }}>
+                        取消
+                    </Button>
+                    <Button onClick={() => {
+                        console.log("click")
+                        dispatch(copyCoursePlan(copyCoursePlanID))
+                        setOpenCopyDialog(false)
+                    }}>
+                        確定
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }
