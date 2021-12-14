@@ -68,7 +68,7 @@ export default function RegisterPage() {
     return (
         isLogin ? <Redirect to='/home' /> :
             <div>
-                <NavBar context="Bow-Code" />
+                <NavBar context="CoDai" />
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
                     <div className={classes.paper}>

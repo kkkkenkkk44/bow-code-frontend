@@ -106,7 +106,7 @@ export default function CoursePlanEditorPage(props) {
 
     return (
         <div>
-            <NavBar context="Bow-Code" />
+            <NavBar context="CoDai" />
             <div className={classes.root}>
                 <Grid container>
                     <Grid item xs={2}></Grid>

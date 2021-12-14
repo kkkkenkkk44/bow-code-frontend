@@ -45,7 +45,7 @@ export default function CreateCoursePlanPage() {
     const classes = useStyles();
     return(
         <div>
-            <NavBar context="Bow-Code" />
+            <NavBar context="CoDai" />
             <div className={classes.paper}>
                 <Typography component="h1" variant="h6">
                     建立教案

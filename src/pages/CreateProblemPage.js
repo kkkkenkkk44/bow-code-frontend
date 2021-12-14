@@ -70,7 +70,7 @@ export default function CreateProblemPage() {
   console.log(activeStep, steps.length)
   return (
     <div className={classes.root}>
-      <NavBar context="Bow-Code" />
+      <NavBar context="CoDai" />
       <Stepper className={classes.stepper} activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps = {};

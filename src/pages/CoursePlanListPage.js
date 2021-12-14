@@ -126,7 +126,7 @@ export default function CoursePlanListPage() {
 
     return (
         <div>
-            <NavBar context="Bow-code" />
+            <NavBar context="CoDai" />
             <div className={classes.root}>
                 <Typography className={classes.sectionTitle} variant="h5" component="h2">
                     所有教案

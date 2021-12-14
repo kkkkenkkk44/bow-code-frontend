@@ -170,7 +170,7 @@ export default function CourseEditorPage(props) {
 
     return (
         <div>
-            <NavBar context="Bow-Code" />
+            <NavBar context="CoDai" />
             {
                 isFetching ? null :
                     <div className={classes.root}>

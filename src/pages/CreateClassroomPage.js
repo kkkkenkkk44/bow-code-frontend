@@ -76,7 +76,7 @@ export default function CreateClassroomPage () {
 
     return (
         <div>
-            <NavBar context="Bow-Code" />
+            <NavBar context="CoDai" />
             <div className={classes.outsideCard}>
             <Grid container spacing={3}>
                 <Grid item xs={6} >

@@ -82,7 +82,7 @@ export default function CourseDetailPage() {
 
     return (
         <div>
-            <NavBar context="Bow-Code" />
+            <NavBar context="CoDai" />
             {
                 isFetchingClassroom ? null :
                     <div className={classes.root}>
