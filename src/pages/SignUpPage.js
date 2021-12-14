@@ -42,7 +42,7 @@ export default function SignUpPage() {
 
     return (
         <div>
-            <NavBar context="CoDai 教室" />
+            <NavBar context="CoDAI 教室" />
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <div className={classes.paper}>

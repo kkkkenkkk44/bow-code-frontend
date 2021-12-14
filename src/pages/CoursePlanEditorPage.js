@@ -106,7 +106,7 @@ export default function CoursePlanEditorPage(props) {
 
     return (
         <div>
-            <NavBar context="CoDai 教室" />
+            <NavBar context="CoDAI 教室" />
             <div className={classes.root}>
                 <Grid container>
                     <Grid item xs={2}></Grid>

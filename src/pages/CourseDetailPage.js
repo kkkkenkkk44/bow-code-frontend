@@ -82,7 +82,7 @@ export default function CourseDetailPage() {
 
     return (
         <div>
-            <NavBar context="CoDai 教室" />
+            <NavBar context="CoDAI 教室" />
             {
                 isFetchingClassroom ? null :
                     <div className={classes.root}>

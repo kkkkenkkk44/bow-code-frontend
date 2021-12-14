@@ -233,7 +233,7 @@ export function ProblemListContent(props) {
 
 export default function problemListPage(){
     return <div>
-        <NavBar context="CoDai 教室" />
+        <NavBar context="CoDAI 教室" />
         <ProblemListContent isPicker={false}></ProblemListContent>
     </div>
 }

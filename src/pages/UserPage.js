@@ -95,7 +95,7 @@ export default function UserPage(props) {
     // }, [])
     return (
         <div>
-            <NavBar context="CoDai 教室" />
+            <NavBar context="CoDAI 教室" />
             <div className={classes.root}>
                 <Paper className={classes.userInfo} square elevation={4}>
 
