@@ -71,7 +71,7 @@ export default function ProblemListTile(props) {
     }
 
     const handleClick = () => {
-        if (!props.unclickable) {
+        if (!props.unclickable && !isPicker) {
             if (typeof ClassroomID === 'undefined') {
                 history.push(`/problem/${problem.id}`)
             }
