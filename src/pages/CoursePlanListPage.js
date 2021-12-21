@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Card, makeStyles, CardContent, Typography, Divider, CardActionArea, IconButton, Tooltip, Zoom, Dialog, DialogTitle, DialogActions, Button, DialogContent } from "@material-ui/core"
+import { CircularProgress, Grid, Card, makeStyles, CardContent, Typography, Divider, CardActionArea, IconButton, Tooltip, Zoom, Dialog, DialogTitle, DialogActions, Button, DialogContent, CardMedia } from "@material-ui/core"
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import NavBar from "../components/NavBar"
@@ -7,6 +7,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import { useHistory } from "react-router-dom"
+import problemListPage from "./ProblemListPage"
 
 const useStyle = makeStyles((theme) => ({
     coursePlanCard: {
@@ -42,6 +43,13 @@ const useStyle = makeStyles((theme) => ({
     },
     coursePlanCardActionArea: {
         // maxHeight: 175
+    },
+    cover: {
+        height: "200px",
+        weight: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
     }
 }))
 
@@ -72,8 +80,8 @@ export default function CoursePlanListPage() {
 
     var CoursePlanList = []
     if (!isFetching) {
-        CoursePlanList = coursePlanList.map(coursePlan => {
-            const { id, name, userInfo, createTime, componentList } = coursePlan
+        CoursePlanList = coursePlanList.map((coursePlan, index) => {
+            const { id, name, userInfo, createTime, componentList, image } = coursePlan
             return (
                 <Grid item xs={6} md={4} lg={3} key={id}>
                     <Card className={classes.coursePlanCard}>
@@ -83,6 +91,24 @@ export default function CoursePlanListPage() {
                                     {name}
                                 </Typography>
                                 <Divider />
+                                <CardMedia
+                                    className={classes.cover}
+                                    children={
+                                        <img
+                                            style={{
+                                                maxHeight: '100%',
+                                                maxWidth: '100%',
+                                                objectFit: "contain"
+                                            }}
+                                            src={
+                                                image ? image :
+                                                    index <= 1 ?
+                                                        "https://www.footmark.info/wp-content/uploads/2018/08/7cc9c9c0cc4bbf474b55600e0ff4ccce.png" :
+                                                        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/ISO_C%2B%2B_Logo.svg/640px-ISO_C%2B%2B_Logo.svg.png"
+                                            }
+                                        />
+                                    }
+                                />
                                 <Typography className={classes.coursePlanCardCreator}>
                                     作者：{userInfo.name}
                                 </Typography>
