@@ -9,6 +9,10 @@ import { Redirect } from "react-router";
 import { useSelector } from 'react-redux';
 import { resetForm } from '../../actions/createProblem';
 import { useDispatch } from 'react-redux';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Checkbox from '@material-ui/core/Checkbox';
 import { changeReview, changeApply, changeVisibility, changeCoursePlanID } from "../../actions/createClassroom";
 
 const useStyles = makeStyles((theme) => ({
@@ -110,8 +114,8 @@ export default function CreateMultipleClassroomForm() {
       };
 
     const handleReview = (e) => {
-        //setReview(event.target.value);
-        dispatch(changeReview(e.target.value));
+
+        dispatch(changeReview(e.target.checked));
       };
   
       //const [apply, setApply] = useState(true)
@@ -141,57 +145,15 @@ export default function CreateMultipleClassroomForm() {
                 onChange={handleCoursePlanID}
             />
             <div className={classes.reviewText}>
-              <span>班級是否需要審核</span>
               <FormControl className={classes.formControl}>
-                <Select
-                  native
-                  value={review}
-                  onChange={handleReview}
-                  label="是否需要審核"
-                  inputProps={{
-                    name: 'review',
-                  }}
-                  className={classes.reviewValue}
-                >
-                  <option value={true}>需要審核</option>
-                  <option value={false}>不需要審核</option>
-                </Select>
-              </FormControl>
-            </div>
-            <div className={classes.applyText}>
-              <span>班級是否開放申請加入</span>
-              <FormControl className={classes.formControl}>
-                <Select
-                  native
-                  value={apply}
-                  onChange={handleApply}
-                  label="是否開放申請加入"
-                  inputProps={{
-                    name: 'apply',
-                  }}
-                  className={classes.applyValue}
-                >
-                  <option value={true}>開放申請加入</option>
-                  <option value={false}>不開放申請加入</option>
-                </Select>
-              </FormControl>
-            </div>
-            <div className={classes.visibilityText}>
-              <span>班級權限</span>
-              <FormControl className={classes.formControl}>
-                <Select
-                  native
-                  value={visibility}
-                  onChange={handleVisibility}
-                  label="教室權限"
-                  inputProps={{
-                    name: 'visibility',
-                  }}
-                  className={classes.visibilityValue}
-                >
-                  <option value={0}>不公開</option>
-                  <option value={1}>公開</option>
-                </Select>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox checked={review} onChange={handleReview} name="review" />
+                    }
+                    label="申請需要老師審核"
+                  />
+                </FormGroup>
               </FormControl>
             </div>
             </form>

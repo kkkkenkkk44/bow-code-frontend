@@ -101,9 +101,9 @@ export default function MultipleClassroomName() {
             var classroom_info = {
                 name: e,
                 coursePlan: coursePlanID,
-                review: review === "true",
-                apply: apply === "true",
-                visibility: parseInt(visibility),
+                review: review,
+                apply: true,
+                visibility: parseInt("1"),
             }
             console.log(classroom_info)
             fetch(`${process.env.REACT_APP_BACKEND_URL}/classroom`, {
